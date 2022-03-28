@@ -4,6 +4,8 @@ services:
       context: ./front
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - "3000:3000"
   backend:
     build:
       context: ./back
