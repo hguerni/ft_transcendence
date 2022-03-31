@@ -25,5 +25,4 @@ services:
       - "31415:5432"
     volumes:
       - ./database-data:/var/lib/postgresql/data
-    restart: always
     container_name: db_app

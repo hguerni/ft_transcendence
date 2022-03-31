@@ -7,7 +7,6 @@ COPY package-lock.json .
 RUN npm install -g npm@latest
 RUN npm install
 RUN mkdir -p node_modules/.cache
-#WORKDIR /app/
 ENV NODE_PATH=/app/node_modules/.bin
 COPY . .
 RUN npm install -g sass

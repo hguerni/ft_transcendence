@@ -31,3 +31,4 @@ export class AuthService {
     async updateUser(@Body() data: UpdateUserDTO) {
         await this.userService.updateUser(data);
     }
+}
