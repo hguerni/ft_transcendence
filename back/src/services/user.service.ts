@@ -7,7 +7,7 @@ import { UpdateUserDTO, RegisterDTO } from '../models/user.model';
 @Injectable()
 export class UserService {
   getById(userId: number) {
-    return this.userRepo.findOne(id);
+    return this.userRepo.findOne(userId);
   }
   constructor(
     @InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
