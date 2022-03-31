@@ -26,7 +26,7 @@ import {
 	email: string;
   
 	@IsString()
-	@MinLength(8)
+	@MinLength(6)
 	@MaxLength(25)
 	password: string;
   }
@@ -36,10 +36,13 @@ import {
 	@MinLength(2)
 	@MaxLength(15)
 	username: string;
-  }
-  
-  export interface AuthPayload {
-	username: string;
+
+	id: number;
+	
+	@IsOptional()
+	image: string;
+
+	authentication: boolean;
   }
   
   export class UpdateUserDTO {
@@ -55,13 +58,18 @@ import {
 	username: string;
 
 	@IsNumber()
-	userId: number;
+	id: number;
   }
 
-  export class createUserDTO {
+  export class CreateUserDTO {
 	@IsString()
 	username: string;
 
 	@IsString()
+	@IsEmail()
 	mail: string;
-  }
+	}
+	
+	export const jwtConstants = {
+    secret: 'secretKey',
+	};
