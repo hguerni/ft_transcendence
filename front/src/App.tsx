@@ -1,16 +1,17 @@
-import logo from './logoT.png';
+import React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import Login from "./components/login.component";
+import LoginSuccess from "./components/loginsuccess.component";
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1>Transcendance </h1>
-        <button type="button" onClick={window.alert}>CONNECTE TOI !</button>
-        
-      </header>
-    </div>
+    <BrowserRouter>
+      <main>
+        <Route path={"/"} component={Login} />
+        <Route path={"/profile"} component={LoginSuccess} />
+      </main>
+    </BrowserRouter>
   );
 }
 

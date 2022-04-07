@@ -10,7 +10,7 @@ import { lastValueFrom } from 'rxjs';
 //APPLICATION DATA
 const uid = 'ee2541faed7eb8ad4cf7c3108ce1ef0e80c014ccca2ec59286a4449299ece99d';
 const secret = '3986895f74fd6788ceaef23242909a0e454bb11bd5efffca1ce5e67d7d88acca';
-const callbackURL = 'http://localhost:8000/auth/login'
+const callbackURL = 'http://localhost:3000/auth/login'
 const state = 'lololol'
 
 

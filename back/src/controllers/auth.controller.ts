@@ -23,10 +23,10 @@ export class AuthController {
         const clientData = await this.userService.findById(client['id']);
 
         if(!clientData)
-            return response.redirect('http://localhost:8080/register')
+            return response.redirect('http://localhost:3000/register')
         else
             await this.userService.setOnline(client['id']);
-        return response.redirect('http://localhost:8080/profile')
+        return response.redirect('http://localhost:3000/profile')
     }
 
     @Post('register')
