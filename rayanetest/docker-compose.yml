@@ -1,0 +1,31 @@
+services:
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: npm start
+    ports:
+      - "3000:3000"
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    env_file:
+      - ./back/.env
+    environment:
+      - NODE_ENV= production
+    depends_on:
+      - db
+    restart: unless-stopped
+  db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: database_transcendence
+    ports:
+      - "31415:5432"
+    volumes:
+      - ./database-data:/var/lib/postgresql/data
+    container_name: db_app
