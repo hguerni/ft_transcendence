@@ -39,23 +39,28 @@ h1 {
   font-weight: bold;
 }
 
-.App-logo2{
-
+.App-logo2 {
   width: 50%;
   height: 50%;
 }
 
+.App-logo3 {
+  width: 10%;
+  height: 10%;
+}
+
 button{
-  padding: 10px;
+  padding: 9px;
   padding-bottom: 2px;
-  background-color: #ff1493;
+  /* background-color: #ff1493; */
+  background-color: transparent;
   margin: 10px;
-  color: #eceae6;
+  color: transparent;
   text-shadow: none;
-  box-shadow: 1px 0 1px #be3077, 0 1px 1px #ff69b4, 2px 1px 1px #be3077, 1px 2px 1px #ff69b4, 3px 2px 1px #be3077, 2px 3px 1px #ff69b4, 4px 3px 1px #be3077, 3px 4px 1px #ff69b4, 5px 4px 1px #be3077, 4px 5px 1px #ff69b4, 6px 5px 1px #be3077;
+  /* box-shadow: 1px 0 1px #be3077, 0 1px 1px #ff69b4, 2px 1px 1px #be3077, 1px 2px 1px #ff69b4, 3px 2px 1px #be3077, 2px 3px 1px #ff69b4, 4px 3px 1px #be3077, 3px 4px 1px #ff69b4, 5px 4px 1px #be3077, 4px 5px 1px #ff69b4, 6px 5px 1px #be3077; */
   cursor: pointer;
   display: inline-block;
-  margin-top: 11px;
+  margin-top: -72px;
   box-sizing: border-box;
   position: relative;
   user-select: none;
@@ -67,8 +72,7 @@ button{
 }
 
 button:hover {
-  background-color: #bd4b43;
-  
+  background-color: #0e062260;
 }
 
 @keyframes App-logo-spin {
