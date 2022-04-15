@@ -5,7 +5,7 @@ import './App.css';
 
 function App() {
   function handleClick() {
-    alert('clicked');
+    alert('clic');
   }
   
   return (
