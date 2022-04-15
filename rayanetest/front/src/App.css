@@ -20,7 +20,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(-10px);
   color: white;
 }
 
@@ -46,7 +46,7 @@ h1 {
 
 .start_image {
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 #strt_btn {
@@ -79,8 +79,8 @@ h1 {
 
 
 .start_button {
-  /* background-color: red; */
-  background-color: transparent;
+  background-color: red;
+  /* background-color: transparent; */
   display: block;
   margin-top: 25px;
   /* box-sizing: border-box; */
