@@ -25,7 +25,6 @@ export class UserController {
     return this.userService.findAll();
   }
 
-
   @Post('upload')
   @UseInterceptors(FileInterceptor('image', {
       storage: diskStorage({
