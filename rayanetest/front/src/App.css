@@ -39,41 +39,58 @@ h1 {
   font-weight: bold;
 }
 
-.App-logo2 {
+.trs_full {
   width: 50%;
   height: 50%;
 }
 
-.App-logo3 {
-  width: 10%;
-  height: 10%;
+.start_image {
+  width: 100%;
+  height: 100%;
 }
 
-button{
-  padding: 9px;
-  padding-bottom: 2px;
-  /* background-color: #ff1493; */
+#strt_btn {
+  width: 100%;
+  height: 100%;  
+  /* padding: 40px; */
   background-color: transparent;
-  margin: 10px;
-  color: transparent;
+  /* margin: 10px;
   text-shadow: none;
-  /* box-shadow: 1px 0 1px #be3077, 0 1px 1px #ff69b4, 2px 1px 1px #be3077, 1px 2px 1px #ff69b4, 3px 2px 1px #be3077, 2px 3px 1px #ff69b4, 4px 3px 1px #be3077, 3px 4px 1px #ff69b4, 5px 4px 1px #be3077, 4px 5px 1px #ff69b4, 6px 5px 1px #be3077; */
   cursor: pointer;
   display: inline-block;
-  margin-top: -72px;
+  margin-top: 25px;
   box-sizing: border-box;
   position: relative;
-  user-select: none;
-  border: 0;
-  font-size: 45px;
-  font-weight: 400;
-  font-family: "Josefin Slab",cursive;
-  outline: 0;
+  user-select: none; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+ 
 }
 
-button:hover {
-  background-color: #0e062260;
+#strt_btn:hover {
+  background-color: rgba(140, 0, 255, 0.349);
 }
+
+
+.start_button {
+  /* background-color: red; */
+  background-color: transparent;
+  display: block;
+  margin-top: 25px;
+  /* box-sizing: border-box; */
+  position: relative;
+  /* padding: 20px; */
+  /* user-select: none;
+  border: 0;
+  outline: 0; */
+}
+
 
 @keyframes App-logo-spin {
   from {

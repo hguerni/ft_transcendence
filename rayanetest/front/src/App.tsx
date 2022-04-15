@@ -12,9 +12,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <img src={logo_entier} className="App-logo2" alt="logo_entier" />
-        <img src={logo_start} className="App-logo3" alt="logo_start" />
-        <button type="button" onClick={handleClick}>hahahah</button>
+        <img src={logo_entier} className="trs_full" alt="logo_entier" /> 
+        <div className="start_button">
+          <img src={logo_start} className="start_image" alt="logo_start" />
+          <button type="button" id="strt_btn"
+          onClick={handleClick}></button>
+        </div>
       </header>
     </div>
   );
