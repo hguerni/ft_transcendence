@@ -5,6 +5,7 @@ import { UserModule } from "./modules/user.module";
 import { AuthModule } from "./modules/auth.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { configService } from "./config/config.service";
+import { ChatGateway } from "./websocket/chat.getaway";
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { configService } from "./config/config.service";
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ChatGateway],
 })
 export class AppModule {}
