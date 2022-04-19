@@ -44,6 +44,7 @@ class ConfigService {
       migrationsTableName: 'migration',
 
       migrations: ['src/migration/*.ts'],
+      synchronize: true,
 
       cli: {
         migrationsDir: 'src/migration',
