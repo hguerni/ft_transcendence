@@ -12,6 +12,8 @@ services:
     ports:
         - "3000:3000" #sur le port 3000
   backend:
+    image: back-image # nom de l'image
+    container_name: back-container # nom du containeur
     build:
       context: ./back
       dockerfile: Dockerfile
