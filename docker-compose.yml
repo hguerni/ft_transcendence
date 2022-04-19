@@ -3,6 +3,12 @@ services:
     build:
       context: ./front
       dockerfile: Dockerfile
+    depends_on:
+      - backend
+    volumes:
+      - ./front:/usr/src/app
+    ports:
+      - "3000:3000"
     restart: unless-stopped
   backend:
     build:
@@ -15,6 +21,10 @@ services:
     depends_on:
       - db
     restart: unless-stopped
+    volumes:
+      - ./back:/usr/src/app
+    ports:
+      - "3030:3030"
   db:
     image: postgres:13-alpine
     environment:

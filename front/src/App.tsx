@@ -8,8 +8,8 @@ function App() {
   return (
     <BrowserRouter>
       <main>
-        <Route path={"/"} component={Login} />
-        <Route path={"/profile"} component={LoginSuccess} />
+        <Route exact path={"/"} component={Login} />
+        <Route exact path={"/profile"} component={LoginSuccess} />
       </main>
     </BrowserRouter>
   );

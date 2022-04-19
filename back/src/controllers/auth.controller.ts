@@ -17,7 +17,8 @@ export class AuthController {
     @UseGuards(AuthGuard('intra'))
     @Get('auth/login')
     async login(@Req() req, @Res({passthrough: true}) response: Response) {
-        await response.cookie('clientID', req.user, {httpOnly: true});
+        response.cookie('clientID', req.user, {httpOnly: true});
+        console.log(response);
         const client = await this.jwtService.verifyAsync(req.user);
 
         const clientData = await this.userService.findById(client['id']);

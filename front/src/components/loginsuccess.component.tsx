@@ -1,13 +1,45 @@
 import React, {useEffect, useState} from "react";
-import {Link, Navigate} from "react-router-dom"
+import {Redirect} from "react-router-dom"
 import axios from "axios";
-import {User} from "../models/user.model";
+//import {User} from "../models/user.model";
 
 const LoginSuccess = () => {
+    const [unauthorized, setUnauthorized] = useState(false);
+    const [user, setUser] = useState({
+        username: '',
+        img: '',
+        email: '',
+        id: 0,
+        pendingInvite: false,
+    });
+
+    useEffect(() => {
+        let mounted = true;
+
+        const authorization = async () => {
+            try { await axios.get('userData'); }
+            catch(err){if(mounted) setUnauthorized(true);}
+        }
+        authorization();
+        return () => {mounted = false;}
+    }, []);
+
+    useEffect(() => {
+        let mounted = true;
+        const getUser = async () => {
+            try {
+                const {data} = await axios.get('userData')
+                if (mounted) setUser(data);
+            }
+            catch(err){if(mounted) setUnauthorized(true);}
+        }
+        getUser();
+        return () => {mounted = false;}
+    }, []);
 
 
     if (unauthorized)
-        return <Navigate to={'/'}/>;
+        return <Redirect to={'/'}/>;
 
 
     return (
@@ -24,6 +56,7 @@ const LoginSuccess = () => {
                 </div>
                 <div className="col-md-3"></div>
             </div>
+    )
 }
 
 export default LoginSuccess

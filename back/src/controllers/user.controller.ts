@@ -36,7 +36,7 @@ export class UserController {
       })
   }))
   uploadFile(@UploadedFile() file) {
-      return { url: `http://localhost:3000/api/uploads/${file.filename}`}
+      return { url: `http://localhost:3000/uploads/${file.filename}`}
   }
 
   @Post("updateUser")
