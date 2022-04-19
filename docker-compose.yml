@@ -1,15 +1,16 @@
 services:
   frontend:
-    build:
-      context: ./front
-      dockerfile: Dockerfile
-    depends_on:
-      - backend
+    image: front-image # nom de l'image
+    container_name: front-container # nom du containeur
     volumes:
-      - ./front:/usr/src/app
+      - ./front:/usr/src/app  #./chemin_local:chemin_dans_le_containeur
+    build:
+      context: ./front #ou se trouve le dockerfile
+      dockerfile: Dockerfile #le dockerfile
+    restart: unless-stopped # la stratégie redémarre un conteneur quel que soit le code de sortie, mais arrête de redémarrer lorsque le service est arrêté ou supprimé.
+    command: npm start # lance directement la commande npm start dans le containeur
     ports:
-      - "3000:3000"
-    restart: unless-stopped
+        - "3000:3000" #sur le port 3000
   backend:
     build:
       context: ./back
