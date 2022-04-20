@@ -26,6 +26,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./back:/usr/src/app
+    command: npm run start:dev
     ports:
       - "3030:3030"
   db:
