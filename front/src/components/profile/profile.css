@@ -1,0 +1,60 @@
+.bigOne {
+    margin-top: 5.75rem;
+    margin-left: auto;
+    margin-right: auto;
+    --tw-bg-opacity: -1;
+    background-color: rgba(70, 31, 92, 0.247);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    width: 50%;
+    padding-left: 1.5rem;
+    /* color: white; */
+    /* position: relative; */
+    /* align-items: flex-start; */
+     display: flex; 
+}
+
+#acc-img {
+    width: 20%;
+    height: 20%;
+    vertical-align: middle;
+}
+
+#camera {
+    width: 50%;
+    height: 50%;
+    background-color: transparent;
+    
+}
+
+.btn {
+  
+  position: absolute;
+    bottom: 5px;
+    left: 50%;
+    width: 50px;
+    margin-left: -25px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.img-holder {
+    position: absolute;
+    margin-top: 2.0rem;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: transparent;
+
+
+}
+
+
+h1 {
+    font-family: 'CrickxRegular';
+    font-weight: normal;
+    font-style: normal;
+    vertical-align: middle;
+ }
+ 
