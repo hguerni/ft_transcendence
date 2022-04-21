@@ -1,0 +1,22 @@
+FONT-AWESOME :
+
+1) add svg core : npm i --save @fortawesome/fontawesome-svg-core
+2) add icons : npm i --save @fortawesome/free-solid-svg-icons
+                npm i --save @fortawesome/free-regular-svg-icons
+3) add react component : npm i --save @fortawesome/react-fontawesome@latest
+
+=======================================================
+=======================================================
+=======================================================
+=======================================================
+
+MATERIAL UI :
+
+1) to install : npm install @mui/material @emotion/react @emotion/styled
+2) Google web fonts : <link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+/>
+3) SVG Icons : npm install @mui/icons-material
+
+Then just use Import <component_name> from '@mui/material/<component_name>'
