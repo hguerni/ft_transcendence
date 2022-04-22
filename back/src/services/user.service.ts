@@ -6,8 +6,8 @@ import { UpdateUserDTO, RegisterDTO } from '../models/user.model';
 
 @Injectable()
 export class UserService {
-  getById(userId: number) {
-    return this.userRepo.findOne(userId);
+  getById(id: number) {
+    return this.userRepo.findOne(id);
   }
   constructor(
     @InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
@@ -21,8 +21,8 @@ export class UserService {
     return await this.userRepo.findOne({ where: { login } });
   }
 
-  async findById(id: number): Promise<UserEntity> {
-    return await this.userRepo.findOne(id);
+  async findByFtId(ft_id: number): Promise<UserEntity> {
+    return await this.userRepo.findOne({where: { ft_id }});
   }
 
   async updateUser(data: UpdateUserDTO) {

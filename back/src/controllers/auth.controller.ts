@@ -18,15 +18,12 @@ export class AuthController {
     @Get('auth/login')
     async login(@Req() req, @Res({passthrough: true}) response: Response) {
         response.cookie('clientID', req.user, {httpOnly: true});
-        console.log(req.data);
         const client = await this.jwtService.verifyAsync(req.user);
 
-        const clientData = await this.userService.findById(client['id']);
+        const clientData = await this.userService.findByFtId(client['id']);
 
         if(!clientData)
             return response.redirect('http://localhost:3000/register')
-        else
-            await this.userService.setOnline(client['id']);
         return response.redirect('http://localhost:3000/profile')
     }
 
@@ -43,8 +40,10 @@ export class AuthController {
 
     @Get('userData')
     async getUserData(@Req() request: Request) {
+        console.log(request.cookies)
         const clientID = await this.authService.clientID(request);
-        return await this.userService.getById(clientID);
+        console.log(clientID);
+        return await this.userService.findByFtId(clientID);
     }
 
     @Post('publicUserData')

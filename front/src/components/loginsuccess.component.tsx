@@ -38,8 +38,8 @@ const LoginSuccess = () => {
     }, []);
 
 
-    if (unauthorized)
-        return <Redirect to={'/'}/>;
+    // if (unauthorized)
+    //     return <Redirect to={'/'}/>;
 
 
     return (

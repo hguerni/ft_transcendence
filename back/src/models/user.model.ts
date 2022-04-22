@@ -38,6 +38,10 @@ import {
 	username: string;
 
 	id: number;
+
+	login: string;
+
+	ft_id: number;
 	
 	@IsOptional()
 	image: string;

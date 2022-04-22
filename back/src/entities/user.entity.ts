@@ -13,6 +13,9 @@ export class UserEntity extends BaseEntity {
 @PrimaryGeneratedColumn()
 id: number;
 
+@Column({ unique: true })
+ft_id: number;
+
 @CreateDateColumn()
 created: Date;
 

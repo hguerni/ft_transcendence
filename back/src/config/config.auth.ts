@@ -6,6 +6,8 @@ import { Strategy } from 'passport-oauth2';
 import { stringify } from 'querystring';
 import { JwtService } from "@nestjs/jwt";
 import { lastValueFrom } from 'rxjs';
+import { RegisterDTO } from '../models/user.model';
+import { UserService } from '../services/user.service';
 
 //APPLICATION DATA
 const uid = 'ee2541faed7eb8ad4cf7c3108ce1ef0e80c014ccca2ec59286a4449299ece99d';
@@ -18,6 +20,7 @@ const state = 'lololol'
 export class IntraConfig extends PassportStrategy(Strategy, 'intra') {
     constructor(
         private authService: AuthService,
+        private userService: UserService,
         private http: HttpService,
         private jwtService: JwtService
     ) {
@@ -41,9 +44,17 @@ export class IntraConfig extends PassportStrategy(Strategy, 'intra') {
         const data = await lastValueFrom(this.http.get('https://api.intra.42.fr/v2/me', {
             headers: { Authorization: `Bearer ${ accessToken }` },
         }));
-        console.log(data);
         const jwt = await this.jwtService.signAsync({id: data.data.id});
+        const clientData = await this.userService.findByFtId(data.data.id);
 
+        if(!clientData){
+            let clientData = new RegisterDTO;
+            clientData.login = data.data.login;
+            clientData.username = data.data.login;
+            clientData.email = data.data.email;
+            clientData.ft_id = data.data.id;
+            await this.authService.newUser(clientData, data.data.id);
+        }
         return jwt;
     }
 

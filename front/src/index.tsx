@@ -12,7 +12,6 @@ axios.defaults.withCredentials = true;
 ReactDOM.render(
   <React.StrictMode>
     <App />
-    <Profile />
   </React.StrictMode>,
   document.getElementById("root")
 );
