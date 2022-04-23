@@ -6,6 +6,9 @@ import camera from '../../images/camera-solid.svg';
 import React, {useEffect, useState} from "react";
 import {Redirect} from "react-router-dom"
 import axios from "axios";
+import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+// import {createTheme} from '@mui/material/styles';
 
 function Profile() {
 
@@ -34,6 +37,7 @@ function Profile() {
       const getUser = async () => {
           try {
               const {data} = await axios.get('userData')
+              console.log(data);
               if (mounted) setUser(data);
           }
           catch(err){if(mounted) setUnauthorized(true);}
@@ -48,17 +52,52 @@ function Profile() {
 
 
   return (
-    <div className="bigOne">
+    <>
+        <div className="bigOne">
+            <div className="img-holder">
+                <button className="btn"> <img src={camera} alt="account" id="camera"/></button>
+            </div>
 
-    <div className="img-holder">
-    <button className="btn"> <img src={camera} alt="account" id="camera"/></button>
-    </div>
-
-      <img src={account_image} alt="account" id="acc-img"/>
-      <h1>{user.username}</h1>
-      <h1>  </h1>
-    </div>
+            <img src={account_image} alt="account" id="acc-img"/>
+            <h1>{user.username}</h1>
+            <h1>  </h1>
+        </div>
+        <Stats />
+    </>
   );
+}
+
+function Stats() {
+    return (
+        <>
+            <div className="stats">
+                <div id="title"><h1>STATISTIQUES</h1></div>
+                <section className="things">
+                    <div className="ico">
+                        <VideogameAssetIcon 
+                            sx={{
+                                width: 200,
+                                height: 200,
+                            }}
+                        />
+                        <h1 id="games">45</h1>
+                        <span id="games"><h2>Games played</h2></span>
+                    </div>
+                    <div className="ico">
+                        <EmojiEventsIcon 
+                            sx={{
+                                color: '#ffc107',
+                                width: 200,
+                                height: 200,
+                            }}
+                        />
+                        <h1 id="victory">24</h1>
+                        <span id="victory"><h2>Victories</h2></span>
+                    </div>
+                </section>
+            </div>
+        </>
+    );
 }
 
 export default Profile;

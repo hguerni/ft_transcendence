@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Profile from './components/profile/profile';
+// import Profile from './components/profile/profile';
 import axios from "axios";
 
 axios.defaults.baseURL = 'http://localhost:3030/';

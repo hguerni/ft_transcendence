@@ -25,12 +25,10 @@
     width: 50%;
     height: 50%;
     background-color: transparent;
-    
 }
 
 .btn {
-  
-  position: absolute;
+    position: absolute;
     bottom: 5px;
     left: 50%;
     width: 50px;
@@ -50,7 +48,6 @@
 
 }
 
-
 h1 {
     font-family: 'CrickxRegular';
     font-weight: normal;
@@ -58,3 +55,60 @@ h1 {
     vertical-align: middle;
  }
  
+ h2 {
+    font-family: 'CrickxRegular';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 90%;
+    vertical-align: middle;
+ }
+
+/* Stats */
+
+#title {
+    font-size: larger;
+    color: rgb(184, 0, 0);
+    height: 10%;
+}
+
+#victory {
+    text-shadow: none;
+    color: rgba(49, 187, 91, 0.705);
+}
+
+#games {
+    text-shadow: none;
+    color: rgba(65, 39, 211, 0.808);
+}
+
+.stats /* same as bigOne */ {
+    margin-top: 5.75rem;
+    margin-left: auto;
+    margin-right: auto;
+    --tw-bg-opacity: -1;
+    background-color: rgba(70, 31, 92, 0.247);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    width: 50%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    display: flex;
+}
+
+.ico {
+    /* margin-left: 0;
+    margin-right: auto;
+    margin-top: 5rem;
+    align-items: center; */
+    align-items: center;
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    font-size: 1.8rem;
+}
+
+.things {
+    grid-gap: 10rem;
+    display: flex;
+    padding: 2.5rem 10.8rem;
+}
