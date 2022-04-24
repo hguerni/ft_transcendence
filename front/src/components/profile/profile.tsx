@@ -6,9 +6,12 @@ import camera from '../../images/camera-solid.svg';
 import React, {useEffect, useState} from "react";
 import {Redirect} from "react-router-dom"
 import axios from "axios";
-import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+// import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
+// import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 // import {createTheme} from '@mui/material/styles';
+import trophy_image from "../../images/trophy.svg";
+import pong_image from "../../images/pong-icon.svg";
+import lose_image from "../../images/lose-icon.svg";
 
 function Profile() {
 
@@ -74,25 +77,39 @@ function Stats() {
                 <div id="title"><h1>STATISTIQUES</h1></div>
                 <section className="things">
                     <div className="ico">
-                        <VideogameAssetIcon 
+                        {/* <VideogameAssetIcon 
                             sx={{
                                 width: 200,
                                 height: 200,
                             }}
-                        />
+                        /> */}
+                        <img src={pong_image} alt="pong" id="pong"/>
                         <h1 id="games">45</h1>
                         <span id="games"><h2>Games played</h2></span>
                     </div>
                     <div className="ico">
-                        <EmojiEventsIcon 
+                        {/* <EmojiEventsIcon 
                             sx={{
                                 color: '#ffc107',
                                 width: 200,
                                 height: 200,
                             }}
-                        />
+                        /> */}
+                        <img src={trophy_image} alt="trophy" id="trophy"/>
                         <h1 id="victory">24</h1>
                         <span id="victory"><h2>Victories</h2></span>
+                    </div>
+                    <div className="ico">
+                        {/* <EmojiEventsIcon 
+                            sx={{
+                                color: '#ffc107',
+                                width: 200,
+                                height: 200,
+                            }}
+                        /> */}
+                        <img src={lose_image} alt="lose" id="lose"/>
+                        <h1 id="defeat">13</h1>
+                        <span id="defeat"><h2>Defeats</h2></span>
                     </div>
                 </section>
             </div>
