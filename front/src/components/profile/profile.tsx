@@ -97,7 +97,7 @@ function Stats() {
                         /> */}
                         <img src={pong_image} alt="pong" id="pong"/>
                         <h1 id="games">45</h1>
-                        <span id="games"><h2>Games played</h2></span>
+                        <span id="games"><h2>Games</h2></span>
                     </div>
                     <div className="ico">
                         {/* <EmojiEventsIcon 
