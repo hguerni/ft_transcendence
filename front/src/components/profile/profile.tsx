@@ -59,6 +59,7 @@ function Profile() {
   return (
     <>
         <div className="bigOne">
+            <div id="title"><h1>Profil</h1></div>
             <div className="img-holder">
                 <button className="btn"> <img src={camera} alt="account" id="camera"/></button>
             </div>
@@ -70,10 +71,12 @@ function Profile() {
             <h1 className="profil"> Profil </h1>
             <div className="conteneur-info">
                 <div className="rank">
-                    <h1>Rank <img src={rank} alt="account" id="rank"/> </h1> 
+                    <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1> 
+                    <h1> 5 </h1> 
                 </div>
                 <div className="level">
                     <h1>Level <img src={level_up} alt="account" id="level"/> </h1> 
+                    <h1> 30 </h1> 
                 </div>
             </div>
         </div>

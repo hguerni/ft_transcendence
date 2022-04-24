@@ -17,6 +17,8 @@
     /* position: relative; */
     /* align-items: flex-start; */
 
+    
+
 
     
     
@@ -26,11 +28,24 @@
   
 }
 
-.login {
-
+.bigOne .login {
+ 
+    background-color: red;
 }
 
-#rank {
+
+
+.rank {
+
+    background-color: green;
+}
+
+.level {
+
+    background-color: rgb(34, 21, 80);
+}
+
+#rank-img {
     width : 50px;
     height : 50px;
 
@@ -44,12 +59,16 @@
     flex-wrap: wrap; /*les item ne sorte pas du container parent*/
     justify-content: space-evenly; /* repartie les espace de maniere egale*/
     
+    
 
 }
 
 .profil {
- 
-  
+    
+    position: relative;
+    bottom: 110px;
+
+    background-color: green;
 
 }
 
@@ -57,6 +76,7 @@
     width: 20%;
     height: 20%;
     vertical-align: middle;
+
 }
 
 #camera {
