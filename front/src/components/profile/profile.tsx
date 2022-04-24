@@ -3,6 +3,8 @@
 import './profile.css';
 import account_image from '../../images/avatar.png';
 import camera from '../../images/camera-solid.svg';
+import level_up from '../../images/level_up.svg';
+import rank from '../../images/rank.svg';
 import React, {useEffect, useState} from "react";
 import {Redirect} from "react-router-dom"
 import axios from "axios";
@@ -62,8 +64,18 @@ function Profile() {
             </div>
 
             <img src={account_image} alt="account" id="acc-img"/>
-            <h1>{user.username}</h1>
-            <h1>  </h1>
+            <div className="login">
+                    <h1>{user.username}</h1> 
+            </div>
+            <h1 className="profil"> Profil </h1>
+            <div className="conteneur-info">
+                <div className="rank">
+                    <h1>Rank <img src={rank} alt="account" id="rank"/> </h1> 
+                </div>
+                <div className="level">
+                    <h1>Level <img src={level_up} alt="account" id="level"/> </h1> 
+                </div>
+            </div>
         </div>
         <Stats />
     </>
