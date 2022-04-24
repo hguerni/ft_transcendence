@@ -154,8 +154,8 @@ h1 {
     width: 50%;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
 }
 
 .ico {
@@ -165,22 +165,33 @@ h1 {
     align-items: center; */
     align-items: center;
     display: flex;
-    flex: 1 1 0;
+    flex: 1;
     flex-direction: column;
     font-size: 1.8rem;
 }
 
-/* #pong {
-    filter: invert(43%) sepia(57%) saturate(2512%) hue-rotate(359deg) brightness(100%) contrast(107%);
-    https://codepen.io/sosuke/pen/Pjoqqp to convert
-} */
+#pong {
+    height: 100px;
+    width: 100px;
+    /* https://codepen.io/sosuke/pen/Pjoqqp to convert */
+}
 
 #lose {
     filter: invert(21%) sepia(96%) saturate(4634%) hue-rotate(19deg) brightness(93%) contrast(96%);
+    height: 100px;
+    width: 100px;
+}
+
+#trophy {
+    height: 100px;
+    width: 100px;
 }
 
 .things {
-    grid-gap: 10rem;
+    grid-gap: 9rem;
     display: flex;
     padding: 2.5rem 10.8rem;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
