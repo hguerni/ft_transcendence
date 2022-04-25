@@ -61,7 +61,6 @@ function Profile() {
   return (
     <>
         <div className="bigOne">
-         <div id="title"><h1>Profil</h1></div>
             
             <div className="img-holder">
                 <button className="btn"> <img src={camera} alt="account" id="camera"/></button>
