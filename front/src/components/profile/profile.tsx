@@ -14,6 +14,7 @@ import axios from "axios";
 import trophy_image from "../../images/trophy.svg";
 import pong_image from "../../images/pong-icon.svg";
 import lose_image from "../../images/lose-icon.svg";
+import { userInfo } from 'os';
 
 function Profile() {
 
@@ -81,6 +82,7 @@ function Profile() {
             </div>
         </div>
         <Stats />
+        <History user={user}/>
     </>
   );
 }
@@ -92,36 +94,16 @@ function Stats() {
                 <div id="title"><h1>STATISTIQUES</h1></div>
                 <section className="things">
                     <div className="ico">
-                        {/* <VideogameAssetIcon 
-                            sx={{
-                                width: 200,
-                                height: 200,
-                            }}
-                        /> */}
                         <img src={pong_image} alt="pong" id="pong"/>
                         <h1 id="games">45</h1>
                         <span id="games"><h2>Games</h2></span>
                     </div>
                     <div className="ico">
-                        {/* <EmojiEventsIcon 
-                            sx={{
-                                color: '#ffc107',
-                                width: 200,
-                                height: 200,
-                            }}
-                        /> */}
                         <img src={trophy_image} alt="trophy" id="trophy"/>
                         <h1 id="victory">24</h1>
                         <span id="victory"><h2>Victories</h2></span>
                     </div>
                     <div className="ico">
-                        {/* <EmojiEventsIcon 
-                            sx={{
-                                color: '#ffc107',
-                                width: 200,
-                                height: 200,
-                            }}
-                        /> */}
                         <img src={lose_image} alt="lose" id="lose"/>
                         <h1 id="defeat">13</h1>
                         <span id="defeat"><h2>Defeats</h2></span>
@@ -131,6 +113,31 @@ function Stats() {
         </>
     );
 }
+
+
+function History(props: any) {
+        return (
+        <>
+            <div className="history">
+                <div id="title"><h1>HISTORIQUE</h1></div>
+                <Game user={props.user}/>
+            </div>
+        </>
+    );
+}
+
+function Game(props: any) {
+    return (
+        <>
+            <div className="game">
+                <div className="login_1">
+                    <h1>{props.user.username}</h1>
+                </div>
+            </div>
+        </>
+    );
+}
+
 
 export default Profile;
 

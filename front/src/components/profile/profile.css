@@ -10,66 +10,42 @@
     width: 50%;
     padding-left: 1.5rem;
 
-
-
- 
     /* color: white; */
     /* position: relative; */
     /* align-items: flex-start; */
-
-    
-
-
-    
-    
-  
-
-    
-  
 }
 
 .bigOne .login {
- 
     background-color: red;
 }
 
-
-
 .rank {
-
     background-color: green;
 }
 
 .level {
-
     background-color: rgb(34, 21, 80);
 }
 
+.login {
+    text-align: right;
+}
 #rank-img {
     width : 50px;
     height : 50px;
-
 }
 
 .conteneur-info {
-   
- 
     display: flex;
     flex-direction: row;
     flex-wrap: wrap; /*les item ne sorte pas du container parent*/
     justify-content: space-evenly; /* repartie les espace de maniere egale*/
-    
-    
-
 }
 
 .profil {
-    
     position: relative;
     bottom: 110px;
-
     background-color: green;
-
 }
 
 #acc-img {
@@ -106,12 +82,12 @@
 
 }
 
-h1 {
+/* h1 {
     font-family: 'CrickxRegular';
     font-weight: normal;
     font-style: normal;
     vertical-align: middle;
- }
+ } */
  
  h2 {
     font-family: 'CrickxRegular';
@@ -121,11 +97,19 @@ h1 {
     vertical-align: middle;
  }
 
+ h3 {
+    font-family: 'CrickxRegular';
+    font-weight: normal;
+    font-style: normal;
+    vertical-align: middle 
+ }
+
 /* Stats */
 
 #title {
     font-size: larger;
     color: rgb(184, 0, 0);
+    text-align: center;
 }
 
 #victory {
@@ -195,3 +179,36 @@ h1 {
     flex-direction: row;
     justify-content: space-evenly;
 }
+
+
+/* History */
+
+.history {
+    margin-top: 5.75rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5.75rem;;
+    --tw-bg-opacity: -1;
+    background-color: rgba(70, 31, 92, 0.247);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    width: 50%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.game {
+    margin-top: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+    --tw-bg-opacity: -1;
+    background-color: rgba(70, 31, 92, 0.247);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+}
+
+.login_1 {
+    align-items: left;
+}
+
