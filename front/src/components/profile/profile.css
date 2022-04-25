@@ -93,7 +93,6 @@
     font-family: 'CrickxRegular';
     font-weight: normal;
     font-style: normal;
-    font-size: 90%;
     vertical-align: middle;
  }
 
@@ -104,7 +103,7 @@
     vertical-align: middle 
  }
 
-/* Stats */
+/* ===================== STATS =====================*/
 
 #title {
     font-size: larger;
@@ -181,7 +180,7 @@
 }
 
 
-/* History */
+/* ===================== HISTORY ===================== */
 
 .history {
     margin-top: 5.75rem;
@@ -199,16 +198,44 @@
 }
 
 .game {
-    margin-top: 3rem;
+    margin-top: 0.5rem;
     margin-left: auto;
     margin-right: auto;
     --tw-bg-opacity: -1;
-    background-color: rgba(70, 31, 92, 0.247);
+    background-color: #25b62ca8;
     border-radius: 1.0rem;
     padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
 
 .login_1 {
-    align-items: left;
+    text-align: left;
 }
 
+.score {
+    text-align: center;
+}
+
+.login_2 {
+    text-align: right;
+}
+
+.date {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+#time {
+    font-family: 'CrickxRegular';
+    font-weight: lighter;
+    font-style: normal;
+    font-size: 1.25em;
+    text-shadow: 2px 2px 4px #999;
+    color: rgb(37, 37, 37);
+}

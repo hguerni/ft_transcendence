@@ -15,6 +15,7 @@ import trophy_image from "../../images/trophy.svg";
 import pong_image from "../../images/pong-icon.svg";
 import lose_image from "../../images/lose-icon.svg";
 import { userInfo } from 'os';
+import TimeAgo from 'react-timeago';
 
 function Profile() {
 
@@ -120,17 +121,30 @@ function History(props: any) {
         <>
             <div className="history">
                 <div id="title"><h1>HISTORIQUE</h1></div>
-                <Game user={props.user}/>
+                <Game user={props.user} color="#25b62ca8"/>
+                <Game user={props.user} color="#bd2148f8"/>
             </div>
         </>
     );
 }
 
 function Game(props: any) {
+    const color = {backgroundColor: props.color };
+    const year = new Date();
+    
     return (
         <>
-            <div className="game">
+            <div className="game" style={color}>
+                <div className="date">
+                    <TimeAgo date={year} id="time"/>
+                </div>
                 <div className="login_1">
+                    <h1>{props.user.username}</h1>
+                </div>
+                <div className="score">
+                    <h1>100 / 055555500</h1>
+                </div>
+                <div className="login_2">
                     <h1>{props.user.username}</h1>
                 </div>
             </div>

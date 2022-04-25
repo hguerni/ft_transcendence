@@ -27,7 +27,7 @@ h1 {
   font-style: normal;
   text-shadow: 2px 2px 4px #999;
   /* text-align: center; */
-  color: #333;
+  color: rgb(40, 40, 40);
   display: block;
   font-size: 2em;
 }
