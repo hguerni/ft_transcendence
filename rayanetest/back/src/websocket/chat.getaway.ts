@@ -15,27 +15,10 @@ import {
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
 	@WebSocketServer() io: Server;
 
-	Clients = new Map<string, Socket>();
+	Connected = [];
 
 	afterInit() {
 	this.io.use((socket, next) => {
-		const sessionID = socket.handshake.auth.sessionID;
-		if (sessionID) {
-		  const session = sessionStore.findSession(sessionID);
-		  if (session) {
-			socket.sessionID = sessionID;
-			socket.userID = session.userID;
-			socket.username = session.username;
-			return next();
-		  }
-		}
-		const username = socket.handshake.auth.username;
-		if (!username) {
-		  return next(new Error("invalid username"));
-		}
-		socket.sessionID = randomId();
-		socket.userID = randomId();
-		socket.username = username;
 		next();
 	});
 	}
@@ -45,12 +28,9 @@ import {
 		@ConnectedSocket() client: Socket
 	)
 	{
-		// persist session
-		sessionStore.saveSession(client.sessionID, {
-			userID: client.userID,
+		this.Connected.push({
 			username: client.username,
-			connected: true,
-		});
+		})
 	}
 
 	@SubscribeMessage('private-message')
