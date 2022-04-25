@@ -195,7 +195,7 @@
 .things {
     grid-gap: 9rem;
     display: flex;
-    padding: 2.5rem 10.8rem;
+    padding: 2.5rem;
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-evenly;

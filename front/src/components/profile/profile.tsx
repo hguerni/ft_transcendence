@@ -14,7 +14,7 @@ import axios from "axios";
 import trophy_image from "../../images/trophy.svg";
 import pong_image from "../../images/pong-icon.svg";
 import lose_image from "../../images/lose-icon.svg";
-import { userInfo } from 'os';
+// import { userInfo } from 'os';
 import TimeAgo from 'react-timeago';
 
 function Profile() {
