@@ -61,17 +61,20 @@ function Profile() {
   return (
     <>
         <div className="bigOne">
-            <div id="title"><h1>Profil</h1></div>
+         <div id="title"><h1>Profil</h1></div>
+            
             <div className="img-holder">
                 <button className="btn"> <img src={camera} alt="account" id="camera"/></button>
             </div>
-
-            <img src={account_image} alt="account" id="acc-img"/>
-            <div className="login">
-                    <h1>{user.username}</h1> 
-            </div>
-            <h1 className="profil"> Profil </h1>
             <div className="conteneur-info">
+                 {/* <div id="title"><h1>Profil</h1></div> */}
+
+
+                <img src={account_image} alt="account" id="acc-img"/>
+
+                <div className="login">
+                    <h1>{user.username}</h1> 
+                </div>
                 <div className="rank">
                     <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1> 
                     <h1> 5 </h1> 
@@ -82,6 +85,7 @@ function Profile() {
                 </div>
             </div>
         </div>
+        
         <Stats />
         <History user={user}/>
     </>
