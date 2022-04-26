@@ -28,9 +28,9 @@ import {
 		@ConnectedSocket() client: Socket
 	)
 	{
-		this.Connected.push({
-			username: client.username,
-		})
+		// this.Connected.push({
+		// 	username: client.username,
+		// })
 	}
 
 	@SubscribeMessage('private-message')
@@ -38,7 +38,7 @@ import {
 		@MessageBody() {name, message}: {name: string, message: string}
 	): void
 	{
-		this.Clients[name].emit('private-message', {name, message});
+		this.Connected[name].emit('private-message', {name, message});
 	}
 
 	@SubscribeMessage('disconnect')
