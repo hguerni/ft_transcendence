@@ -87,8 +87,23 @@ function Profile() {
         
         <Stats />
         <History user={user}/>
+        <Amis />
+
     </>
   );
+}
+
+function Amis() {
+    return (
+        <>
+            <div className="amis">
+                <div id="title"><h1>Amis</h1></div>
+                <h1> Rayane</h1>
+                <h1> Elias </h1>
+
+            </div>
+        </>
+    );
 }
 
 function Stats() {
