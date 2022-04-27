@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { getRepository, Repository } from 'typeorm';
 import { UpdateUserDTO, RegisterDTO } from '../models/user.model';
+import { FilesService } from './file.service';
 
 @Injectable()
 export class UserService {
@@ -11,7 +12,17 @@ export class UserService {
   }
   constructor(
     @InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
+    private readonly filesService: FilesService,
   ) {}
+
+  async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
+    const avatar = await this.filesService.uploadFile(imageBuffer, filename);
+    const user = await this.findByFtId(userId);
+    await this.userRepo.update(user.id, {
+      avatarId: avatar.id
+    });
+    return avatar;
+  }
 
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepo.find();

@@ -12,13 +12,14 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { UpdateUserDTO } from '../models/user.model';
+import { AuthService } from '../services/auth.service';
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
 import { Response } from 'express';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private authService : AuthService) {}
 
   @Get()
   async findAll(){
@@ -34,6 +35,14 @@ export class UserController {
           }
       })
   }))
+
+  @Post('avatar')
+  @UseInterceptors(FileInterceptor('file'))
+  async addAvatar(@Req() req, @UploadedFile() file: diskStorage.File) {
+    const clientID = await this.authService.clientID(req);
+    return this.userService.addAvatar(clientID, file.buffer, file.originalname);
+  }
+
   uploadFile(@UploadedFile() file) {
       return { url: `http://localhost:3000/uploads/${file.filename}`}
   }

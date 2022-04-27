@@ -1,8 +1,7 @@
-// import React from 'react';
-// import { BrowserRouter, Route } from 'react-router-dom';
 import './profile.css';
 import account_image from '../../images/avatar.png';
 import camera from '../../images/camera-solid.svg';
+import UserService from '../../services/user.service';
 import React, {useEffect, useState} from "react";
 import {Redirect} from "react-router-dom"
 import axios from "axios";
@@ -15,7 +14,6 @@ function Profile() {
       img: '',
       email: '',
       id: 0,
-      pendingInvite: false,
   });
 
   useEffect(() => {
@@ -56,7 +54,9 @@ function Profile() {
 
       <img src={account_image} alt="account" id="acc-img"/>
       <h1>{user.username}</h1>
-      <h1>  </h1>
+      <div className="start_button">
+          <button type="button" id="strt_btn" onClick={UserService.logout}></button>
+      </div>
     </div>
   );
 }

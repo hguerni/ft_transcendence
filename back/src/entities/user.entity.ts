@@ -4,9 +4,12 @@ import {  BaseEntity,
   UpdateDateColumn,
   Column,
   JoinTable,
+  JoinColumn,
+  OneToOne,
   ManyToMany,
   Entity} from 'typeorm';
 import { IsBoolean, IsEmail, IsString } from 'class-validator';
+import File from './file.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
@@ -27,6 +30,18 @@ updated: Date;
 @IsString()
 email: string;
 
+@JoinColumn({ name: 'avatarId' })
+@OneToOne(
+  () => File,
+  {
+    nullable: true
+  }
+)
+public avatar?: File;
+
+@Column({ nullable: true })
+public avatarId?: number;
+
 @Column({unique: true})
 @IsString()
 login: string;
@@ -34,9 +49,6 @@ login: string;
 @Column()
 @IsString()
 username: string;
-
-@Column({ default: null, nullable: true })
-image: string | null;
 
 @ManyToMany(() => UserEntity)
 @JoinTable()

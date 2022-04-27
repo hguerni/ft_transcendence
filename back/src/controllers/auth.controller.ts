@@ -51,13 +51,14 @@ export class AuthController {
         return await this.userService.getById(data.id);
     }
 
-    @Post('logout')
+    @Get('logout')
     async logout(@Req() request: Request, @Res({passthrough: true}) response: Response) {
         response.clearCookie('clientID');
-        const clientID = await this.authService.clientID(request);
-        await this.userService.setOffline(clientID);
+        //const clientID = await this.authService.clientID(request);
+        //await this.userService.setOffline(clientID);
 
         return {message: 'Success'}
+        
     }
 
 }

@@ -1,4 +1,6 @@
 import axios from "axios";
+import React from "react";
+
 
 export default class UserService {
   static async findName(userID: number) {
@@ -15,5 +17,10 @@ export default class UserService {
 
   static async getUserData() {
     return await axios.get("userData");
+  }
+
+  static async logout(){
+    await axios.get("logout");
+    return window.location.reload();
   }
 }
