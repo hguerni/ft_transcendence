@@ -4,7 +4,7 @@ import UserService from '../services/user.service';
 import styled from 'styled-components'
 
 function Navbar(){
-  let props = {brand: {name: "transcendance", to: "Profile"}, links: [{name: "Logout", to: UserService.logout}]}
+  let props = {brand: {name: "transcendance", to: "/"}, links: [{name: "Logout", to: UserService.logout}]}
   const { brand, links } = props;
   const NavLinks: any = () => links.map((link: { name: string, to: () => Promise<void> }) => <Li key={link.name}><button onClick={link.to}>{link.name}</button></Li>);
   return (
@@ -40,8 +40,9 @@ const Navbarr = styled.nav`
   a { color: white; text-decoration: none; }`;
 
 const Brand = styled.a`
-  font-weight: bold;
-  font-style: italic;
+  font-family: 'CrickxRegular';
+  font-weight: lighter;
+  font-style: normal;
   margin-left: 1rem;
   padding-right: 1rem;`;
 
@@ -71,6 +72,8 @@ const Li = styled.li`
   line-height: 16px;
   margin: 0 1.125rem ;
   text-decoration: none;
-  white-space: nowrap;`;
+  background-color: transparent;
+  white-space: nowrap;`
+  
 
 export default Navbar;

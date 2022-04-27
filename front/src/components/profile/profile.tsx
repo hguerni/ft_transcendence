@@ -92,12 +92,21 @@ function Profile() {
 }
 
 function Amis() {
+    let online = 0;
     return (
         <>
+        
             <div className="amis">
                 <div id="title"><h1>Amis</h1></div>
-                <h1> Rayane</h1>
-                <h1> Elias </h1>
+                <h1 id='info-online'>En ligne</h1>
+                <h1 id='info-offline'>hors ligne</h1>
+                {online == 0 ? (
+                    <h1> Rayane  </h1> 
+                 ) : (
+                    <h1> Elias </h1> 
+                )}
+                    
+                
 
             </div>
         </>
