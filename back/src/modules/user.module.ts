@@ -7,7 +7,7 @@ import {JwtModule} from "@nestjs/jwt";
 import {jwtConstants} from "../models/user.model";
 import {AuthService} from "../services/auth.service";
 import { FilesService } from '../services/file.service';
-import File from 'src/entities/file.entity';
+import File from '../entities/file.entity';
 
 @Module({
     imports: [
