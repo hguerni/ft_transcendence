@@ -1,3 +1,10 @@
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+echo  "${RED} Npm install dans le front"
 cd front && npm i
+echo  "${RED} Npm install dans le back"
 cd ../back && npm i
-docker system prune -a && docker compose up --build
+echo  "${RED}Build"${NC} 
+docker system prune && docker compose up --build
+ 

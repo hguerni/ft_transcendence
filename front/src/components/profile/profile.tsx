@@ -103,7 +103,7 @@ function Amis() {
                 {online == 0 ? (
                     <h1> Rayane  </h1> 
                  ) : (
-                    <h1> Elias </h1> 
+                    <h1> Elias </h1>
                 )}
                     
                 
