@@ -6,31 +6,103 @@
     background-color: rgba(70, 31, 92, 0.247);
     border-radius: 1.0rem;
     padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
     width: 50%;
     padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+
+
     /* color: white; */
     /* position: relative; */
     /* align-items: flex-start; */
-     display: flex; 
+
+}
+
+.amis {
+    /* margin-top: 5.75rem; */
+    /* margin-left: auto; */
+    --tw-bg-opacity: -1;
+    background-color: rgba(70, 31, 92, 0.247);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    width: 15%;
+    height: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    text-align: center;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+
+
+
+    /* color: white; */
+    /* position: relative; */
+    /* align-items: flex-start; */
+
+}
+
+
+.rank {
+
+}
+
+.level {
+    position: relative;
+   
+}
+
+.login {
+    /* text-align: right; */
+     position: relative;
+    top: 30px;
+    right: 30px;
+    
+
+    
+}
+#rank-img {
+    width : 50px;
+    height : 50px;
+}
+
+.conteneur-info {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /*les item ne sorte pas du container parent*/
+    justify-content: space-evenly; /* repartie les espace de maniere egale*/
+    /* position: relative;
+    bottom: 250px;
+    left: 60px; */
+}
+
+#profil {
+    /* position: relative;
+    bottom: 110px; */
+    text-align: center;
+
 }
 
 #acc-img {
-    width: 20%;
-    height: 20%;
+    width : 150px;
+    height : 150px;
     vertical-align: middle;
+    position: relative;
+    right: 40px;
+
 }
 
 #camera {
     width: 50%;
     height: 50%;
     background-color: transparent;
-    
+
+
+
 }
 
 .btn {
-  
-  position: absolute;
+    
     bottom: 5px;
     left: 50%;
     width: 50px;
@@ -38,6 +110,12 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
+    position: relative;
+ 
+
+
+    
+    
 }
 
 .img-holder {
@@ -48,13 +126,163 @@
     background-color: transparent;
 
 
+
 }
 
-
-h1 {
+/* h1 {
+    font-family: 'CrickxRegular';
+    font-weight: normal;
+    font-style: normal;
+    vertical-align: middle;
+ } */
+ 
+ h2 {
     font-family: 'CrickxRegular';
     font-weight: normal;
     font-style: normal;
     vertical-align: middle;
  }
- 
+
+ h3 {
+    font-family: 'CrickxRegular';
+    font-weight: normal;
+    font-style: normal;
+    vertical-align: middle 
+ }
+
+/* ===================== STATS =====================*/
+
+#title {
+    font-size: larger;
+    color: rgb(184, 0, 0);
+    text-align: center;
+}
+
+#victory {
+    text-shadow: none;
+    color: rgba(49, 187, 91, 0.705);
+}
+
+#defeat {
+    text-shadow: none;
+    color: #ca3305;
+}
+
+#games {
+    text-shadow: none;
+    color: rgba(65, 39, 211, 0.808);
+}
+
+.stats /* same as bigOne */ {
+    margin-top: 5.75rem;
+    margin-left: auto;
+    margin-right: auto;
+    --tw-bg-opacity: -1;
+    background-color: rgba(70, 31, 92, 0.247);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    width: 50%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    /* display: flex;
+    flex-direction: column; */
+}
+
+.ico {
+    /* margin-left: 0;
+    margin-right: auto;
+    margin-top: 5rem;
+    align-items: center; */
+    align-items: center;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    font-size: 1.8rem;
+}
+
+#pong {
+    height: 100px;
+    width: 100px;
+    /* https://codepen.io/sosuke/pen/Pjoqqp to convert */
+}
+
+#lose {
+    filter: invert(21%) sepia(96%) saturate(4634%) hue-rotate(19deg) brightness(93%) contrast(96%);
+    height: 100px;
+    width: 100px;
+}
+
+#trophy {
+    height: 100px;
+    width: 100px;
+}
+
+.things {
+    grid-gap: 9rem;
+    display: flex;
+    padding: 2.5rem;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+
+/* ===================== HISTORY ===================== */
+
+.history {
+    margin-top: 5.75rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5.75rem;;
+    --tw-bg-opacity: -1;
+    background-color: rgba(70, 31, 92, 0.247);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    width: 50%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.game {
+    margin-top: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    --tw-bg-opacity: -1;
+    background-color: #25b62ca8;
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.login_1 {
+    text-align: left;
+}
+
+.score {
+    text-align: center;
+}
+
+.login_2 {
+    text-align: right;
+}
+
+.date {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+#time {
+    font-family: 'CrickxRegular';
+    font-weight: lighter;
+    font-style: normal;
+    font-size: 1.25em;
+    text-shadow: 2px 2px 4px #999;
+    color: rgb(37, 37, 37);
+}

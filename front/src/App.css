@@ -22,14 +22,14 @@
 }
 
 h1 {
-  font-family: "Josefin Slab",Helvetica;
+  font-family: 'CrickxRegular';
+  font-weight: normal;
+  font-style: normal;
   text-shadow: 2px 2px 4px #999;
-  text-align: center;
-  color: #333;
+  /* text-align: center; */
+  color: rgb(40, 40, 40);
   display: block;
   font-size: 2em;
-
-  font-weight: bold;
 }
 
 .trs_full {
@@ -72,7 +72,6 @@ h1 {
 
 
 .start_button {
-  background-color: red;
   min-width: 200px;
   min-height: 50px;
   /* background-color: transparent; */
