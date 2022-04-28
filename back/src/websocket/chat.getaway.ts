@@ -15,7 +15,7 @@ import {
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
 	@WebSocketServer() io: Server;
 
-	Connected = [];
+	Connected : {name: string | string[], socket: Socket}[] = [];
 
 	afterInit() {
 	this.io.use((socket, next) => {
@@ -28,23 +28,37 @@ import {
 		@ConnectedSocket() client: Socket
 	)
 	{
-		// this.Connected.push({
-		// 	username: client.username,
-		// })
+		let ret = {name: client.handshake.headers.name, socket: client};
+		this.Connected.push(ret);
 	}
 
 	@SubscribeMessage('private-message')
 	handleEvent(
-		@MessageBody() {name, message}: {name: string, message: string}
+		@MessageBody() {name, message}: {name: string, message: string},
+		@ConnectedSocket() client : Socket
 	): void
 	{
-		this.Connected[name].emit('private-message', {name, message});
+		this.Connected.forEach(element => {
+			if (element.name == name)
+			{
+				element.socket.emit('private-message', {name, message});
+				return;
+			}
+		});
 	}
 
 	@SubscribeMessage('disconnect')
 	handleDisconnect(
-		@MessageBody() {name, message}: {name: string, message: string}
+		@ConnectedSocket() client : Socket
 	): void
 	{
+		this.Connected.forEach(element => {
+			if (element.socket = client)
+			{
+				let index = this.Connected.indexOf(element);
+				this.Connected.splice(index);
+				return;
+			}
+		});
 	}
   }
