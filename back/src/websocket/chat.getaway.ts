@@ -10,10 +10,8 @@ import {
   } from '@nestjs/websockets';
 
   import { Server, Socket } from 'socket.io'
-import { ChatEntity } from 'src/entities/chat.entity';
-
-  import { ChatService } from 'src/services/chat.service';
-import { UserService } from 'src/services/user.service';
+  import { ChatDTO } from '../models/chat.model';
+  import { ChatService } from '../services/chat.service';
 
   @WebSocketGateway({namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
@@ -55,10 +53,12 @@ import { UserService } from 'src/services/user.service';
 
 	@SubscribeMessage('addchat')
 	addchat(
-		@MessageBody() chat: ChatEntity
+		@MessageBody() chat: ChatDTO,
+		@ConnectedSocket() client: Socket
 	): void
 	{
-		this.chatService.addOne(chat);
+		console.log("hey");
+		client.emit('lol', this.chatService.addOne(chat));
 	}
 
 	@SubscribeMessage('disconnect')

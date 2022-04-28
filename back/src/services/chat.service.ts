@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ChatEntity } from "src/entities/chat.entity";
+import { ChatEntity } from "../entities/chat.entity";
+import { ChatDTO } from "../models/chat.model";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -10,7 +11,11 @@ export class ChatService {
         private chatRepository: Repository<ChatEntity>,
       ) {}
     
-    async addOne(data: ChatEntity){
+    async addOne(data: ChatDTO){
         return await this.chatRepository.save(data); 
+    }
+
+    async getAll(): Promise<ChatEntity[]>{
+        return await this.chatRepository.find();
     }
 }
