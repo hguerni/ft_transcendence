@@ -7,9 +7,16 @@ import {  BaseEntity,
 	ManyToMany,
 	OneToMany,
 	ManyToOne,
-	Entity} from 'typeorm';
+	Entity,
+  OneToOne} from 'typeorm';
   import { IsBoolean, IsEmail, IsString } from 'class-validator';
-  import { UserEntity } from './user.entity';
+  import { MemberEntity } from './member.entity';
+
+  enum status {
+    private,
+    public,
+    protected
+  }
 
   @Entity('chat')
   export class ChatEntity extends BaseEntity {
@@ -24,21 +31,14 @@ import {  BaseEntity,
   name: string;
 
   @Column()
-  @IsBoolean()
-  private: boolean;
+  status: number;
 
   @Column()
   @IsString()
   password: string;
 
-  @ManyToMany(() => UserEntity)
+  @ManyToOne(() => MemberEntity, (members) => members.chat)
   @JoinTable()
-  users: UserEntity[];
-
-  @ManyToOne(() => UserEntity)
-  bans: UserEntity[];
-
-  @ManyToOne(() => UserEntity)
-  modos: UserEntity[];
+  members: MemberEntity[];
 
   }
