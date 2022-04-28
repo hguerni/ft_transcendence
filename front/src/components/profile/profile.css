@@ -287,3 +287,30 @@
    /* align-items: flex-start; */
 
 }
+
+#info-online{
+    padding-right: 260px;
+    font-size: 20px;
+    color: rgb(184, 179, 179);
+}
+
+#info-offline{
+    padding-right: 260px;
+    font-size: 20px;
+    color: rgb(184, 179, 179);
+}
+
+#rondstatus {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    left: 10px;
+    padding-left: 12px;
+    padding-top: 5px;
+    
+}
+
+#texteh1 {
+    font-size: 20px;
+    text-align: left;
+}

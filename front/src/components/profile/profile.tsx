@@ -13,6 +13,9 @@ import axios from "axios";
 import trophy_image from "../../images/trophy.svg";
 import pong_image from "../../images/pong-icon.svg";
 import lose_image from "../../images/lose-icon.svg";
+import rond_vert from "../../images/icons8-green-circle-48.svg";
+import rond_rouge from "../../images/icons8-red-circle-48.png";
+import nitendo from "../../images/nitendo.svg";
 // import { userInfo } from 'os';
 import TimeAgo from 'react-timeago';
 
@@ -92,22 +95,70 @@ function Profile() {
 }
 
 function Amis() {
+
+    const data : {nom: string, online: number}[] = [
+        {nom: "rayane", online: 1},
+        {nom: "elias", online: 0},
+        {nom: "pierre", online: 0},
+        {nom: "ava", online: 0},
+        {nom: "leo", online: 2}
+    ];
     let online = 0;
     return (
         <>
         
             <div className="amis">
-                <div id="title"><h1>Amis</h1></div>
-                <h1 id='info-online'>En ligne</h1>
-                <h1 id='info-offline'>hors ligne</h1>
-                {online == 0 ? (
-                    <h1> Rayane  </h1> 
-                 ) : (
-                    <h1> Elias </h1>
-                )}
-                    
                 
+                <div id="title"><h1>Amis</h1></div>
+                
+               {/* faire  une boucle ici qui check dabbord si les ami son en ligne */}
 
+               <h1 id='info-online'>Online</h1>
+               {data.map((element, i) => {   
+                console.log(element); 
+                
+           // Affichage
+                return (
+                    element.online != 0 ? (
+                               
+                        element.online == 1 ? (
+                        <ul>
+                            <h1 id='texteh1'> <img src={rond_vert} alt="account" id="rondstatus" /> {element.nom} </h1>
+                        </ul>
+                        )
+                        :(
+                            <ul>
+                            <h1 id='texteh1'> <img src={nitendo} alt="account" id="rondstatus" /> {element.nom} </h1>
+                        </ul>
+                        )
+                   
+                    ) 
+                    : (
+''
+                    )
+                )
+
+                    })}
+                          <h1 id='info-offline'>Offline</h1>
+               {data.map((element, i) => {   
+                console.log(element); 
+                
+           // Affichage
+                return (
+                    element.online == 0 ? (
+                               
+                    
+                        <ul>
+                            <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.nom}</h1>
+                        </ul>
+                   
+                    ) 
+                    : (
+''
+                    )
+                )
+
+                    })}
             </div>
         </>
     );
