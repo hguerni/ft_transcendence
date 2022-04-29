@@ -35,8 +35,19 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: database_transcendence
+    depends_on:
+      - pgadmin
     ports:
       - "31415:5432"
     volumes:
       - ./database-data:/var/lib/postgresql/data
     container_name: db_app
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: lol@lol.com # email login
+      PGADMIN_DEFAULT_PASSWORD: lol # password login
+      PGADMIN_LISTEN_PORT: 5050 # connect to db : port - "5432", host - "db", meme connexion que typeorm
+    ports:
+      - "5050:5050"
+    container_name: pgadmin
