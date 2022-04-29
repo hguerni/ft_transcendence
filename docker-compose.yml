@@ -35,8 +35,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: database_transcendence
-    depends_on:
-      - pgadmin
     ports:
       - "31415:5432"
     volumes:
@@ -44,6 +42,8 @@ services:
     container_name: db_app
   pgadmin:
     image: dpage/pgadmin4
+    depends_on:
+      - db
     environment:
       PGADMIN_DEFAULT_EMAIL: lol@lol.com # email login
       PGADMIN_DEFAULT_PASSWORD: lol # password login

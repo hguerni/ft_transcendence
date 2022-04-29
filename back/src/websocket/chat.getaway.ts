@@ -57,8 +57,9 @@ import {
 		@ConnectedSocket() client: Socket
 	): void
 	{
-		console.log("hey");
-		client.emit('lol', this.chatService.addOne(chat));
+		this.chatService.addOne(chat)
+		.then((val) => client.emit('addchat', val))
+		.catch((error) => client.emit('addchat', error));
 	}
 
 	@SubscribeMessage('disconnect')
