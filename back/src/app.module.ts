@@ -6,14 +6,18 @@ import { AuthModule } from "./modules/auth.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { configService } from "./config/config.service";
 import { ChatGateway } from "./websocket/chat.getaway";
+import { ChatEntity } from "./entities/chat.entity";
+import { ChatService } from "./services/chat.service";
+import { ChatDTO } from "./models/chat.model";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     UserModule,
     AuthModule,
+    TypeOrmModule.forFeature([ChatEntity])
   ],
   controllers: [AppController],
-  providers: [AppService, ChatGateway],
+  providers: [AppService, ChatGateway, ChatService],
 })
 export class AppModule {}

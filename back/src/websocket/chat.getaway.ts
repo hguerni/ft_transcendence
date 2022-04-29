@@ -10,10 +10,14 @@ import {
   } from '@nestjs/websockets';
 
   import { Server, Socket } from 'socket.io'
+  import { ChatDTO } from '../models/chat.model';
+  import { ChatService } from '../services/chat.service';
 
   @WebSocketGateway({namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
 	@WebSocketServer() io: Server;
+
+	constructor(private chatService: ChatService) {}
 
 	Connected : {name: string | string[], socket: Socket}[] = [];
 
@@ -45,6 +49,16 @@ import {
 				return;
 			}
 		});
+	}
+
+	@SubscribeMessage('addchat')
+	addchat(
+		@MessageBody() chat: ChatDTO,
+		@ConnectedSocket() client: Socket
+	): void
+	{
+		console.log("hey");
+		client.emit('lol', this.chatService.addOne(chat));
 	}
 
 	@SubscribeMessage('disconnect')
