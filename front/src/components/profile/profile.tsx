@@ -62,7 +62,7 @@ function Profile() {
   return (
     <>
         <div className="bigOne">
-            
+
             <div className="img-holder">
                 <button className="btn"> <img src={camera} alt="account" id="camera"/></button>
             </div>
@@ -73,19 +73,19 @@ function Profile() {
                 <img src={account_image} alt="account" id="acc-img"/>
 
                 <div className="login">
-                    <h1>{user.username}</h1> 
+                    <h1>{user.username}</h1>
                 </div>
                 <div className="rank">
-                    <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1> 
-                    <h1> 5 </h1> 
+                    <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1>
+                    <h1> 5 </h1>
                 </div>
                 <div className="level">
-                    <h1>Level <img src={level_up} alt="account" id="level"/> </h1> 
-                    <h1> 30 </h1> 
+                    <h1>Level <img src={level_up} alt="account" id="level"/> </h1>
+                    <h1> 30 </h1>
                 </div>
             </div>
         </div>
-        
+
         <Stats />
         <History user={user}/>
         <Amis />
@@ -106,21 +106,21 @@ function Amis() {
     let online = 0;
     return (
         <>
-        
+
             <div className="amis">
-                
+
                 <div id="title"><h1>Amis</h1></div>
-                
+
                {/* faire  une boucle ici qui check dabbord si les ami son en ligne */}
 
                <h1 id='info-online'>Online</h1>
-               {data.map((element, i) => {   
-                console.log(element); 
-                
+               {data.map((element, i) => {
+                console.log(element);
+
            // Affichage
                 return (
                     element.online != 0 ? (
-                               
+
                         element.online == 1 ? (
                         <ul>
                             <h1 id='texteh1'> <img src={rond_vert} alt="account" id="rondstatus" /> {element.nom} </h1>
@@ -131,8 +131,8 @@ function Amis() {
                             <h1 id='texteh1'> <img src={nitendo} alt="account" id="rondstatus" /> {element.nom} </h1>
                         </ul>
                         )
-                   
-                    ) 
+
+                    )
                     : (
 ''
                     )
@@ -140,19 +140,19 @@ function Amis() {
 
                     })}
                           <h1 id='info-offline'>Offline</h1>
-               {data.map((element, i) => {   
-                console.log(element); 
-                
+               {data.map((element, i) => {
+                console.log(element);
+
            // Affichage
                 return (
                     element.online == 0 ? (
-                               
-                    
+
+
                         <ul>
                             <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.nom}</h1>
                         </ul>
-                   
-                    ) 
+
+                    )
                     : (
 ''
                     )
@@ -207,7 +207,7 @@ function History(props: any) {
 function Game(props: any) {
     const color = {backgroundColor: props.color };
     const year = new Date();
-    
+
     return (
         <>
             <div className="game" style={color}>
@@ -255,7 +255,7 @@ export default Profile;
 //     <div className="bigOne">
 //     <div className="img-holder">
 //       <input type="file" onChange={handleChange} />
-     
+
 //     </div>
 //       {/* <div <button className="btn"> <img src={camera} alt="account" id="camera"/></button> </div> */}
 //       <img src={file} alt="account" id="acc-img"/>

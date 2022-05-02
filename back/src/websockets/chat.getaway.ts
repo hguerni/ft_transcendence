@@ -13,7 +13,7 @@ import {
   import { ChatDTO } from '../models/chat.model';
   import { ChatService } from '../services/chat.service';
 
-  @WebSocketGateway({namespace: 'chat'})
+  @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
 	@WebSocketServer() io: Server;
 
