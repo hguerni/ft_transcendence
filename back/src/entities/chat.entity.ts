@@ -11,6 +11,7 @@ import {  BaseEntity,
   OneToOne} from 'typeorm';
   import { IsBoolean, IsEmail, IsString } from 'class-validator';
   import { MemberEntity } from './member.entity';
+import { MsgEntity } from './msg.entity';
 
   enum status {
     private,
@@ -40,5 +41,8 @@ import {  BaseEntity,
   @ManyToOne(() => MemberEntity, (members) => members.chat)
   @JoinTable()
   members: MemberEntity[];
+
+  @OneToMany(() => MsgEntity, (message) => message.chat)
+  messages: MsgEntity[]
 
   }

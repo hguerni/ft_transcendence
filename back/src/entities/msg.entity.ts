@@ -13,6 +13,7 @@ import {  BaseEntity,
   import { IsBoolean, IsEmail, isString, IsString } from 'class-validator';
   import { UserEntity } from './user.entity';
 import { MemberEntity } from './member.entity';
+import { ChatEntity } from './chat.entity';
 
   @Entity('message')
   export class MsgEntity extends BaseEntity {
@@ -28,5 +29,9 @@ import { MemberEntity } from './member.entity';
   @Column()
   @IsString()
   message: string;
+
+  @ManyToOne(() => ChatEntity, (chat) => chat.messages)
+  @JoinColumn()
+  chat: ChatEntity
 
   }
