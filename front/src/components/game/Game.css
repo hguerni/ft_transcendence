@@ -1,0 +1,83 @@
+h1 {
+	font-family: "Lucida Console", monospace;
+	text-align: center;
+	font-size: 36px;
+	margin-top: 1em;
+	font-weight: bold;
+}
+
+.Gamezone {
+  margin-top: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.gameTabs {
+  background-color: #5701C8;
+  border-radius: 8px;
+  width: fit-content;
+  box-shadow: 0px 3px 15px rgba(34, 35, 58, 0.5);
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 25px;
+}
+
+.tabButton {
+  font-size: 20px;
+  margin: 10px 15px 10px 15px;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color: transparent;
+}
+
+.tabButton:active {
+  background-color: rgba(0, 0, 0, .2);
+}
+
+.tabButtonActive {
+  background-color: rgba(255, 255, 255, .2);
+}
+
+.gameButton {
+  padding: 8px;
+  color: white;
+  background-color: #5701C8;
+  border-radius: 8px;
+  margin: 10px;
+}
+
+.gameCards {
+  border-radius: 8px;
+  margin: 30px;
+  padding: 20px;
+  width: fit-content;
+  background-color: #8854d0;
+  color: white;
+  text-align: center;
+}
+
+.gameFighting {
+}
+
+.searchGame {
+  position: absolute;
+  top: 150px;
+  left: 50px;
+  height: 500px;
+  overflow: auto;
+  border: solid 5px #5701C8;
+  border-radius: 8px;
+  background-color: #5701C8;
+  padding: 15px;
+}
+
+.searchGame::-webkit-scrollbar {
+  display: none;
+}
