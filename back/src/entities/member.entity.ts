@@ -37,7 +37,7 @@ import {  BaseEntity,
   @IsBoolean()
   mute: boolean;
 
-  @OneToMany(() => ChatEntity, (chat) => chat.members )
-  chat: ChatEntity;
+  // @OneToMany(() => ChatEntity, (chat) => chat.members )
+  // chat: ChatEntity;
 
   }

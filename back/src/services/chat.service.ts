@@ -17,20 +17,22 @@ export class ChatService {
     
     async addOne(data: ChatDTO){
 
-        const chat = this.chatRepository.create(data);
+        const chat = this.chatRepository.create({...data, "messages": []});
+        console.log(chat);
         return await this.chatRepository.save(chat);
     }
 
     async addMsg(data: MsgDTO){
-        const message = this.msgRepo.create(data);
-        const chat = await this.chatRepository.findOne(data.chatId);
+        const chat = await this.chatRepository.findOne(data.chatId, {relations: ["messages"]});
+        const message = this.msgRepo.create({ "message": data.message, "chat": chat});
         chat.messages.push(message);
-        this.chatRepository.save(chat);
+        await this.chatRepository.save(chat);
         return await this.msgRepo.save(message);
     }
 
     async getMsg(data: number){
-        return await (await this.chatRepository.findOneOrFail(data)).messages;
+        const chat = await this.chatRepository.findOne(data, {relations: ["messages"]});
+        return chat.messages;
     }
 
     async getAll(): Promise<ChatEntity[]>{

@@ -8,7 +8,8 @@ import {  BaseEntity,
 	OneToMany,
 	ManyToOne,
 	Entity,
-  OneToOne} from 'typeorm';
+  OneToOne,
+  JoinColumn} from 'typeorm';
   import { IsBoolean, IsEmail, IsString } from 'class-validator';
   import { MemberEntity } from './member.entity';
 import { MsgEntity } from './msg.entity';
@@ -38,9 +39,8 @@ import { MsgEntity } from './msg.entity';
   @IsString()
   password: string;
 
-  @ManyToOne(() => MemberEntity, (members) => members.chat)
-  @JoinTable()
-  members: MemberEntity[];
+  // @ManyToOne(() => MemberEntity, (members) => members.chat)
+  // members: MemberEntity[];
 
   @OneToMany(() => MsgEntity, (message) => message.chat)
   messages: MsgEntity[]

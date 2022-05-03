@@ -84,6 +84,16 @@ import {
 		.catch((error) => client.emit('addmsg', error));
 	}
 
+	@SubscribeMessage('getall')
+	getall(
+		@ConnectedSocket() client: Socket
+	): void
+	{
+		this.chatService.getAll()
+		.then((val) => client.emit('addmsg', val))
+		.catch((error) => client.emit('addmsg', error));
+	}
+
 	@SubscribeMessage('disconnect')
 	handleDisconnect(
 		@ConnectedSocket() client : Socket
