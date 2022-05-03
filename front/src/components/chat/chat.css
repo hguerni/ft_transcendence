@@ -1,0 +1,31 @@
+.direct-messages {
+    margin-top: 5.75rem;
+    margin-left: auto;
+    margin-right: auto;
+    --tw-bg-opacity: -1;
+    background-color: rgba(70, 31, 92, 0.247);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 20%;
+    position: fixed;
+    bottom: 0em;
+    right: 3rem;
+}
+
+#close-icon {
+    display: block;
+    margin-right: 0;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.direct-messages-list {
+    border: solid;
+    border-color: #a8a8a8;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
