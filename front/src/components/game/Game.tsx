@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-import Sketch from "react-p5";
 import './Game.css';
 import GameTabs from './GameTabs';
 

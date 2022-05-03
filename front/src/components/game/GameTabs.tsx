@@ -1,4 +1,3 @@
-import React from 'react';
 import "./Game.css"
 import { BrowserRouter, Route, useHistory, useLocation } from "react-router-dom";
 

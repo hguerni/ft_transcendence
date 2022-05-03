@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Gamezone, { GameStartTraining, GameStart, GameReset, GameJoin, GameWatch, GetRooms, GameCreate } from './Gamezone';
-import { io, Socket } from "socket.io-client";
+import { useState, useEffect } from "react";
+import { GameJoin, GameWatch, GetRooms } from './GameArea';
 import { socket } from "./GameFighting";
 
 export interface RoomProps {

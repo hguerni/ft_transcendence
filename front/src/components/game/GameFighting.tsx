@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Gamezone, { GameStartTraining, GameStart, GameReset, GameJoin, GameWatch, GetRooms, GameCreate } from './Gamezone';
+import { useState } from "react";
+import GameArea, { GameStart, GameCreate } from './GameArea';
 import { io, Socket } from "socket.io-client";
 import Popup from 'reactjs-popup';
 import { v4 } from 'uuid'
@@ -35,10 +35,10 @@ export default function GameFighting() {
           <GamesInProgress/>
         </div>
       </div>
-      <div className='GameZone'>
-        <Gamezone client={socket}/>
+      <div className='gameArea'>
+        <GameArea client={socket}/>
       </div>
-      <div className="GameZone">
+      <div className="gameArea">
         <CreateGamePopUp/>
         <button className="gameButton" onClick={() => GameStart(socket)}>START GAME</button>
       </div>

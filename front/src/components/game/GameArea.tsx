@@ -1,7 +1,6 @@
-import React, { } from 'react';
 import Sketch from "react-p5";
 import p5Types from "p5";
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 
 const UP_ARROW = 38;
 const DOWN_ARROW = 40;
