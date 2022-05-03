@@ -18,7 +18,7 @@ import { MsgDTO } from "./models/chat.model";
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     UserModule,
     AuthModule,
-    TypeOrmModule.forFeature([ChatEntity, MsgEntity])
+    TypeOrmModule.forFeature([ChatEntity, MsgEntity]),
     GameModule,
   ],
   controllers: [AppController],
