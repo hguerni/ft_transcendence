@@ -5,7 +5,7 @@ import { Subscriber } from 'rxjs';
 import { GameService, RoomProps } from '../services/game.service';
 import { v4 } from 'uuid'
 
-export let logger: Logger = new Logger('test');
+export let logger: Logger = new Logger('gameTest');
 
 @WebSocketGateway({cors: {origin: "*"}})
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -32,7 +32,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  handleSendingRooms(clients: string) {
+  private handleSendingRooms(clients: string) {
     let rooms: RoomProps[] = [];
     for (const [key, value] of this.gameRooms.entries()) {
       if (!value.getRoomProps().trainingMode)
@@ -40,6 +40,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     this.wsServer.to(clients).emit("SEND_ROOMS_INFOS", JSON.stringify(rooms))
     this.logger.log("SEND_ROOMS_INFOS");
+  }
+
+  private handleJoiningRooms(client: Socket, room: string) {
+
   }
 
   @SubscribeMessage('MOVE_PADDLE_UP')
@@ -58,13 +62,16 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   handleGameStarting(client: Socket) {
     const room = this.clientsToRoom.get(client.id);
     logger.log(room);
-    this.gameRooms.get(room).startGame(this.wsServer, room);
+    this.gameRooms.get(room).setPlayerReady(client.id);
+    if (this.gameRooms.get(room).getRoomProps().p1_readyToStart === true &&
+      this.gameRooms.get(room).getRoomProps().p2_readyToStart === true)
+      this.gameRooms.get(room).startGame(this.wsServer, room);
     this.logger.log("GAME_STARTED");
   }
 
   @SubscribeMessage('START_TRAINING')
   handleStartingTraining(client: Socket) {
-    const gameRoom = new GameService()
+    const gameRoom = new GameService();
     const gameRoomName = gameRoom.getRoomProps().name;
     gameRoom.setPlayersIds(client.id);
     gameRoom.setTrainingModeOn(client.id);
@@ -87,14 +94,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('GAME_CREATE')
   handleCreatingRoom(client: Socket, room: string) {
-    const gameRoom = new GameService()
-    const gameRoomName = gameRoom.getRoomProps().name;
-    this.clientsToRoom.set(client.id, gameRoomName);
+    const gameRoom = new GameService();
+    gameRoom.setRoomName(room);
+    this.clientsToRoom.set(client.id, room);
     gameRoom.setPlayersIds(client.id);
-    this.gameRooms.set(gameRoomName, gameRoom);
-    client.join(gameRoomName);
+    this.gameRooms.set(room, gameRoom);
+    client.join(room);
     this.handleSendingRooms(this.getRoomsGroup);
-    this.logger.log("GAME_CREATED");
+    this.logger.log(`GAME ${room} CREATED`);
   }
 
   @SubscribeMessage('GAME_JOIN')
@@ -110,6 +117,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   handleGettingRooms(client: Socket) {
     client.join(this.getRoomsGroup);
     this.handleSendingRooms(client.id);
+    logger.log(this.clientsToRoom.get(client.id));
   }
 
   @SubscribeMessage('GAME_WATCH')

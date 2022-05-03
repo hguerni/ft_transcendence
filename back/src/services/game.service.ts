@@ -19,11 +19,13 @@ export class PongProps {
 }
 
 export class RoomProps {
-  name: string = `room_${v4()}`;
+  name: string = v4().substring(0, 10);
   trainingMode: boolean = false;
   canJoinGame: boolean = true;
-  player1: string = "";
-  palyer2?: string;
+  p1_name: string = "";
+  p2_name: string = "";
+  p1_readyToStart: boolean = false;
+  p2_readyToStart: boolean = false;
 }
 
 function genRandomInt(min, max) {
@@ -35,6 +37,9 @@ function genRandomVelocity() {
   if (Math.random() * 2 < 1)
     velocity *= -1;
   return velocity
+}
+
+function collision() {
 }
 
 @Injectable()
@@ -93,7 +98,7 @@ export class GameService {
     pong.ball_x += pong.ball_vx;
     pong.ball_y += pong.ball_vy;
     //pong.paddle_l_y = pong.ball_y - 25;
-    if (game.room.trainingMode)
+    if (game.room.trainingMode && pong.ball_y - 25 < pong.height - 55 && pong.ball_y - 25 > 5)
       pong.paddle_r_y = pong.ball_y - 25;
     wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(pong));
   }
@@ -171,10 +176,19 @@ export class GameService {
     }
   }
 
+  setPlayerReady(clientId: string) {
+    if (this.playersIds.get("left") === clientId)
+      this.room.p1_readyToStart = true;
+    else
+      this.room.p2_readyToStart = true;
+  }
+
   setTrainingModeOn(clientId: string) {
     this.room.trainingMode = true;
     this.playersIds.set("left", clientId);
     this.playersIds.set("right", "Bob");
+    this.room.p2_name = "Bob";
+    this.room.p2_readyToStart = true;
   }
 
   getPongProps(): PongProps {

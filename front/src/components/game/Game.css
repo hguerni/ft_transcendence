@@ -1,11 +1,3 @@
-h1 {
-	font-family: "Lucida Console", monospace;
-	text-align: center;
-	font-size: 36px;
-	margin-top: 1em;
-	font-weight: bold;
-}
-
 .Gamezone {
   margin-top: 10px;
 	display: flex;
@@ -55,7 +47,7 @@ h1 {
 
 .gameCards {
   border-radius: 8px;
-  margin: 30px;
+  margin: 20px auto 20px auto;
   padding: 20px;
   width: fit-content;
   background-color: #8854d0;
@@ -63,21 +55,40 @@ h1 {
   text-align: center;
 }
 
+.gameCardsBox {
+  margin-top: 10px;
+  height: 400px;
+  overflow: auto;
+  border: solid 5px #4b00ad;
+  border-radius: 8px;
+}
+
+.gameCardsBox::-webkit-scrollbar {
+  display: none;
+}
+
 .gameFighting {
 }
 
 .searchGame {
   position: absolute;
-  top: 150px;
+  top: 110px;
   left: 50px;
-  height: 500px;
-  overflow: auto;
   border: solid 5px #5701C8;
   border-radius: 8px;
   background-color: #5701C8;
   padding: 15px;
+  width: 200px;
 }
 
-.searchGame::-webkit-scrollbar {
-  display: none;
+.popup-content {
+  margin: auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #5701C8;
+  color: white;
+}
+
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
 }

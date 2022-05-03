@@ -38,15 +38,16 @@ export function GameJoin(client: Socket, room: string) {
 }
 
 export function GameWatch(client: Socket, room: string) {
-	client.emit("GAME_WATCH");
+	client.emit("GAME_WATCH", room);
 }
 
 export function GetRooms(client: Socket) {
 	client.emit("GET_ROOMS");
 }
 
-export function GameCreate(client: Socket) {
-	client.emit("GAME_CREATE");
+export function GameCreate(client: Socket, room: string) {
+	client.emit("GAME_CREATE", room);
+	console.log("testttt");
 }
 
 export default function Gamezone(props: {client: Socket}) {
@@ -78,9 +79,9 @@ export default function Gamezone(props: {client: Socket}) {
 		p5.text(pong.score_r, (pong.width / 4) * 3, pong.height / 3);
 
 		if (p5.keyIsDown(UP_ARROW))
-		props.client.emit("MOVE_PADDLE_UP");
+			props.client.emit("MOVE_PADDLE_UP");
 		else if (p5.keyIsDown(DOWN_ARROW))
-		props.client.emit("MOVE_PADDLE_DOWN");
+			props.client.emit("MOVE_PADDLE_DOWN");
 	};
 
 	return <Sketch setup={setup} draw={draw}/>;
