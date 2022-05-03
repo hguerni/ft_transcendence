@@ -5,6 +5,7 @@ import Login from "./components/login.component";
 import Profile from './components/profile/profile';
 import Navbar from './components/navbar.component';
 import Game from './components/game/Game';
+import Chat from "./components/chat/chat";
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Navbar/>
         <Route exact path={"/"} component={Login} />
         <Route exact path={"/profile"} component={Profile} />
+        <Route exact path={"/chat"} component={Chat} />
         <Route exact path={"/game"} component={Game} />
         <Route exact path={"/game/training"} component={Game} />
         <Route exact path={"/game/fighting"} component={Game} />
