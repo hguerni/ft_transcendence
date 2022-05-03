@@ -10,3 +10,11 @@ export class ChatDTO {
     @IsString()
     password: string
 }
+
+export class MsgDTO {
+    @IsString()
+    message: string;
+
+    @IsNumber()
+    chatId: number;
+}
