@@ -119,9 +119,9 @@ function Amis() {
 
            // Affichage
                 return (
-                    element.online != 0 ? (
+                    element.online !== 0 ? (
 
-                        element.online == 1 ? (
+                        element.online === 1 ? (
                         <ul>
                             <h1 id='texteh1'> <img src={rond_vert} alt="account" id="rondstatus" /> {element.nom} </h1>
                         </ul>
@@ -145,7 +145,7 @@ function Amis() {
 
            // Affichage
                 return (
-                    element.online == 0 ? (
+                    element.online === 0 ? (
 
 
                         <ul>
