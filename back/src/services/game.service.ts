@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { logger } from 'src/websockets/game.gateway';
+import { logger } from '../websockets/game.gateway';
 import { v4 } from 'uuid'
 
 export class PongProps {
@@ -173,6 +173,7 @@ export class GameService {
       this.playersIds.set("right", clientId);
       this.nb_players++;
       this.room.canJoinGame = false;
+      logger.log("testttttt");
     }
   }
 

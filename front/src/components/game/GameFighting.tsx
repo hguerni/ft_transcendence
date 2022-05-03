@@ -16,7 +16,7 @@ function CreateGamePopUp() {
       <button className="gameButton" onClick={() => setOpen(true)}> CREATE GAME</button>
       <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
         <div>Enter a name for your game:</div>
-        <input
+        <input className="input"
           type="text"
           value={gameName}
           onChange={(e) => setGameName(e.target.value)}

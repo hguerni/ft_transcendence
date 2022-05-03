@@ -18,7 +18,9 @@ export class PongProps {
 	paddle_l_y: number = 50;
 	paddle_r_x: number = 575;
 	paddle_r_y: number = 50;
-  }
+}
+
+console.log("youpi")
 
 export function GameStartTraining(client: Socket) {
 	client.emit("START_TRAINING");
@@ -33,6 +35,7 @@ export function GameReset(client: Socket) {
 }
 
 export function GameJoin(client: Socket, room: string) {
+	console.log(client.id);
 	client.emit("GAME_JOIN", room);
 }
 

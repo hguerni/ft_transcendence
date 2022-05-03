@@ -3,8 +3,8 @@ import { GameJoin, GameWatch, GetRooms } from './GameArea';
 import { socket } from "./GameFighting";
 
 export interface RoomProps {
-	name: string;
-	trainingMode: boolean;
+  name: string;
+  trainingMode: boolean;
   canJoinGame: boolean;
   p1_name: string;
   p2_name: string;
@@ -57,7 +57,7 @@ export function GamesInProgress() {
       <div>
         <div style={{color: 'white', textAlign: 'center', marginBottom: '10px'}}>Search game:</div>
         <div style={{marginLeft: 'auto', marginRight: 'auto', width: 'fit-content'}}>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)}/>
+          <input className="input" type="text" value={name} onChange={(e) => setName(e.target.value)}/>
         </div>
       </div>
 

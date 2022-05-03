@@ -92,3 +92,7 @@
 .popup-overlay {
   background: rgba(0, 0, 0, 0.5);
 }
+
+.input {
+  border-radius: 5px;
+}
