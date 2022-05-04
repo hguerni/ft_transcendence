@@ -10,7 +10,7 @@ import {
   } from '@nestjs/websockets';
 
   import { Server, Socket } from 'socket.io'
-  import { ChatDTO } from '../models/chat.model';
+  import { ChatDTO, MsgDTO } from '../models/chat.model';
   import { ChatService } from '../services/chat.service';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
@@ -62,7 +62,7 @@ import {
 		.catch((error) => client.emit('addchat', error));
 	}
 
-	@SubscribeMessage('disconnect')
+    @SubscribeMessage('disconnect')
 	handleDisconnect(
 		@ConnectedSocket() client : Socket
 	): void

@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Put, Req, Res, UnauthorizedException, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put, Req, Res, UnauthorizedException, UseGuards} from '@nestjs/common';
 import { UserService } from "../services/user.service";
 import { AuthService } from "../services/auth.service";
 import { UpdateUserDTO, RegisterDTO} from "../models/user.model";
@@ -38,6 +38,16 @@ export class AuthController {
         await this.authService.updateUser(data);
     }
 
+    @Put('updateAvatar')
+    async updateAvatar(@Body() data: any, @Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        const clientData = await this.userService.findByFtId(clientID);
+        console.log("LOL", data);
+        clientData.avatar = data.avatar;
+        await this.authService.updateAvatar(clientData);
+    }
+
+
     @Get('userData')
     async getUserData(@Req() request: Request) {
         console.log(request.cookies)
@@ -61,4 +71,8 @@ export class AuthController {
         
     }
 
+    @Get('uploads/:path')
+    async getImage(@Param('path') path, @Res() res: Response) {
+        res.sendFile(path, {root: 'uploads'});
+    }
 }

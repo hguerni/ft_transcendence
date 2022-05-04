@@ -18,16 +18,42 @@ import rond_rouge from "../../images/icons8-red-circle-48.png";
 import nitendo from "../../images/nitendo.svg";
 // import { userInfo } from 'os';
 import TimeAgo from 'react-timeago';
+import Avatar from './avatar.component';
 
 function Profile() {
 
   const [unauthorized, setUnauthorized] = useState(false);
+  const [avatar, setAvatar] = useState('');
   const [user, setUser] = useState({
       username: '',
-      img: '',
+      avatar: '',
       email: '',
       id: 0,
   });
+
+   const hiddenFileInput = React.useRef<HTMLInputElement>(null);
+  
+   // Programatically click the hidden file input element
+   // when the Button component is clicked
+   const handleClick = () => {
+     hiddenFileInput.current!.click();
+   };
+
+   const upload = async (files: FileList | null ) => {
+    console.log("LOL");
+    if (files === null) return;
+
+    const formData = new FormData();
+    formData.append('image', files[0]);
+
+    try {
+        const {data} = await axios.post('user/upload', formData);
+        await axios.put('updateAvatar', {avatar: data.url});
+        setAvatar(data.url);
+    }
+    catch (err) {setAvatar('http://localhost:3030/uploads/avatar.png')}
+
+    }
 
   useEffect(() => {
       let mounted = true;
@@ -47,6 +73,7 @@ function Profile() {
               const {data} = await axios.get('userData')
               console.log(data);
               if (mounted) setUser(data);
+              if (mounted) setAvatar(data.avatar);
           }
           catch(err){if(mounted) setUnauthorized(true);}
       }
@@ -63,14 +90,16 @@ function Profile() {
     <>
         <div className="bigOne">
 
+
             <div className="img-holder">
-                <button className="btn"> <img src={camera} alt="account" id="camera"/></button>
+                <button className="btn" onClick={handleClick}> <img src={camera} alt="account" id="camera"/></button>
+                <input className="btn" type="file" ref={hiddenFileInput} hidden onChange={e => upload(e.target.files)} style={{display: 'none'}}/>
             </div>
             <div className="conteneur-info">
                  {/* <div id="title"><h1>Profil</h1></div> */}
 
 
-                <img src={account_image} alt="account" id="acc-img"/>
+                <img src={avatar} alt="account" id="acc-img"/>
 
                 <div className="login">
                     <h1>{user.username}</h1>
@@ -119,9 +148,9 @@ function Amis() {
 
            // Affichage
                 return (
-                    element.online != 0 ? (
+                    element.online !== 0 ? (
 
-                        element.online == 1 ? (
+                        element.online === 1 ? (
                         <ul>
                             <h1 id='texteh1'> <img src={rond_vert} alt="account" id="rondstatus" /> {element.nom} </h1>
                         </ul>
@@ -145,7 +174,7 @@ function Amis() {
 
            // Affichage
                 return (
-                    element.online == 0 ? (
+                    element.online === 0 ? (
 
 
                         <ul>

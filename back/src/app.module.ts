@@ -8,16 +8,18 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { configService } from "./config/config.service";
 import { ChatGateway } from "./websockets/chat.gateway";
 import { ChatEntity } from "./entities/chat.entity";
+import { MsgEntity } from "./entities/msg.entity";
 import { ChatService } from "./services/chat.service";
 import { ChatDTO } from "./models/chat.model";
+import { MsgDTO } from "./models/chat.model";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     UserModule,
     AuthModule,
+    TypeOrmModule.forFeature([ChatEntity, MsgEntity]),
     GameModule,
-    TypeOrmModule.forFeature([ChatEntity])
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway, ChatService],

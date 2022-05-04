@@ -44,7 +44,7 @@ import {
 	ft_id: number;
 	
 	@IsOptional()
-	image: string;
+	avatar: string;
 
 	authentication: boolean;
   }
