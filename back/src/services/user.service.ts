@@ -49,10 +49,14 @@ export class UserService {
   }
 
   async setOffline(clientID: number): Promise<any> {
-    return this.userRepo.update(clientID, { online: false });
+    return this.userRepo.update(clientID, { online: 1 });
   }
 
   async setOnline(clientID: number): Promise<any> {
-    return this.userRepo.update(clientID, { online: true });
+    return this.userRepo.update(clientID, { online: 0 });
+  }
+
+  async setInGame(clientID: number): Promise<any> {
+    return this.userRepo.update(clientID, { online: 2 });
   }
 }

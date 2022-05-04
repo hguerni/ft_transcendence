@@ -7,9 +7,10 @@ import {  BaseEntity,
   JoinColumn,
   OneToOne,
   ManyToMany,
+  OneToMany,
   Entity} from 'typeorm';
 import { IsBoolean, IsEmail, IsString } from 'class-validator';
-import File from './file.entity';
+import { FriendEntity } from './friend.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
@@ -42,15 +43,15 @@ login: string;
 @IsString()
 username: string;
 
-@ManyToMany(() => UserEntity)
+@ManyToMany(() => FriendEntity)
 @JoinTable()
-friends: UserEntity[];
+friends: FriendEntity[];
 
 @Column({default: false})
 @IsBoolean()
 isBan: boolean;
 
 @IsBoolean()
-online: boolean;
+online: number;
 
 }
