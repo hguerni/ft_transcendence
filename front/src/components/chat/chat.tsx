@@ -46,15 +46,13 @@ function Bodychat() {
                 </div>
                 <div className="footerChat">
                     
-
+                    <input id="inputrayane" type="text" placeholder="Write message" />
                     <div className="submitChat">
                         <button className="buttonSubmit"> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
 
-                    </div>
-
-                
-
+                    </div> 
                 </div>
+
             </div>
         </>
     );

@@ -114,7 +114,7 @@
    
     margin-left: auto;
     position: relative;
-    bottom: 8px;
+    bottom: 24px;
     left: 23px;
 
 
@@ -145,8 +145,7 @@
     left: 23px;
 
 
-
-    width: 8%;
+    
     height: 110%;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -239,7 +238,13 @@
 
 #inputrayane
 {
+    width: auto;
     border: none;
+    outline: none ;
     background-color: transparent;
+    color: white;
+    font-family: 'CrickxRegular';
+    position: relative;
+    top: 20px;
 }
 
