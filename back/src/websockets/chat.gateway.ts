@@ -62,39 +62,7 @@ import {
 		.catch((error) => client.emit('addchat', error));
 	}
 
-	@SubscribeMessage('addmsg')
-	addmsg(
-		@MessageBody() msg: MsgDTO,
-		@ConnectedSocket() client: Socket
-	): void
-	{
-		this.chatService.addMsg(msg)
-		.then((val) => client.emit('addmsg', val))
-		.catch((error) => client.emit('addmsg', error));
-	}
-
-	@SubscribeMessage('getmsg')
-	getmsg(
-		@MessageBody() id: number,
-		@ConnectedSocket() client: Socket
-	): void
-	{
-		this.chatService.getMsg(id)
-		.then((val) => client.emit('addmsg', val))
-		.catch((error) => client.emit('addmsg', error));
-	}
-
-	@SubscribeMessage('getall')
-	getall(
-		@ConnectedSocket() client: Socket
-	): void
-	{
-		this.chatService.getAll()
-		.then((val) => client.emit('addmsg', val))
-		.catch((error) => client.emit('addmsg', error));
-	}
-
-	@SubscribeMessage('disconnect')
+    @SubscribeMessage('disconnect')
 	handleDisconnect(
 		@ConnectedSocket() client : Socket
 	): void

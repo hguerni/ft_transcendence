@@ -1,4 +1,3 @@
-import React from 'react';
 import "./Game.css"
 import { BrowserRouter, Route, useHistory, useLocation } from "react-router-dom";
 
@@ -40,52 +39,3 @@ export default function GameTabs() {
 
   );
 }
-
-/*
-export default function BasicTabs() {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-  return (
-    <BrowserRouter>
-      <main>
-        <Route exact path={"/game"} component={Gamezone} />
-      </main>
-    </BrowserRouter>
-  );
-
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Box>
-        <Tabs sx={tabsStyle} value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab sx={tabStyle1} label="Training" {...a11yProps(0)} />
-          <Tab sx={tabStyle2} label="Fighting" {...a11yProps(1)} />
-        </Tabs>
-      </Box>
-      <TabPanel value={value} index={0}>
-        <div className='GameZone'>
-            <Gamezone/>
-        </div>
-        <div className='Gamezone'>
-            <button onClick={GameStartTraining}>START TRAINING</button>
-            <button onClick={GetRooms}>GET ROOMS</button>
-            <button onClick={GameWatch}>WATCH GAME</button>
-            <button onClick={GameJoin}>JOIN GAME</button>
-            <button onClick={GameStart}>START GAME</button>
-            <button onClick={GameReset}>RESET GAME</button>
-          </div>
-          <div className="GameZone">
-            <p>Intruction for testing: JOIN GAME {'->'} START GAME</p>
-          </div>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <div className='GameZone'>
-            to be implemented
-        </div>
-      </TabPanel>
-    </Box>
-  );
-}
-*/
