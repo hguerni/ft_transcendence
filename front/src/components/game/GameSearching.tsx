@@ -30,6 +30,15 @@ function GamesCards(props: {room: RoomProps}) {
   );
 }
 
+function isGameWaitingPlayer(rooms: RoomProps[]) {
+  for (const room of rooms) {
+    if (room.canJoinGame === true) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function AutoMatching(rooms: RoomProps[]) {
   for (const room of rooms) {
     if (room.canJoinGame === true) {
@@ -70,7 +79,7 @@ export function GamesInProgress() {
       <div style={{margin: 'auto', width: 'fit-content'}}>
         <button className='gameButton' onClick={() => AutoMatching(rooms)}>AUTO MATCHING</button>
       </div>
-      {AutoMatching(rooms) === false &&
+      {isGameWaitingPlayer(rooms) === false &&
         <div style={{color: 'white', textAlign: 'center'}}>All games are full, please create your own game</div>
       }
     </div>

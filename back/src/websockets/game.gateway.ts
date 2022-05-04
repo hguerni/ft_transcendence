@@ -92,7 +92,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('GAME_CREATE')
   handleCreatingRoom(client: Socket, room: string) {
     if (client.id in this.clientsToRoom) {
-      this.wsServer.to(client.id).emit("USER_GAME_ALREADY_CREATED")
+      this.wsServer.to(client.id).emit("USER_ALREADY_CREATED_GAME")
       return ;
     }
     const gameRoom = new GameService();
@@ -107,10 +107,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('GAME_JOIN')
   handleJoiningRoom(client: Socket, room: string) {
-    for (const [key, value] of this.clientsToRoom)
-      this.logger.log("test: " + key + ' ' + value);
-    if (client.id in this.clientsToRoom) {
-      this.wsServer.to(client.id).emit("USER_GAME_ALREADY_JOINED")
+    if (this.clientsToRoom.has(client.id)) {
+      this.wsServer.to(client.id).emit("USER_ALREADY_JOINED_GAME")
       return ;
     }
     this.clientsToRoom.set(client.id, room);
