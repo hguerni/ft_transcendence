@@ -11,7 +11,7 @@ import {  BaseEntity,
   import { IsBoolean, IsEmail, IsString } from 'class-validator';
   import { UserEntity } from './user.entity';
   
-  @Entity('users')
+  @Entity('friends')
   export class FriendEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

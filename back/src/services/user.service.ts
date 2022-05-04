@@ -15,14 +15,14 @@ export class UserService {
     private readonly filesService: FilesService,
   ) {}
 
-  async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
-    const avatar = await this.filesService.uploadFile(imageBuffer, filename);
-    const user = await this.findByFtId(userId);
-    await this.userRepo.update(user.id, {
-      avatarId: avatar.id
-    });
-    return avatar;
-  }
+  // async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
+  //   const avatar = await this.filesService.uploadFile(imageBuffer, filename);
+  //   const user = await this.findByFtId(userId);
+  //   await this.userRepo.update(user.id, {
+  //     avatarId: avatar.id
+  //   });
+  //   return avatar;
+  // }
 
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepo.find();
@@ -37,6 +37,10 @@ export class UserService {
   }
 
   async updateUser(data: UpdateUserDTO) {
+    return await this.userRepo.update(data.id, data);
+  }
+
+  async updateAvatar(data: UserEntity) {
     return await this.userRepo.update(data.id, data);
   }
 

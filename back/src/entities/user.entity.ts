@@ -30,17 +30,9 @@ updated: Date;
 @IsString()
 email: string;
 
-@JoinColumn({ name: 'avatarId' })
-@OneToOne(
-  () => File,
-  {
-    nullable: true
-  }
-)
-public avatar?: File;
-
-@Column({ nullable: true })
-public avatarId?: number;
+@Column()
+@IsString()
+avatar: string;
 
 @Column({unique: true})
 @IsString()

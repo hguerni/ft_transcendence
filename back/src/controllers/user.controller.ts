@@ -36,15 +36,15 @@ export class UserController {
       })
   }))
 
-  @Post('avatar')
-  @UseInterceptors(FileInterceptor('file'))
-  async addAvatar(@Req() req, @UploadedFile() file: diskStorage.File) {
-    const clientID = await this.authService.clientID(req);
-    return this.userService.addAvatar(clientID, file.buffer, file.originalname);
-  }
+  // @Post('avatar')
+  // @UseInterceptors(FileInterceptor('file'))
+  // async addAvatar(@Req() req, @UploadedFile() file: diskStorage.File) {
+  //   const clientID = await this.authService.clientID(req);
+  //   return this.userService.addAvatar(clientID, file.buffer, file.originalname);
+  // }
 
   uploadFile(@UploadedFile() file) {
-      return { url: `http://localhost:3000/uploads/${file.filename}`}
+      return { url: `http://localhost:3030/uploads/${file.filename}`}
   }
 
   @Post("updateUser")

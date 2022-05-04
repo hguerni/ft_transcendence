@@ -4,6 +4,7 @@ import {Request} from 'express';
 import {JwtService} from "@nestjs/jwt";
 import {UserService} from "./user.service";
 import {UpdateUserDTO, RegisterDTO} from "../models/user.model";
+import { UserEntity } from '../entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,6 @@ export class AuthService {
     }
 
     async newUser(@Body() data: RegisterDTO, clientID: number) {
-        data.image = 'https://previews.123rf.com/images/koblizeek/koblizeek2001/koblizeek200100050/138262629-man-icon-profile-member-user-perconal-symbol-vector-on-white-isolated-background-.jpg?fj=1';
         data.id = clientID;
         data.authentication = false;
 
@@ -30,5 +30,9 @@ export class AuthService {
 
     async updateUser(@Body() data: UpdateUserDTO) {
         await this.userService.updateUser(data);
+    }
+
+    async updateAvatar(@Body() data: UserEntity) {
+        await this.userService.updateAvatar(data);
     }
 }

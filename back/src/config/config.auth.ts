@@ -53,6 +53,7 @@ export class IntraConfig extends PassportStrategy(Strategy, 'intra') {
             clientData.username = data.data.login;
             clientData.email = data.data.email;
             clientData.ft_id = data.data.id;
+            clientData.avatar = "http://localhost:3030/uploads/avatar.png"
             await this.authService.newUser(clientData, data.data.id);
         }
         return jwt;
