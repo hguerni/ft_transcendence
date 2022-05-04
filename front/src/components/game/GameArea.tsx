@@ -1,7 +1,6 @@
-import React, { } from 'react';
 import Sketch from "react-p5";
 import p5Types from "p5";
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 
 const UP_ARROW = 38;
 const DOWN_ARROW = 40;
@@ -19,7 +18,9 @@ export class PongProps {
 	paddle_l_y: number = 50;
 	paddle_r_x: number = 575;
 	paddle_r_y: number = 50;
-  }
+}
+
+console.log("youpi")
 
 export function GameStartTraining(client: Socket) {
 	client.emit("START_TRAINING");
@@ -34,19 +35,21 @@ export function GameReset(client: Socket) {
 }
 
 export function GameJoin(client: Socket, room: string) {
+	console.log(client.id);
 	client.emit("GAME_JOIN", room);
 }
 
 export function GameWatch(client: Socket, room: string) {
-	client.emit("GAME_WATCH");
+	client.emit("GAME_WATCH", room);
 }
 
 export function GetRooms(client: Socket) {
 	client.emit("GET_ROOMS");
 }
 
-export function GameCreate(client: Socket) {
-	client.emit("GAME_CREATE");
+export function GameCreate(client: Socket, room: string) {
+	client.emit("GAME_CREATE", room);
+	console.log("testttt");
 }
 
 export default function Gamezone(props: {client: Socket}) {
@@ -78,9 +81,9 @@ export default function Gamezone(props: {client: Socket}) {
 		p5.text(pong.score_r, (pong.width / 4) * 3, pong.height / 3);
 
 		if (p5.keyIsDown(UP_ARROW))
-		props.client.emit("MOVE_PADDLE_UP");
+			props.client.emit("MOVE_PADDLE_UP");
 		else if (p5.keyIsDown(DOWN_ARROW))
-		props.client.emit("MOVE_PADDLE_DOWN");
+			props.client.emit("MOVE_PADDLE_DOWN");
 	};
 
 	return <Sketch setup={setup} draw={draw}/>;

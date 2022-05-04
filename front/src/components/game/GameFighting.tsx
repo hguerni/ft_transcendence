@@ -1,81 +1,28 @@
-import React, { useState, useEffect } from "react";
-import Gamezone, { GameStartTraining, GameStart, GameReset, GameJoin, GameWatch, GetRooms, GameCreate } from './Gamezone';
-import { Room, RoomService } from "@mui/icons-material";
+import { useState } from "react";
+import GameArea, { GameStart, GameCreate } from './GameArea';
 import { io, Socket } from "socket.io-client";
-import { RmOptions } from "fs";
+import Popup from 'reactjs-popup';
+import { v4 } from 'uuid'
+import { GamesInProgress } from "./GameSearching";
 
-const socket: Socket = io("ws://localhost:3030");
+export const socket: Socket = io("ws://localhost:3030");
 
-export interface RoomProps {
-	name: string;
-	trainingMode: boolean;
-  canJoinGame: boolean;
-  player1: string;
-  palyer2?: string;
-}
-
-function SearchGame(props: {room: RoomProps[]}) {
-  const [name, setName] = useState<string>("");
+function CreateGamePopUp() {
+  const [gameName, setGameName] = useState<string>(v4().substring(0, 10));
+  const [open, setOpen] = useState(false);
 
   return (
     <div>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-    </div>
-  )
-}
-
-function CardButton(props: {room: RoomProps}) {
-  if (props.room.canJoinGame === true)
-    return (<button className='gameButton' onClick={() => GameJoin(socket, props.room.name)}>JOIN GAME</button>);
-  else
-    return (<button className='gameButton' onClick={() => GameWatch(socket, props.room.name)}>WATCH GAME</button>);
-}
-
-export function GamesCards(props: {room: RoomProps}) {
-  return (
-    <div className='gameCards'>
-      <div style={{marginBottom: '20px'}}>
-        {props.room.name.substring(0, 10)}
-      </div>
-        <CardButton room={props.room}/>
-    </div>
-  );
-}
-
-export function GamesInProgress() {
-  const [rooms, setRooms] = useState<RoomProps[]>([]);
-  const [name, setName] = useState<string>("");
-
-  useEffect(() => {
-    socket.on("SEND_ROOMS_INFOS", (rooms: string) => {
-      setRooms(JSON.parse(rooms));
-    });
-    //setInterval(GetRooms, 1000, socket);
-    GetRooms(socket);
-    console.log("test");
-  }, [])
-
-  return (
-    <div>
-      <div style={{marginLeft: 'auto', marginRight: 'auto', width: 'fit-content'}}>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      </div>
-
-      <div>
-        {rooms.map(item => {
-          if (item.name.includes(name))
-            return <GamesCards key={item.name} room={item}/>
-        })}
-      </div>
-      <button className='gameButton' onClick={() => GetRooms(socket)}>MANUAL REFRESH</button>
+      <button className="gameButton" onClick={() => setOpen(true)}> CREATE GAME</button>
+      <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+        <div>Enter a name for your game:</div>
+        <input className="input"
+          type="text"
+          value={gameName}
+          onChange={(e) => setGameName(e.target.value)}
+        />
+        <button className="gameButton" onClick={() => {GameCreate(socket, gameName); setOpen(false); setGameName(v4().substring(0, 10))}}>SEND</button>
+      </Popup>
     </div>
   );
 }
@@ -88,13 +35,15 @@ export default function GameFighting() {
           <GamesInProgress/>
         </div>
       </div>
-      <div className='GameZone'>
-        <Gamezone client={socket}/>
+      <div className='gameArea'>
+        <GameArea client={socket}/>
       </div>
-      <div className="GameZone">
-        <button className="gameButton" onClick={() => GameCreate(socket)}>CREATE GAME</button>
+      <div className="gameArea">
+        <CreateGamePopUp/>
         <button className="gameButton" onClick={() => GameStart(socket)}>START GAME</button>
       </div>
     </div>
   );
 }
+
+//<button className="gameButton" onClick={() => GameCreate(socket)}>CREATE GAME</button>
