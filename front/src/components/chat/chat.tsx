@@ -3,6 +3,9 @@ import './chat.css';
 import { RestaurantRounded } from "@mui/icons-material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Button } from "@mui/material";
+import buttonsubmit from "../../images/submitChat2.png";
+import directmessage from "../../images/directChat.png";
+import addgroup from "../../images/add-group.png";
 
 function ButtonCreateCanal(){
 
@@ -21,10 +24,47 @@ function ButtonCreateCanal(){
      );
 }
 
+function Bodychat() {
+
+    return (
+        <>
+            <div className="allBodyChat">
+                <div className="headerChat">
+
+                    <div className="iconeChat">
+                        <button className="buttonaddgroup"> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
+                        <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
+
+                    </div>
+
+
+                </div>
+
+                <div className="centerChat">
+
+
+                </div>
+                <div className="footerChat">
+                    
+
+                    <div className="submitChat">
+                        <button className="buttonSubmit"> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
+
+                    </div>
+
+                
+
+                </div>
+            </div>
+        </>
+    );
+}
+
 function Chat() {
 
     return (
         <>
+            <Bodychat/>
             <ButtonCreateCanal/>
             <DirectMessages />
         </>
