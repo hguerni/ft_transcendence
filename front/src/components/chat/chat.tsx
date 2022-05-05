@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { useState } from 'react'; 
 import './chat.css';
 import { RestaurantRounded } from "@mui/icons-material";
 import ClearIcon from '@mui/icons-material/Clear';
@@ -9,16 +10,19 @@ import addgroup from "../../images/add-group.png";
 
 function ButtonCreateCanal(){
 
-    const creatCanal = () => {
+    const [Chatbox, setChatbox] = useState(["Direct Messages"]); 
+    
+    function addComponent() {
+        setChatbox([...Chatbox, "Direct Messages"]);
+    } 
 
-     }
- 
-     return (
+    return (
          <>
              <div className="chat">
-             <button onClick={creatCanal} className="button" name="button 1">
-                 Button 1
+             <button onClick={addComponent} className="button" name="button 1">
+                 call component
               </button>
+              {Chatbox.map((item) => (<DirectMessages text={item} />))}
              </div>
          </>
      );
@@ -28,7 +32,7 @@ function Bodychat() {
 
     return (
         <>
-            <div className="allBodyChat">
+          <div className="allBodyChat">
                 <div className="headerChat">
 
                     <div className="iconeChat">
@@ -63,48 +67,42 @@ function Chat() {
     return (
         <>
             <Bodychat/>
+            {/* <DirectMessages /> */}
             <ButtonCreateCanal/>
-            <DirectMessages />
+            
         </>
     );
 }
 
-function DirectMessages() {
+function DirectMessages(props: any) {
     return (
-        <div className="direct-messages">
-            <div className="direct-messages-header">
-                <div className="direct-messages-header-title">
-                    <span>Direct Messages</span>
-                    <ClearIcon id="close-icon"/>
-                </div>
-                
-            </div>
-            <div className="direct-messages-list">
-                <div className="direct-messages-list-item">
-                    <div className="direct-messages-list-item-content">
-                        <div className="direct-messages-list-item-content-name">
-                            <span>John Doe</span>
-                        </div>
-                        <div className="direct-messages-list-item-content-message">
-                            <span>Hello, how are you?</span>
-                        </div>
+        <>
+            <div className="allBodyChat">
+                <div className="headerChat">
+
+                    <div className="iconeChat">
+                        <button className="buttonaddgroup"> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
+                        <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
+
                     </div>
+
+
                 </div>
-                <div className="direct-messages-list-item">
-                    <div className="direct-messages-list-item-content">
-                        <div className="direct-messages-list-item-content-name">
-                            <span>John Doe</span>
-                        </div>
-                        <div className="direct-messages-list-item-content-message">
-                            <span>Hello, how are you?</span>
-                        </div>
-                    </div>
+
+                <div className="centerChat">
+                    <h1> {props.text} </h1>
                 </div>
+                <div className="footerChat">
+                    
+                    <input id="inputrayane" type="text" placeholder="Write message" />
+                    <div className="submitChat">
+                        <button className="buttonSubmit"> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
+
+                    </div> 
+                </div>
+
             </div>
-            <div className="direct-messages-write">
-                    <input type="text" placeholder="Write message" />
-                </div>
-        </div>
+        </>
     );
 }
 
