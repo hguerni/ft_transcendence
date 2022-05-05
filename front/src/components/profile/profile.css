@@ -93,6 +93,20 @@
     
 }
 
+.btncrayon{
+    
+
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+ 
+
+
+    
+    
+}
+
 .img-holder {
     position: absolute;
     margin-top: 2.0rem;
