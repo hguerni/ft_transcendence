@@ -11,14 +11,30 @@ import { ChatEntity } from "./entities/chat.entity";
 import { MsgEntity } from "./entities/msg.entity";
 import { ChatService } from "./services/chat.service";
 import { ChatDTO } from "./models/chat.model";
+<<<<<<< Updated upstream
 import { MsgDTO } from "./models/chat.model";
+=======
+<<<<<<< Updated upstream
+=======
+import { MsgDTO } from "./models/chat.model";
+import { MemberEntity } from "./entities/member.entity";
+import { UserEntity } from "./entities/user.entity";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     UserModule,
     AuthModule,
+<<<<<<< Updated upstream
     TypeOrmModule.forFeature([ChatEntity, MsgEntity]),
+=======
+<<<<<<< Updated upstream
+=======
+    TypeOrmModule.forFeature([ChatEntity, MsgEntity, MemberEntity, UserEntity]),
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     GameModule,
   ],
   controllers: [AppController],

@@ -10,7 +10,15 @@ import {
   } from '@nestjs/websockets';
 
   import { Server, Socket } from 'socket.io'
+<<<<<<< Updated upstream:back/src/websockets/chat.gateway.ts
   import { ChatDTO, MsgDTO } from '../models/chat.model';
+=======
+<<<<<<< Updated upstream:back/src/websockets/chat.getaway.ts
+  import { ChatDTO } from '../models/chat.model';
+=======
+  import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
+>>>>>>> Stashed changes:back/src/websockets/chat.gateway.ts
+>>>>>>> Stashed changes:back/src/websockets/chat.getaway.ts
   import { ChatService } from '../services/chat.service';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
@@ -62,7 +70,26 @@ import {
 		.catch((error) => client.emit('addchat', error));
 	}
 
+<<<<<<< Updated upstream:back/src/websockets/chat.gateway.ts
     @SubscribeMessage('disconnect')
+=======
+<<<<<<< Updated upstream:back/src/websockets/chat.getaway.ts
+	@SubscribeMessage('disconnect')
+=======
+	@SubscribeMessage('addmember')
+	addmember(
+		@MessageBody() data: AddMemberDTO,
+		@ConnectedSocket() client: Socket
+	): void
+	{
+		this.chatService.addMember(data)
+		.then((val) => client.emit('addchat', val))
+		.catch((error) => client.emit('addchat', error));
+	}
+
+    @SubscribeMessage('disconnect')
+>>>>>>> Stashed changes:back/src/websockets/chat.gateway.ts
+>>>>>>> Stashed changes:back/src/websockets/chat.getaway.ts
 	handleDisconnect(
 		@ConnectedSocket() client : Socket
 	): void

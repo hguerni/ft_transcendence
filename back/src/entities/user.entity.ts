@@ -10,7 +10,16 @@ import {  BaseEntity,
   OneToMany,
   Entity} from 'typeorm';
 import { IsBoolean, IsEmail, IsString } from 'class-validator';
+<<<<<<< Updated upstream
 import { FriendEntity } from './friend.entity';
+=======
+<<<<<<< Updated upstream
+import File from './file.entity';
+=======
+import { FriendEntity } from './friend.entity';
+import { MemberEntity } from './member.entity';
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 @Entity('users')
 export class UserEntity extends BaseEntity {

@@ -39,10 +39,24 @@ import { MsgEntity } from './msg.entity';
   @IsString()
   password: string;
 
+<<<<<<< Updated upstream
   // @ManyToOne(() => MemberEntity, (members) => members.chat)
   // members: MemberEntity[];
 
   @OneToMany(() => MsgEntity, (message) => message.chat)
   messages: MsgEntity[]
+=======
+<<<<<<< Updated upstream
+  @ManyToOne(() => MemberEntity, (members) => members.chat)
+  @JoinTable()
+  members: MemberEntity[];
+=======
+  @ManyToOne(() => MemberEntity)
+  members: MemberEntity[];
+
+  @OneToMany(() => MsgEntity, (message) => message.chat)
+  messages: MsgEntity[]
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
   }

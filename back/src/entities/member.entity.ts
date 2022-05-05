@@ -14,13 +14,6 @@ import {  BaseEntity,
   import { UserEntity } from './user.entity';
   import { ChatEntity } from './chat.entity';
 
-  enum status {
-    owner,
-    admin,
-    modo,
-    ban
-  }
-
   @Entity('member')
   export class MemberEntity extends BaseEntity {
   
@@ -37,7 +30,15 @@ import {  BaseEntity,
   @IsBoolean()
   mute: boolean;
 
+<<<<<<< Updated upstream
   // @OneToMany(() => ChatEntity, (chat) => chat.members )
   // chat: ChatEntity;
+=======
+<<<<<<< Updated upstream
+  @OneToMany(() => ChatEntity, (chat) => chat.members )
+  chat: ChatEntity;
+>>>>>>> Stashed changes
 
+=======
+>>>>>>> Stashed changes
   }

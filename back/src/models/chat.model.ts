@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from "class-validator";
+import { isNumber, IsNumber, IsString } from "class-validator";
 
 export class ChatDTO {
     @IsString()
@@ -9,6 +9,11 @@ export class ChatDTO {
 
     @IsString()
     password: string
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 }
 
 export class MsgDTO {
@@ -17,4 +22,19 @@ export class MsgDTO {
 
     @IsNumber()
     chatId: number;
+<<<<<<< Updated upstream
+=======
+
+    @IsNumber()
+    userId: number;
+}
+
+export class AddMemberDTO {
+    @IsNumber()
+    userId: string;
+
+    @IsNumber()
+    chatId: number;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 }
