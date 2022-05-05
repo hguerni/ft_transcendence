@@ -88,7 +88,14 @@ function Profile() {
 
 
   return (
-    <>
+    <> 
+        <h1>authen 2FA
+
+            <label className="switch">
+            <input type="checkbox" />
+                <span className="slider round"></span>
+            </label>
+            </h1>
         <div className="bigOne">
 
 
