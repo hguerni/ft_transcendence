@@ -4,6 +4,7 @@ import './chat.css';
 import { RestaurantRounded } from "@mui/icons-material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { Button } from "@mui/material";
+import loupe from "../../images/loupe.png";
 import buttonsubmit from "../../images/submitChat2.png";
 import directmessage from "../../images/directChat.png";
 import addgroup from "../../images/add-group.png";
@@ -61,8 +62,7 @@ function Bodychat() {
                     <div className="iconeChat">
                         <CreatePopup/>
                         <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
-                        <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="loupe"/></button>
-
+                        <button className="buttonInviteUsers"> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
                     </div>
 
 
