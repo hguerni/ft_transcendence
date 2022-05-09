@@ -274,3 +274,14 @@
 
 }
 
+.popup-content {
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #5701C8;
+    color: white;
+  }
+  
+  .popup-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }

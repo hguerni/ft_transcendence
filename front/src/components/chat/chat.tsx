@@ -8,8 +8,6 @@ import buttonsubmit from "../../images/submitChat2.png";
 import directmessage from "../../images/directChat.png";
 import addgroup from "../../images/add-group.png";
 import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-
 
 
 function ButtonCreateCanal(){
@@ -32,15 +30,16 @@ function ButtonCreateCanal(){
      );
 }
 
-function CreateGamePopUp() {
+function CreatePopup() {
     const [gameName, setGameName] = useState("");
     const [open, setOpen] = useState(false);
   
     return (
       <div>
-        <button className="gameButton" onClick={() => setOpen(true)}> CREATE GAME</button>
+          <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
+       
         <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
-          <div>Enter a name for your game:</div>
+          <div>Nom du Channel a creer</div>
           <input className="input"
             type="text"
             value={gameName}
@@ -60,7 +59,7 @@ function Bodychat() {
                 <div className="headerChat">
 
                     <div className="iconeChat">
-                        <button className="buttonaddgroup"> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
+                        <CreatePopup/>
                         <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
 
                     </div>
