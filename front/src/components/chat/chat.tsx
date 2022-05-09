@@ -112,14 +112,44 @@ function Channel() {
     );
 }
 
+function ListChannel() {
+    return (
+        <>
+            <div className="AllbodyList">
+                <div className="headerChatList">
+
+                    <h1 id="h1channel"> List</h1>
+
+                </div>
+
+                <div className="centerChat">
+
+
+                </div>
+                <div className="footerChatList">
+                    
+
+                </div> 
+
+            </div>
+            
+            
+        </>
+    );
+}
+
 function Chat() {
 
     return (
         <>
-            <Bodychat/>
+            <div className="rayaneleboloss">
+                <Channel/>
+                <ButtonCreateCanal/>
+                <Bodychat/>
+                <ListChannel/>
+            </div>
             {/* <DirectMessages /> */}
-            <Channel/>
-            <ButtonCreateCanal/>
+            
             
             
         </>
