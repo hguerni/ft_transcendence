@@ -10,6 +10,8 @@ import addgroup from "../../images/add-group.png";
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
+
+
 function ButtonCreateCanal(){
 
     const [Chatbox, setChatbox] = useState(["Direct Messages"]); 
@@ -21,14 +23,34 @@ function ButtonCreateCanal(){
     return (
          <>
              <div className="chat">
-             <button onClick={addComponent} className="button" name="button 1">
+             {/* <button onClick={addComponent} className="button" name="button 1">
                  call component
-              </button>
-              {Chatbox.map((item) => (<DirectMessages text={item} />))}
+              </button> */}
+              {/* {Chatbox.map((item) => (<DirectMessages text={item} />))} */}
              </div>
          </>
      );
 }
+
+function CreateGamePopUp() {
+    const [gameName, setGameName] = useState("");
+    const [open, setOpen] = useState(false);
+  
+    return (
+      <div>
+        <button className="gameButton" onClick={() => setOpen(true)}> CREATE GAME</button>
+        <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+          <div>Enter a name for your game:</div>
+          <input className="input"
+            type="text"
+            value={gameName}
+            onChange={(e) => setGameName(e.target.value)}
+          />
+          <button className="gameButton" onClick={() => { setOpen(false); setGameName("")}}>SEND</button>
+        </Popup>
+      </div>
+    );
+  }
 
 function Bodychat() {
 
@@ -64,13 +86,42 @@ function Bodychat() {
     );
 }
 
+function Channel() {
+
+    return (
+        <>
+            <div className="Allbodychannel">
+                <div className="headerChatchannel">
+
+                    <h1 id="h1channel"> Channel</h1>
+
+                </div>
+
+                <div className="centerChat">
+
+
+                </div>
+                <div className="footerChatchannel">
+                    
+
+                </div> 
+
+            </div>
+            
+            
+        </>
+    );
+}
+
 function Chat() {
 
     return (
         <>
             <Bodychat/>
             {/* <DirectMessages /> */}
+            <Channel/>
             <ButtonCreateCanal/>
+            
             
         </>
     );
@@ -104,9 +155,6 @@ function DirectMessages(props: any) {
                 </div>
 
             </div>
-            <Popup trigger={<button> Trigger</button>} position="right center">
-                <div>Popup content here !!</div>
-            </Popup>
         </>
     );
 }

@@ -218,3 +218,59 @@
     top: 20px;
 }
 
+/* Channel composant */
+
+.Allbodychannel {
+
+    margin-top: 5.75rem;
+
+
+    width: 13%;
+
+ 
+    padding-top: 0.5rem;
+
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    position: relative;
+    bottom: 855px;
+    left: 300px;
+
+}
+
+.footerChatchannel {
+
+    background-color: rgb(14, 13, 13);
+    padding-top: 0.5rem;
+    /* width: 20%; */
+    height: 8%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+
+    border-radius: 0px 0px 0px 20px;
+      
+
+}
+
+.headerChatchannel {
+    margin-top: 5.75rem;
+
+
+    background-color: rgb(15, 15, 15);
+    padding-top: 0.5rem;
+    /* width: 20%; */
+    height: 8%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    border-radius: 20px 0px 0px 0px;
+}
+
+#h1channel {
+    text-align: center;
+    color: rgb(185, 174, 174);
+    width: 100%;
+    word-wrap: break-word
+
+}
+
