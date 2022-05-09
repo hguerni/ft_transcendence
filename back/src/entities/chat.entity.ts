@@ -14,10 +14,11 @@ import {  BaseEntity,
   import { MemberEntity } from './member.entity';
 import { MsgEntity } from './msg.entity';
 
-  enum status {
+  export enum chat_status {
     private,
     public,
-    protected
+    protected,
+    pv_message
   }
 
   @Entity('chat')
@@ -39,10 +40,10 @@ import { MsgEntity } from './msg.entity';
   @IsString()
   password: string;
 
-  @ManyToOne(() => MemberEntity)
-  members: MemberEntity[];
-
   @OneToMany(() => MsgEntity, (message) => message.chat)
-  messages: MsgEntity[]
+  messages: MsgEntity[];
+
+  @OneToMany(() => MemberEntity, (member) => member.chat)
+  members: MemberEntity[];
 
   }

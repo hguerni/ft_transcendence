@@ -42,6 +42,7 @@ import {
 		@ConnectedSocket() client : Socket
 	): void
 	{
+		this.chatService.getChat("pv-")
 		this.Connected.forEach(element => {
 			if (element.name == name)
 			{
@@ -71,6 +72,14 @@ import {
 		this.chatService.addMember(data)
 		.then((val) => client.emit('addchat', val))
 		.catch((error) => client.emit('addchat', error));
+	}
+
+	@SubscribeMessage('test')
+	test(
+		@ConnectedSocket() client: Socket
+	): void
+	{
+		this.chatService.getPvmsg().then( (v) => console.log(v));
 	}
 
     @SubscribeMessage('disconnect')
