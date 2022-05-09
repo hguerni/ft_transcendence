@@ -7,6 +7,8 @@ import { Button } from "@mui/material";
 import buttonsubmit from "../../images/submitChat2.png";
 import directmessage from "../../images/directChat.png";
 import addgroup from "../../images/add-group.png";
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 function ButtonCreateCanal(){
 
@@ -102,6 +104,9 @@ function DirectMessages(props: any) {
                 </div>
 
             </div>
+            <Popup trigger={<button> Trigger</button>} position="right center">
+                <div>Popup content here !!</div>
+            </Popup>
         </>
     );
 }
