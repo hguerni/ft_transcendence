@@ -30,15 +30,6 @@ import {  BaseEntity,
   @IsBoolean()
   mute: boolean;
 
-<<<<<<< Updated upstream
-  // @OneToMany(() => ChatEntity, (chat) => chat.members )
-  // chat: ChatEntity;
-=======
-<<<<<<< Updated upstream
   @OneToMany(() => ChatEntity, (chat) => chat.members )
   chat: ChatEntity;
->>>>>>> Stashed changes
-
-=======
->>>>>>> Stashed changes
   }

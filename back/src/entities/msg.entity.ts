@@ -23,8 +23,8 @@ import { ChatEntity } from './chat.entity';
   @CreateDateColumn()
   created: Date;
 
-  // @OneToOne(() => MemberEntity)
-  // member: MemberEntity;
+  @OneToOne(() => MemberEntity)
+  member: MemberEntity;
 
   @Column()
   @IsString()
