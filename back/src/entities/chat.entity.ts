@@ -39,8 +39,8 @@ import { MsgEntity } from './msg.entity';
   @IsString()
   password: string;
 
-  // @ManyToOne(() => MemberEntity, (members) => members.chat)
-  // members: MemberEntity[];
+  @ManyToOne(() => MemberEntity)
+  members: MemberEntity[];
 
   @OneToMany(() => MsgEntity, (message) => message.chat)
   messages: MsgEntity[]

@@ -10,7 +10,9 @@ import {  BaseEntity,
   OneToMany,
   Entity} from 'typeorm';
 import { IsBoolean, IsEmail, IsString } from 'class-validator';
+import File from './file.entity';
 import { FriendEntity } from './friend.entity';
+import { MemberEntity } from './member.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {

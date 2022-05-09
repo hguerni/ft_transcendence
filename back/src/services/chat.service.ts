@@ -1,10 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ChatEntity } from "../entities/chat.entity";
-import { ChatDTO } from "../models/chat.model";
+import { AddMemberDTO, ChatDTO } from "../models/chat.model";
 import { Repository } from "typeorm";
 import { MsgEntity } from "../entities/msg.entity";
+import { MemberEntity } from "../entities/member.entity";
 import { MsgDTO } from "../models/chat.model";
+import { UserEntity } from "../entities/user.entity";
+
+enum status {
+    owner,
+    admin,
+    modo,
+    ban,
+    default
+  }
 
 @Injectable()
 export class ChatService {
@@ -16,7 +26,6 @@ export class ChatService {
       ) {}
     
     async addOne(data: ChatDTO){
-
         const chat = this.chatRepository.create({...data, "messages": []});
         console.log(chat);
         return await this.chatRepository.save(chat);
@@ -30,6 +39,11 @@ export class ChatService {
         return await this.msgRepo.save(message);
     }
 
+    async addMember(data: AddMemberDTO)
+    {
+
+    }
+    
     async getMsg(data: number){
         const chat = await this.chatRepository.findOne(data, {relations: ["messages"]});
         return chat.messages;

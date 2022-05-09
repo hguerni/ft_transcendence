@@ -10,7 +10,7 @@ import {
   } from '@nestjs/websockets';
 
   import { Server, Socket } from 'socket.io'
-  import { ChatDTO, MsgDTO } from '../models/chat.model';
+  import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
   import { ChatService } from '../services/chat.service';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
@@ -58,6 +58,17 @@ import {
 	): void
 	{
 		this.chatService.addOne(chat)
+		.then((val) => client.emit('addchat', val))
+		.catch((error) => client.emit('addchat', error));
+	}
+
+	@SubscribeMessage('addmember')
+	addmember(
+		@MessageBody() data: AddMemberDTO,
+		@ConnectedSocket() client: Socket
+	): void
+	{
+		this.chatService.addMember(data)
 		.then((val) => client.emit('addchat', val))
 		.catch((error) => client.emit('addchat', error));
 	}
