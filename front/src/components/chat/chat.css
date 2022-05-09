@@ -228,6 +228,15 @@
    
 }
 
+#loupe {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    left: 35rem;
+    
+    /* background-color: transparent; */
+}
+
 /* Channel composant */
 
 .Allbodychannel {

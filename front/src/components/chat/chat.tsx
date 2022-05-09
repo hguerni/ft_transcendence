@@ -61,6 +61,7 @@ function Bodychat() {
                     <div className="iconeChat">
                         <CreatePopup/>
                         <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
+                        <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="loupe"/></button>
 
                     </div>
 
