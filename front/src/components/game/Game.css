@@ -38,11 +38,16 @@
 }
 
 .gameButton {
-  padding: 8px;
+  padding: 10px;
   color: white;
-  background-color: #5701C8;
   border-radius: 8px;
+  background-color: #5701C8;
+  border: 2px solid black;
   margin: 10px;
+}
+
+.gameButton:hover {
+  opacity: 0.8;
 }
 
 .gameCards {
@@ -96,4 +101,28 @@
 .input {
   border-radius: 5px;
   border: none;
+}
+
+.gameInProgress {
+  color: white;
+  text-align: center;
+  position: absolute;
+  top: 250px;
+  right: 50px;
+  border: solid 5px #5701C8;
+  border-radius: 8px;
+  background-color: #5701C8;
+  padding: 15px;
+  width: 200px;
+  height: 200px;
+}
+
+.gridStatsContainer {
+  display: grid;
+  column-gap: 20px;
+  row-gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.gridStatsItem {
 }

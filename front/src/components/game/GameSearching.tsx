@@ -10,6 +10,8 @@ export interface RoomProps {
   p2_name: string;
   p1_readyToStart: boolean;
   p2_readyToStart: boolean;
+  p1_score: number;
+  p2_score: number;
 }
 
 function CardButton(props: {room: RoomProps}) {
@@ -49,9 +51,10 @@ function AutoMatching(rooms: RoomProps[]) {
   return false;
 }
 
-export function GamesInProgress() {
+export function GameSearching() {
   const [rooms, setRooms] = useState<RoomProps[]>([]);
   const [name, setName] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     socket.on("SEND_ROOMS_INFOS", (rooms: string) => {
@@ -79,9 +82,8 @@ export function GamesInProgress() {
       <div style={{margin: 'auto', width: 'fit-content'}}>
         <button className='gameButton' onClick={() => AutoMatching(rooms)}>AUTO MATCHING</button>
       </div>
-      {isGameWaitingPlayer(rooms) === false &&
-        <div style={{color: 'white', textAlign: 'center'}}>All games are full, please create your own game</div>
-      }
+      {}
+      <div style={{color: 'white', textAlign: 'center'}}>{message}</div>
     </div>
   );
 }

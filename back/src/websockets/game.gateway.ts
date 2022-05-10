@@ -42,6 +42,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.logger.log("SEND_ROOMS_INFOS");
   }
 
+  private handleSendingCurrentRoom(clientId: string) {
+    let room: RoomProps = this.gameRooms.get(this.clientsToRoom.get(clientId)).getRoomProps();
+    this.wsServer.to(clientId).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(room))
+    this.logger.log("SEND_CURRENT_ROOM_INFOS");
+  }
+
   @SubscribeMessage('MOVE_PADDLE_UP')
   handlePaddleMovingUp(client: Socket) {
     const room = this.clientsToRoom.get(client.id);
@@ -102,6 +108,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.gameRooms.set(room, gameRoom);
     client.join(room);
     this.handleSendingRooms(this.getRoomsGroup);
+    this.handleSendingCurrentRoom(client.id);
     this.logger.log(`GAME ${room} CREATED`);
   }
 
@@ -115,6 +122,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.gameRooms.get(room).setPlayersIds(client.id);
     client.join(room);
     this.handleSendingRooms(this.getRoomsGroup);
+    this.handleSendingCurrentRoom(client.id);
     this.logger.log("GAME_JOINED");
   }
 
@@ -122,13 +130,18 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   handleGettingRooms(client: Socket) {
     client.join(this.getRoomsGroup);
     this.handleSendingRooms(client.id);
-    logger.log(this.clientsToRoom.get(client.id));
+  }
+
+  @SubscribeMessage('GET_CURRENT_ROOM')
+  handleGettingCurrentRoom(client: Socket) {
+    this.handleSendingCurrentRoom(client.id);
   }
 
   @SubscribeMessage('GAME_WATCH')
   handleWatchingGame(client: Socket, roomToWatch: string) {
     client.join(roomToWatch);
     this.clientsToRoom.set(client.id, roomToWatch);
+    this.handleSendingCurrentRoom(client.id);
     this.logger.log(`Client ${client.id} has joined the room ${roomToWatch}`);
     this.logger.log("GAME_WATCHED");
   }
