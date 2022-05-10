@@ -41,7 +41,6 @@ function Profile() {
    };
 
    const upload = async (files: FileList | null ) => {
-    console.log("LOL");
     if (files === null) return;
 
     const formData = new FormData();

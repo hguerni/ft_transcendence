@@ -45,8 +45,6 @@ login: string;
 @IsString()
 username: string;
 
-@ManyToMany(() => FriendEntity)
-@JoinTable()
 friends: FriendEntity[];
 
 @Column({default: false})
