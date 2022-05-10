@@ -3,7 +3,8 @@ import GameArea, { GameStart, GameCreate } from './GameArea';
 import { io, Socket } from "socket.io-client";
 import Popup from 'reactjs-popup';
 import { v4 } from 'uuid'
-import { GamesInProgress } from "./GameSearching";
+import { GameSearching } from "./GameSearching";
+import { GameInProgress } from "./GameInProgress";
 
 export const socket: Socket = io("ws://localhost:3030");
 
@@ -28,11 +29,16 @@ function CreateGamePopUp() {
 }
 
 export default function GameFighting() {
+let getName;
+
   return (
     <div className="gameFighting">
       <div>
         <div className="searchGame">
-          <GamesInProgress/>
+          <GameSearching/>
+        </div>
+        <div className="gameInProgress">
+          <GameInProgress/>
         </div>
       </div>
       <div className='gameArea'>
