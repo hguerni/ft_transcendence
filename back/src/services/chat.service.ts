@@ -58,13 +58,14 @@ export class ChatService {
         return await this.chatRepository.findOne(name);
     }
 
-    async getPvmsg()
+    async getPvmsg(login: string)
     {
         const chat = await this.chatRepository.find({
             select: ["id", "members"],
-            relations: ["members"],
+            relations: ["members", "user"],
             where: {
-                status: chat_status.pv_message
+                status: chat_status.pv_message,
+                // members: [{user: {login}}]
             }
         });
         return chat;
