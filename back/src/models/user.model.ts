@@ -46,7 +46,7 @@ import {
 	@IsOptional()
 	avatar: string;
 
-	authentication: boolean;
+	twofa: boolean;
   }
   
   export class UpdateUserDTO {

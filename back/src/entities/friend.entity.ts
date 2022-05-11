@@ -7,7 +7,6 @@ import {  BaseEntity,
     JoinColumn,
     OneToOne,
     ManyToOne,
-    OneToMany,
     ManyToMany,
     Entity} from 'typeorm';
   import { IsBoolean, IsEmail, IsString } from 'class-validator';
@@ -21,7 +20,11 @@ import {  BaseEntity,
   @IsString()
   status: string;
   
+  @ManyToOne(()=> UserEntity, user => user.friends)
+  @JoinTable()
   user: UserEntity;
+
+  friend: UserEntity;
 
   @OneToOne(() => FriendEntity)
   @JoinTable()

@@ -11,7 +11,6 @@ import { UserService } from '../services/user.service';
 
 //APPLICATION DATA
 require('dotenv').config();
-let env: { [k: string]: string | undefined }
 
 const uid = process.env.APIUID;
 const secret = process.env.APISECRET;

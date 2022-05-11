@@ -6,18 +6,17 @@ import { UserService } from '../services/user.service';
 import {JwtModule} from "@nestjs/jwt";
 import {jwtConstants} from "../models/user.model";
 import {AuthService} from "../services/auth.service";
-import { FilesService } from '../services/file.service';
-import File from '../entities/file.entity';
+import { FriendEntity } from '../entities/friend.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([UserEntity, File]),
+        TypeOrmModule.forFeature([UserEntity, FriendEntity]),
         JwtModule.register({
             secret: jwtConstants.secret,
             signOptions: { expiresIn: '1d' },
         }),],
     controllers: [UserController],
-    providers: [UserService, AuthService, FilesService],
+    providers: [UserService, AuthService],
     exports: [UserService],
 })
 export class UserModule {}

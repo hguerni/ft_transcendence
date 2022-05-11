@@ -1,7 +1,8 @@
 export interface User {
   id : number
   username: string
-  status?: string
+  online?: number
   email? : string
-  img?: string
+  avatar?: string
+  twofa: boolean
 }
