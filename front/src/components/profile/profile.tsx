@@ -20,13 +20,14 @@ import crayon from "../../images/crayon-de-couleur.png";
 // import { userInfo } from 'os';
 import TimeAgo from 'react-timeago';
 import Avatar from './avatar.component';
-import { truncate } from 'fs';
 
 function Profile() {
 
   const [unauthorized, setUnauthorized] = useState(false);
   const [avatar, setAvatar] = useState('');
   const[modifyName, setModify] = useState(true);
+  const[twofa, setToggle] = useState(false)
+  const[activateTwoFa, setTwofa] = useState(false);
   const [user, setUser] = useState({
       username: '',
       avatar: '',
@@ -50,16 +51,16 @@ function Profile() {
     if (target.checked) {
         target.checked = true;
         console.log(target.checked);
-        //user.twofa = false;
-        //setUser(user);
-        //axios.get("2fa/activate");
+        setTwofa(true);
+        setToggle(true)
     }
     else {
         console.log(target.checked);
         target.checked = false
-        //user.twofa = true;
-       // setUser(user);
-       // axios.get("2fa/disable");
+        user.twofa = false;
+        setUser(user);
+        setToggle(false)
+        axios.get("2fa/disable");
     }
   };
 
@@ -108,6 +109,7 @@ function Profile() {
               console.log(data);
               if (mounted) setUser(data);
               if (mounted) setAvatar(data.avatar);
+              if (mounted) setToggle(data.twofa)
           }
           catch(err){if(mounted) setUnauthorized(true);}
       }
@@ -119,13 +121,15 @@ function Profile() {
   if (unauthorized)
       return <Redirect to={'/'}/>;
 
+  if (activateTwoFa)
+    return <Redirect to={'/activate2fa'}/>;
 
   return (
     <> 
         <h1>authen 2FA
 
             <label className="switch">
-            <input type="checkbox" onChange={handleChange} />
+            <input type="checkbox" checked={twofa} onChange={handleChange} />
                 <span className="slider round"></span>
             </label>
             </h1>

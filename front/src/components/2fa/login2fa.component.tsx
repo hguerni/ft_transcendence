@@ -2,7 +2,7 @@
 import { SyntheticEvent, useEffect, useState } from "react";
 import axios from 'axios';
 
-import logo from '../images/ICON.svg';
+import logo from '../../images/ICON.svg';
 import {Redirect} from "react-router-dom";
 
 

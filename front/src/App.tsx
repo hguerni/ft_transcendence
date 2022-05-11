@@ -7,7 +7,8 @@ import Navbar from './components/navbar.component';
 import Game from './components/game/Game';
 import Profiles from './components/profile/profilepublic';
 import './App.css';
-import TwoFa from "./components/login2fa.component";
+import TwoFa from "./components/2fa/login2fa.component";
+import ActivateTwoFa from "./components/2fa/activate2fa.component";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route exact path={"/profile"} component={Profile} />
         <Route exact path={"/profiles"} component={Profiles} />
         <Route exact path={"/2fa"} component={TwoFa} />
+        <Route exact path={"/activate2fa"} component={ActivateTwoFa} />
         <Route exact path={"/game"} component={Game} />
         <Route exact path={"/game/training"} component={Game} />
         <Route exact path={"/game/fighting"} component={Game} />

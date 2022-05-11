@@ -16,7 +16,8 @@ export class UserService {
   ) {}
 
   async saveTwoFactorSecret(secret: string, clientID: number): Promise<any> {
-    return this.userRepo.update(clientID, { twofaSecret: secret });
+    const client = await this.findByFtId(clientID);
+    return this.userRepo.update(client.id, { twofaSecret: secret });
   }
 
   async enableTwoFactor(clientID: number): Promise<any> {

@@ -39,7 +39,6 @@ export class AuthController {
     async activate2fa(@Req() request: Request) {
         const clientID = await this.authService.clientID(request);
         const OtpAuthUrl = await this.authService.twoFactorAuthSecret(clientID);
-        await this.userService.enableTwoFactor(clientID);
         return this.authService.createQRcode(OtpAuthUrl);
     }
 
@@ -47,6 +46,8 @@ export class AuthController {
     async verify2fa (@Req() request: Request, @Body() data) {
         const clientID = await this.authService.clientID(request);
         const validated = await this.authService.twoFactorAuthVerify(data.code, clientID);
+        console.log(validated);
+        console.log("LOL");
 
         if (!validated)
             throw new UnauthorizedException('Wrong authentication code');
