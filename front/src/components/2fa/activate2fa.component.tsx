@@ -75,7 +75,7 @@ function ActivateTwoFa(){
                     <p/>  }
 
                 <div className="form-floating">
-                    <input required className="form-control" id="floatingInput" placeholder="12345"
+                    <input required className="form-control" id="floatingInput" placeholder="entercode"
                            onChange={e => setCode(e.target.value)}/>
                     <label htmlFor="floatingInput">Enter authentication code</label>
                 </div>
