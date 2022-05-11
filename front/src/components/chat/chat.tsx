@@ -9,6 +9,18 @@ import buttonsubmit from "../../images/submitChat2.png";
 import directmessage from "../../images/directChat.png";
 import addgroup from "../../images/add-group.png";
 import Popup from 'reactjs-popup';
+import { Server } from "socket.io";
+import { io } from "socket.io-client";
+
+
+const socket = io("ws://localhost:3030");
+
+class info {
+    /*creation d'une class qui servira a determiner le nom 
+    ainsi l'input de la personne qui envoi le message*/
+    name: string = "";
+    inputValue: string = "";
+}
 
 
 function ButtonCreateCanal(){
@@ -32,27 +44,59 @@ function ButtonCreateCanal(){
 }
 
 function CreatePopup() {
-    const [gameName, setGameName] = useState("");
+    const [channelName, setChannelName] = useState("");
     const [open, setOpen] = useState(false);
   
     return (
       <div>
           <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
-       
         <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
           <div>Nom du Channel a creer</div>
           <input className="input"
             type="text"
-            value={gameName}
-            onChange={(e) => setGameName(e.target.value)}
+            value={channelName}
+            onChange={(e) => setChannelName(e.target.value)}
           />
-          <button className="gameButton" onClick={() => { setOpen(false); setGameName("")}}>SEND</button>
+          <button className="gameButton" onClick={() => { setOpen(false); setChannelName("")}}>SEND</button>
         </Popup>
+
       </div>
+
     );
   }
 
 function Bodychat() {
+
+    /*A chaque fois que le state sera appeler le composant sera recre et changera*/
+
+    const [infoInputChat, setInputValue] = useState(new info()); //state qui prend une instance de ma class info
+    
+    const [message, setMessage] = useState("");
+
+    /*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
+    socket.emit("joinroom");
+
+    /*fonction qui sera executer quand l'utilisateur  aura appuyer pour envoyer le message*/
+    function sendInput(message: string)
+    {
+        // future post a envoyer au back ...
+        
+       
+
+
+        infoInputChat.inputValue = message;
+        // envoi d'un message au serveur. Le Json.stringify sert a transformer un objet en string
+        socket.emit("bonjour du client",  JSON.stringify(infoInputChat));
+    }
+
+    // réception d'un message envoyé par le serveur
+    socket.on("bonjour du serveur", (message: string) => {
+            // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+            setInputValue(JSON.parse(message));
+    });
+
+    infoInputChat.name = "rayane";
+
 
     return (
         <>
@@ -69,14 +113,26 @@ function Bodychat() {
                 </div>
 
                 <div className="centerChat">
-
+                    {/* condition qui sert a afficher le name de la personne 
+                    qui envoi le message que si un input est rentrer */}
+                        {infoInputChat.inputValue != "" ? (
+            
+                        <h1 className="inputName"> {infoInputChat.name} </h1>
+                      
+                        )
+                    :
+                    (
+                        ""
+                    )}
+                    <h1 className="inputValue">{infoInputChat.inputValue}</h1>
 
                 </div>
                 <div className="footerChat">
                     
-                    <input id="inputrayane" type="text" placeholder="Write message" />
+                    <input id="inputrayane" type="text" placeholder="Write message" value={message} onChange={(e) => setMessage(e.target.value)}/>
+
                     <div className="submitChat">
-                        <button className="buttonSubmit"> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
+                        <button className="buttonSubmit" onClick={() => { console.log(infoInputChat.inputValue); sendInput(message); setMessage("");}}> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
 
                     </div> 
                 </div>
@@ -87,6 +143,8 @@ function Bodychat() {
 }
 
 function Channel() {
+
+    
 
     return (
         <>
@@ -107,8 +165,7 @@ function Channel() {
                 </div> 
 
             </div>
-            
-            
+                    
         </>
     );
 }
@@ -145,7 +202,7 @@ function Chat() {
         <>
             <div className="rayaneleboloss">
                 <Channel/>
-                <ButtonCreateCanal/>
+                {/* <ButtonCreateCanal/> */}
                 <Bodychat/>
                 <ListChannel/>
             </div>

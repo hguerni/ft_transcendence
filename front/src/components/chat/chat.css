@@ -359,3 +359,14 @@
     padding-right: 1.5rem;
     border-radius: 0px 20px 0px 0px;
 }
+
+.inputName {
+    color: white;
+    font-size: 25px;
+}
+
+.inputValue {
+    color: rgb(184, 190, 190);
+    font-size: 20px;
+
+}
