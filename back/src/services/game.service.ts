@@ -83,6 +83,8 @@ export class GameService {
       game.launchBall(game);
       wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(game.pong));
       wsServer.to(game.room.name).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(game.room))
+      if (game.room.p1_score >= 2 || game.room.p2_score >= 2)
+        clearInterval(game.intervalId_0);
     }
   }
 
@@ -182,7 +184,6 @@ export class GameService {
       this.playersIds.set("right", clientId);
       this.nb_players++;
       this.room.canJoinGame = false;
-      logger.log("testttttt");
     }
   }
 
@@ -211,5 +212,9 @@ export class GameService {
 
   getRoomProps(): RoomProps {
     return this.room;
+  }
+
+  getPlayerId(id: string): string {
+    return this.playersIds.get(id);
   }
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { GameJoin, GameWatch, GetRooms } from './GameArea';
-import { socket } from "./GameFighting";
+import { socket } from "./Game";
+import { CreateGamePopUp } from "./GameFighting";
 
 export interface RoomProps {
   name: string;
@@ -79,8 +80,9 @@ export function GameSearching() {
             return <GamesCards key={item.name} room={item}/>
         })}
       </div>
-      <div style={{margin: 'auto', width: 'fit-content'}}>
+      <div style={{marginTop: '10px', margin: 'auto', width: 'fit-content', textAlign: 'center'}}>
         <button className='gameButton' onClick={() => AutoMatching(rooms)}>AUTO MATCHING</button>
+        <CreateGamePopUp/>
       </div>
       {}
       <div style={{color: 'white', textAlign: 'center'}}>{message}</div>
