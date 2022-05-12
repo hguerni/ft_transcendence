@@ -22,10 +22,12 @@ export class RoomProps {
   name: string = v4().substring(0, 10);
   trainingMode: boolean = false;
   canJoinGame: boolean = true;
-  p1_name: string = "";
-  p2_name: string = "";
+  p1_name: string = "p1_name";
+  p2_name: string = "p2_name";
   p1_readyToStart: boolean = false;
   p2_readyToStart: boolean = false;
+  p1_score: number = 0;
+  p2_score: number = 0;
 }
 
 function genRandomInt(min, max) {
@@ -69,11 +71,20 @@ export class GameService {
     if (game.pong.ball_x < 0 || game.pong.ball_x > game.pong.width)
     {
       if (game.pong.ball_x < 0)
+      {
         game.pong.score_r++;
+        game.room.p2_score++;
+      }
       else
+      {
         game.pong.score_l++;
+        game.room.p1_score++;
+      }
       game.launchBall(game);
       wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(game.pong));
+      wsServer.to(game.room.name).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(game.room))
+      if (game.room.p1_score >= 2 || game.room.p2_score >= 2)
+        clearInterval(game.intervalId_0);
     }
   }
 
@@ -173,7 +184,6 @@ export class GameService {
       this.playersIds.set("right", clientId);
       this.nb_players++;
       this.room.canJoinGame = false;
-      logger.log("testttttt");
     }
   }
 
@@ -202,5 +212,9 @@ export class GameService {
 
   getRoomProps(): RoomProps {
     return this.room;
+  }
+
+  getPlayerId(id: string): string {
+    return this.playersIds.get(id);
   }
 }

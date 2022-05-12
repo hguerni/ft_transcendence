@@ -2,14 +2,45 @@ import { userInfo } from 'os';
 import * as React from 'react'
 import UserService from '../services/user.service';
 import styled from 'styled-components'
+import { Redirect, useHistory } from 'react-router-dom';
+import axios from 'axios';
+import { User } from '../models/user.model';
 
 function Navbar(){
+  const [user, setUser] = React.useState({
+    online: 0,
+    username: '',
+    avatar: '',
+    email: '',
+    id: 0
+  });
+  const history = useHistory();
+
+  const handleKey = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter"){
+      let mounted = true
+      const {data} = await axios.get('user/name/' + e.currentTarget.value);
+      console.log(data);
+      if (mounted && data) setUser(data);
+      mounted = false;
+    }
+  };
+  if (user.id !== 0) {
+    let id  = user.id;
+    history.push("/profiles", {id: user.id});
+    user.id = 0;
+  }
   let props = {brand: {name: "transcendance", to: "/"}, links: [{name: "Logout", to: UserService.logout}]}
   const { brand, links } = props;
   const NavLinks: any = () => links.map((link: { name: string, to: () => Promise<void> }) => <Li key={link.name}><button onClick={link.to}>{link.name}</button></Li>);
   return (
     <Navbarr>
       <Brand href={brand.to}>{brand.name}</Brand>
+      <input
+        type="text"
+        placeholder="Search"
+        onKeyDown={handleKey}
+      />
       <Ul>
         <NavLinks />
       </Ul>

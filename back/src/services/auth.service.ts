@@ -1,6 +1,7 @@
 
 import {Body, Injectable} from '@nestjs/common';
 import {Request} from 'express';
+import {authenticator} from "otplib";
 import {JwtService} from "@nestjs/jwt";
 import {UserService} from "./user.service";
 import {UpdateUserDTO, RegisterDTO} from "../models/user.model";
@@ -13,6 +14,27 @@ export class AuthService {
         private userService: UserService,
     ) {}
   
+    async twoFactorAuthSecret(clientID: number) {
+        const client = await this.userService.findByFtId(clientID);
+        const secret = authenticator.generateSecret();
+        await this.userService.saveTwoFactorSecret(secret, clientID);
+
+        return  authenticator.keyuri(client.email, 'ft_transcendence', secret); //OtpAuthUrl
+    }
+
+    async createQRcode(otpauthUrl: string) {
+        var QRCode = require('qrcode');
+        await QRCode.toFile('./uploads/qrcode.png', otpauthUrl);
+
+        return {url: 'http://localhost:3030/uploads/qrcode.png'};
+    }
+
+    async twoFactorAuthVerify(code: string, clientID: number) {
+        const client = await this.userService.findByFtId(clientID);
+        console.log(code)
+        console.log(client.twofaSecret)
+        return authenticator.verify({token: code, secret: client.twofaSecret});
+    }
 
     async clientID(request: Request): Promise<number> {
         const cookie = request.cookies['clientID'];
@@ -23,7 +45,7 @@ export class AuthService {
 
     async newUser(@Body() data: RegisterDTO, clientID: number) {
         data.id = clientID;
-        data.authentication = false;
+        data.twofa = false;
 
         await this.userService.createUser(data);
     }

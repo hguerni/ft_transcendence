@@ -20,8 +20,6 @@ export class PongProps {
 	paddle_r_y: number = 50;
 }
 
-console.log("youpi")
-
 export function GameStartTraining(client: Socket) {
 	client.emit("START_TRAINING");
 }
@@ -47,9 +45,16 @@ export function GetRooms(client: Socket) {
 	client.emit("GET_ROOMS");
 }
 
+export function GetCurrentRoom(client: Socket) {
+	client.emit("GET_CURRENT_ROOM");
+}
+
 export function GameCreate(client: Socket, room: string) {
 	client.emit("GAME_CREATE", room);
-	console.log("testttt");
+}
+
+export function GameLeave(client: Socket) {
+	client.emit("GAME_LEAVE");
 }
 
 export default function Gamezone(props: {client: Socket}) {

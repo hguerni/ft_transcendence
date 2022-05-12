@@ -7,7 +7,7 @@ import { v4 } from 'uuid'
 
 export let logger: Logger = new Logger('gameTest');
 
-@WebSocketGateway({cors: {origin: "*"}})
+@WebSocketGateway({cors: {origin: "*"}, namespace: 'game'})
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer() wsServer: Server;
@@ -15,6 +15,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   private gameRooms: Map<string, GameService>;
   private clientsToRoom: Map<string, string> = new Map();
   private getRoomsGroup: string = v4(); // room name of clients who wants infos on games (or rooms) in progress
+  private watchersIds: string[] = [""];
 
   constructor() {
     this.gameRooms = new Map();
@@ -29,6 +30,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   handleDisconnect(client: Socket) {
+    const room = this.clientsToRoom.get(client.id);
+    if (room != undefined)
+    {
+      this.clientsToRoom.delete(client.id);
+      client.leave(room);
+    }
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
@@ -40,6 +47,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     this.wsServer.to(clients).emit("SEND_ROOMS_INFOS", JSON.stringify(rooms))
     this.logger.log("SEND_ROOMS_INFOS");
+  }
+
+  private handleSendingCurrentRoom(clientId: string) {
+    let room: RoomProps = this.gameRooms.get(this.clientsToRoom.get(clientId)).getRoomProps();
+    this.wsServer.to(clientId).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(room))
+    this.logger.log("SEND_CURRENT_ROOM_INFOS");
   }
 
   @SubscribeMessage('MOVE_PADDLE_UP')
@@ -57,17 +70,33 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('GAME_START')
   handleGameStarting(client: Socket) {
     const room = this.clientsToRoom.get(client.id);
-    logger.log(room);
+    let p1_name = this.gameRooms.get(room).getRoomProps().p1_name;
+    let p2_name = this.gameRooms.get(room).getRoomProps().p2_name;
+    let p1_id = this.gameRooms.get(room).getPlayerId('left');
+    let p2_id = this.gameRooms.get(room).getPlayerId('right');
+
     this.gameRooms.get(room).setPlayerReady(client.id);
     if (this.gameRooms.get(room).getRoomProps().p1_readyToStart === true &&
       this.gameRooms.get(room).getRoomProps().p2_readyToStart === true)
       this.gameRooms.get(room).startGame(this.wsServer, room);
     this.logger.log("GAME_STARTED");
+    if (this.gameRooms.get(room).getRoomProps().p1_readyToStart && this.gameRooms.get(room).getRoomProps().p2_readyToStart)
+      this.wsServer.to(this.clientsToRoom.get(client.id)).emit("PLAYER_IS_READY", "");
+    else if (this.gameRooms.get(room).getPlayerId('left') === client.id)
+    {
+      this.wsServer.to(p2_id).emit("PLAYER_IS_READY", `${p1_name} is ready to start!`);
+      this.wsServer.to(p1_id).emit("PLAYER_IS_READY", `Waiting for ${p2_name} to start...`);
+    }
+    else
+    {
+      this.wsServer.to(p1_id).emit("PLAYER_IS_READY", `${p2_name} is ready to start!`);
+      this.wsServer.to(p2_id).emit("PLAYER_IS_READY", `Waiting for ${p1_name} to start...`);
+    }
   }
 
   @SubscribeMessage('START_TRAINING')
   handleStartingTraining(client: Socket) {
-    if (!(client.id in this.clientsToRoom)) {
+    if (!(this.clientsToRoom.has(client.id))) {
       const gameRoom = new GameService();
       const gameRoomName = gameRoom.getRoomProps().name;
       gameRoom.setPlayersIds(client.id);
@@ -91,10 +120,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('GAME_CREATE')
   handleCreatingRoom(client: Socket, room: string) {
-    if (client.id in this.clientsToRoom) {
-      this.wsServer.to(client.id).emit("USER_ALREADY_CREATED_GAME")
+    if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
+      this.wsServer.to(client.id).emit("USER_ALREADY_CREATED_GAME");
       return ;
     }
+    this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1);
     const gameRoom = new GameService();
     gameRoom.setRoomName(room);
     this.clientsToRoom.set(client.id, room);
@@ -102,19 +132,22 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.gameRooms.set(room, gameRoom);
     client.join(room);
     this.handleSendingRooms(this.getRoomsGroup);
+    this.handleSendingCurrentRoom(client.id);
     this.logger.log(`GAME ${room} CREATED`);
   }
 
   @SubscribeMessage('GAME_JOIN')
   handleJoiningRoom(client: Socket, room: string) {
-    if (this.clientsToRoom.has(client.id)) {
+    if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
       this.wsServer.to(client.id).emit("USER_ALREADY_JOINED_GAME")
       return ;
     }
+    this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1);
     this.clientsToRoom.set(client.id, room);
     this.gameRooms.get(room).setPlayersIds(client.id);
     client.join(room);
     this.handleSendingRooms(this.getRoomsGroup);
+    this.handleSendingCurrentRoom(client.id);
     this.logger.log("GAME_JOINED");
   }
 
@@ -122,20 +155,31 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   handleGettingRooms(client: Socket) {
     client.join(this.getRoomsGroup);
     this.handleSendingRooms(client.id);
-    logger.log(this.clientsToRoom.get(client.id));
+  }
+
+  @SubscribeMessage('GET_CURRENT_ROOM')
+  handleGettingCurrentRoom(client: Socket) {
+    this.handleSendingCurrentRoom(client.id);
   }
 
   @SubscribeMessage('GAME_WATCH')
   handleWatchingGame(client: Socket, roomToWatch: string) {
+    if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
+      this.wsServer.to(client.id).emit("USER_ALREADY_JOINED_GAME")
+      return ;
+    }
+    this.watchersIds.push(client.id);
     client.join(roomToWatch);
     this.clientsToRoom.set(client.id, roomToWatch);
+    this.handleSendingCurrentRoom(client.id);
+    this.wsServer.to(client.id).emit("GAME_UPDATE", JSON.stringify(this.gameRooms.get(roomToWatch).getPongProps()));
     this.logger.log(`Client ${client.id} has joined the room ${roomToWatch}`);
     this.logger.log("GAME_WATCHED");
   }
 
   @SubscribeMessage('GAME_LEAVE')
   handleLeavingRoom(client: Socket) {
-    const room = this.clientsToRoom[client.id];
+    const room = this.clientsToRoom.get(client.id);
     this.clientsToRoom.delete(client.id);
     client.leave(room);
     this.logger.log(`Client ${client.id} has leaved the room ${room}`);

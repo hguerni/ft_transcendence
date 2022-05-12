@@ -20,7 +20,13 @@ import {  BaseEntity,
   @IsString()
   status: string;
   
-  @ManyToMany(() => UserEntity)
+  @ManyToOne(()=> UserEntity, user => user.friends)
   @JoinTable()
-  users: UserEntity;
+  user: UserEntity;
+
+  friend: UserEntity;
+
+  @OneToOne(() => FriendEntity)
+  @JoinTable()
+  friendship: FriendEntity;
 }

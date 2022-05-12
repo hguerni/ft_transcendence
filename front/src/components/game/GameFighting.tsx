@@ -3,11 +3,11 @@ import GameArea, { GameStart, GameCreate } from './GameArea';
 import { io, Socket } from "socket.io-client";
 import Popup from 'reactjs-popup';
 import { v4 } from 'uuid'
-import { GamesInProgress } from "./GameSearching";
+import { GameSearching } from "./GameSearching";
+import { GameInProgress } from "./GameInProgress";
+import { socket } from "./Game";
 
-export const socket: Socket = io("ws://localhost:3030");
-
-function CreateGamePopUp() {
+export function CreateGamePopUp() {
   const [gameName, setGameName] = useState<string>(v4().substring(0, 10));
   const [open, setOpen] = useState(false);
 
@@ -28,20 +28,29 @@ function CreateGamePopUp() {
 }
 
 export default function GameFighting() {
+  const [msg, setMsg] = useState<string>("");
+
+  socket.on("PLAYER_IS_READY", (msg: string) => {
+    setMsg(msg);
+  });
+
   return (
     <div className="gameFighting">
       <div>
         <div className="searchGame">
-          <GamesInProgress/>
+          <GameSearching/>
+        </div>
+        <div className="gameInProgress">
+          <GameInProgress/>
         </div>
       </div>
       <div className='gameArea'>
         <GameArea client={socket}/>
       </div>
       <div className="gameArea">
-        <CreateGamePopUp/>
         <button className="gameButton" onClick={() => GameStart(socket)}>START GAME</button>
       </div>
+      <div className="gameArea">{msg}</div>
     </div>
   );
 }

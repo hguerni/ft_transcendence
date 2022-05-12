@@ -5,7 +5,10 @@ import {
   Post,
   Put,
   Req,
+  Res,
   UseGuards,
+  Param,
+  ParseIntPipe,
   UseInterceptors,
   ValidationPipe,
   UploadedFile
@@ -23,7 +26,17 @@ export class UserController {
 
   @Get()
   async findAll(){
-    return this.userService.findAll();
+    return await this.userService.findAll();
+  }
+
+  @Get("name/:param")
+  async searchUser(@Param('param') param) {
+    return await this.userService.findByUserName(param);
+  }
+
+  @Get(":id")
+  async getProfile(@Param('id', new ParseIntPipe()) id) {
+    return await this.userService.getById(id);
   }
 
   @Post('upload')
@@ -36,19 +49,12 @@ export class UserController {
       })
   }))
 
-  // @Post('avatar')
-  // @UseInterceptors(FileInterceptor('file'))
-  // async addAvatar(@Req() req, @UploadedFile() file: diskStorage.File) {
-  //   const clientID = await this.authService.clientID(req);
-  //   return this.userService.addAvatar(clientID, file.buffer, file.originalname);
-  // }
-
   uploadFile(@UploadedFile() file) {
       return { url: `http://localhost:3030/uploads/${file.filename}`}
   }
 
   @Post("updateUser")
-  update(@Body(new ValidationPipe()) data: UpdateUserDTO) {
-    return this.userService.updateUser(data);
+  async update(@Body(new ValidationPipe()) data: UpdateUserDTO) {
+    return await this.userService.updateUser(data);
   }
 }
