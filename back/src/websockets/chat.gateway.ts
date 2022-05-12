@@ -33,7 +33,7 @@ import {
 	)
 	{
 		//console.log(client.handshake);
-		console.log(client.conn.request);
+		//console.log(client.conn.request);
 		let ret = {name: client.handshake.headers.name, socket: client};
 		this.Connected.push(ret);
 	}

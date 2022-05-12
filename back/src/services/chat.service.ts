@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { ChatEntity, chat_status } from "../entities/chat.entity";
 import { AddMemberDTO, ChatDTO } from "../models/chat.model";
-import { Repository } from "typeorm";
+import { EntityManager, Repository } from "typeorm";
 import { MsgEntity } from "../entities/msg.entity";
 import { MemberEntity } from "../entities/member.entity";
 import { MsgDTO } from "../models/chat.model";
@@ -28,7 +28,9 @@ export class ChatService {
         @InjectRepository(UserEntity)
         private userRepo: Repository<UserEntity>,
         @InjectRepository(MemberEntity)
-        private membersRepo: Repository<MemberEntity>
+        private membersRepo: Repository<MemberEntity>,
+        @InjectEntityManager()
+        private manager: EntityManager
       ) {}
     
     async pvmsg_init(login1: string, login2:string)
@@ -58,17 +60,25 @@ export class ChatService {
         return await this.chatRepository.findOne(name);
     }
 
+    // {login: psemsari,
+    // group: {name, message:[]}}
+
+    // {group: name,
+    // mess}
     async getPvmsg(login: string)
     {
-        const chat = await this.chatRepository.find({
-            select: ["id", "members"],
-            relations: ["members", "user"],
-            where: {
-                status: chat_status.pv_message,
-                // members: [{user: {login}}]
-            }
-        });
-        return chat;
+        const user = await this.userRepo.findOne({where: {login: login}});
+        console.log(user);
+        const members = await this.membersRepo.find({select: ['id', 'chat'], where: {user: user}, relations: ['chat']});
+        console.log(members);
+        const chat = await this.manager.createQueryBuilder()
+        .from(UserEntity, "user")
+        .addFrom(MemberEntity, "member");
+        // const chat = await this.chatRepository.createQueryBuilder("chat")
+        //     .leftJoinAndSelect("chat.members", "members")
+        //     .where("members = :mb", {members})
+        //     .getManyAndCount();
+        console.log(chat[0]);
     }
 
     async getUser(name: string)
