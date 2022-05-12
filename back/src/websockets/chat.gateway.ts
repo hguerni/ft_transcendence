@@ -32,6 +32,8 @@ import {
 		@ConnectedSocket() client: Socket
 	)
 	{
+		//console.log(client.handshake);
+		console.log(client.conn.request);
 		let ret = {name: client.handshake.headers.name, socket: client};
 		this.Connected.push(ret);
 	}
@@ -42,12 +44,13 @@ import {
 		@ConnectedSocket() client : Socket
 	): void
 	{
+		//this.chatService.getChat("pv-")
 		this.Connected.forEach(element => {
-			if (element.name == name)
-			{
-				element.socket.emit('private-message', {name, message});
-				return;
-			}
+		if (element.name == name)
+		{
+			element.socket.emit('private-message', {name, message});
+			return;
+		}
 		});
 	}
 
@@ -71,6 +74,14 @@ import {
 		this.chatService.addMember(data)
 		.then((val) => client.emit('addchat', val))
 		.catch((error) => client.emit('addchat', error));
+	}
+
+	@SubscribeMessage('test')
+	test(
+		@ConnectedSocket() client: Socket
+	): void
+	{
+		this.chatService.getPvmsg("psemsari").then( (v) => console.log(v));
 	}
 
     @SubscribeMessage('disconnect')
