@@ -386,11 +386,15 @@
     font-size: 35px;
 }
 
-.history {
+.chathistory {
+    font-size: 20px;
+    color: rgb(184, 190, 190);
     overflow: auto;
+    margin-left: 1rem;
+    word-wrap: break-word
 }
 
-.history::-webkit-scrollbar {
+.chathistory::-webkit-scrollbar {
     display: none;
 }
 

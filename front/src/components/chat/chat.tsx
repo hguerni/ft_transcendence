@@ -101,7 +101,7 @@ function Bodychat() {
     // réception d'un message envoyé par le serveur
     socket.on("bonjour du serveur", (message: string) => {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-            console.log(message);
+
             setInputValue(JSON.parse(message));
 
             let tmp = [...arrayhistory];
@@ -144,17 +144,17 @@ function Bodychat() {
                     )}
                         {arrayhistory.map((item) => {
                    
-                        return <h1 className="history"> {item.inputValue} </h1>
+                        return <h1 className="chathistory"> {item.inputValue} </h1>
                         
                     })}
 
                 </div>
                 <div className="footerChat">
                     
-                    <input id="inputrayane" type="text" placeholder="Write message" value={message} onChange={(e) => setMessage(e.target.value)}/>
+                    <input id="inputrayane" type="text" placeholder="Write message" value={message} onChange={(e) => setMessage(e.target.value)} onKeyPress={(e) => {if (e.key === "Enter") {sendInput(message); setMessage("");}}}/>
 
                     <div className="submitChat">
-                        <button className="buttonSubmit" onClick={() => { console.log(infoInputChat.inputValue); sendInput(message); setMessage("");}}> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
+                        <button className="buttonSubmit" onClick={() => {  sendInput(message); setMessage("");}}> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
 
                     </div> 
                 </div>
