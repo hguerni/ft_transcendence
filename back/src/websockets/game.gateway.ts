@@ -145,4 +145,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       client.join("channel1");
     
     }
+
+    @SubscribeMessage('CREATE_CHANNEL')
+    handleCreateChannel(client: Socket, channelName: string) {
+  
+      client.join("channel2");
+      this.wsServer.to("channel2").emit("CHANNEL_CREATED",  channelName) // le serveur se connect sur le channel1 et retour le message
+    
+    }
 }

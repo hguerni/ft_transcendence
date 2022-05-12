@@ -15,6 +15,7 @@ import { io } from "socket.io-client";
 
 const socket = io("ws://localhost:3030");
 
+
 class info {
     /*creation d'une class qui servira a determiner le nom 
     ainsi l'input de la personne qui envoi le message*/
@@ -46,6 +47,12 @@ function ButtonCreateCanal(){
 function CreatePopup() {
     const [channelName, setChannelName] = useState("");
     const [open, setOpen] = useState(false);
+
+   function sendChannelName ()
+   {
+        socket.emit("CREATE_CHANNEL",  channelName);
+   }
+    
   
     return (
       <div>
@@ -55,9 +62,10 @@ function CreatePopup() {
           <input className="input"
             type="text"
             value={channelName}
+            
             onChange={(e) => setChannelName(e.target.value)}
           />
-          <button className="gameButton" onClick={() => { setOpen(false); setChannelName("")}}>SEND</button>
+          <button className="gameButton" onClick={() => { setOpen(false); sendChannelName(); setChannelName("")}}>SEND</button>
         </Popup>
 
       </div>
@@ -72,6 +80,7 @@ function Bodychat() {
     const [infoInputChat, setInputValue] = useState(new info()); //state qui prend une instance de ma class info
     
     const [message, setMessage] = useState("");
+    const [arrayhistory, setArrayhistory] = useState<info[]>([]);
 
     /*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
     socket.emit("joinroom");
@@ -92,7 +101,16 @@ function Bodychat() {
     // réception d'un message envoyé par le serveur
     socket.on("bonjour du serveur", (message: string) => {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+            console.log(message);
             setInputValue(JSON.parse(message));
+
+            let tmp = [...arrayhistory];
+            tmp.push(JSON.parse(message));
+           
+   
+            
+            setArrayhistory(tmp);
+  
     });
 
     infoInputChat.name = "rayane";
@@ -124,7 +142,11 @@ function Bodychat() {
                     (
                         ""
                     )}
-                    <h1 className="inputValue">{infoInputChat.inputValue}</h1>
+                        {arrayhistory.map((item) => {
+                   
+                        return <h1 className="history"> {item.inputValue} </h1>
+                        
+                    })}
 
                 </div>
                 <div className="footerChat">
@@ -142,9 +164,22 @@ function Bodychat() {
     );
 }
 
+
 function Channel() {
 
-    
+    const [channelName, setChannelName] = useState("");
+    const [arrayChannelName, setArrayChannelName] = useState<string[]>([]);
+
+    // réception d'un message envoyé par le serveur
+    socket.on("CHANNEL_CREATED", (message: string) => {
+        // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+        //setInputValue(message);
+        setChannelName(message);
+
+        let tmp = [...arrayChannelName];
+        tmp.push(message);
+        setArrayChannelName(tmp);
+    });
 
     return (
         <>
@@ -156,6 +191,12 @@ function Channel() {
                 </div>
 
                 <div className="centerChat">
+
+                    {arrayChannelName.map((item) => {
+                        
+                        return <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)} </h1>
+                        
+                    })}
 
 
                 </div>
