@@ -16,7 +16,7 @@ import lose_image from "../../images/lose-icon.svg";
 import rond_vert from "../../images/icons8-green-circle-48.svg";
 import rond_rouge from "../../images/icons8-red-circle-48.png";
 import nitendo from "../../images/nitendo.svg";
-import crayon from "../../images/index.png"
+import add_friend from "../../images/add-friend.png";
 // import { userInfo } from 'os';
 import TimeAgo from 'react-timeago';
 import { User } from '../../models/user.model';
@@ -74,7 +74,7 @@ function Profiles(props : any) {
                 <img src={avatar} alt="account" id="acc-img"/>
 
                 <div className="login">
-                    <h1>{user.username} <button className="btncrayon" > <img src={crayon} alt="account" id="crayon"/></button> </h1>
+                    <h1>{user.username} <button className="btncrayon" > <img src={add_friend} alt="account" id="crayon"/></button> </h1>
                 </div>
                 <div className="rank">
                     <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1>

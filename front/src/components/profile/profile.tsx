@@ -137,7 +137,7 @@ function Profile() {
 
 
             <div className="img-holder">
-                <button className="btn" onClick={handleClick}> <img src={camera} alt="account" id="camera"/></button>
+                <button className="btn" onClick={handleClick}> <img src={camera} alt="account" id="camera" title="Changer l'avatar"/></button>
                 <input className="btn" type="file" ref={hiddenFileInput} hidden onChange={e => upload(e.target.files)} style={{display: 'none'}}/>
             </div>
             <div className="conteneur-info">
