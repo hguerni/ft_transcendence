@@ -61,7 +61,8 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.25"
+    "@types/styled-components": "^5.1.25",
+    "@types/uuid": "^8.3.4"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.6",

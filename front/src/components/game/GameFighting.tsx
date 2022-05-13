@@ -56,7 +56,6 @@ export function GamesInProgress() {
     });
     //setInterval(GetRooms, 1000, socket);
     GetRooms(socket);
-    console.log("test");
   }, [])
 
   return (

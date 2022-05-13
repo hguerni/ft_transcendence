@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { useState } from 'react'; 
+import React, { Component, useEffect } from "react";
+import { useState } from 'react';
 import './chat.css';
 import { RestaurantRounded } from "@mui/icons-material";
 import ClearIcon from '@mui/icons-material/Clear';
@@ -11,14 +11,19 @@ import addgroup from "../../images/add-group.png";
 import Popup from 'reactjs-popup';
 import { Server } from "socket.io";
 import { io } from "socket.io-client";
+import { V4MAPPED } from "dns";
+import { v4 } from 'uuid'
 
 
 const socket = io("ws://localhost:3030");
 
+/*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
+socket.emit("joinroom");
 
 class info {
-    /*creation d'une class qui servira a determiner le nom 
+    /*creation d'une class qui servira a determiner le nom
     ainsi l'input de la personne qui envoi le message*/
+    key: string = v4();
     name: string = "";
     inputValue: string = "";
 }
@@ -26,11 +31,11 @@ class info {
 
 function ButtonCreateCanal(){
 
-    const [Chatbox, setChatbox] = useState(["Direct Messages"]); 
-    
+    const [Chatbox, setChatbox] = useState(["Direct Messages"]);
+
     function addComponent() {
         setChatbox([...Chatbox, "Direct Messages"]);
-    } 
+    }
 
     return (
          <>
@@ -52,8 +57,8 @@ function CreatePopup() {
    {
         socket.emit("CREATE_CHANNEL",  channelName);
    }
-    
-  
+
+
     return (
       <div>
           <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
@@ -62,7 +67,7 @@ function CreatePopup() {
           <input className="input"
             type="text"
             value={channelName}
-            
+
             onChange={(e) => setChannelName(e.target.value)}
           />
           <button className="gameButton" onClick={() => { setOpen(false); sendChannelName(); setChannelName("")}}>SEND</button>
@@ -73,48 +78,38 @@ function CreatePopup() {
     );
   }
 
-function Bodychat() {
+/*fonction qui sera executer quand l'utilisateur  aura appuyer pour envoyer le message*/
+function sendInput(message: string)
+{
+    let infoInputChat = new info(); // créé infoInputChat avec une nouvelle clé unique
 
+    // future post a envoyer au back ...
+    infoInputChat.name = "rayane";
+    infoInputChat.inputValue = message;
+    // envoi d'un message au serveur. Le Json.stringify sert a transformer un objet en string
+    socket.emit("bonjour du client",  JSON.stringify(infoInputChat));
+}
+
+function Bodychat() {
     /*A chaque fois que le state sera appeler le composant sera recre et changera*/
 
-    const [infoInputChat, setInputValue] = useState(new info()); //state qui prend une instance de ma class info
-    
+    const [arrayHistory, setArrayhistory] = useState<info[]>([]);
+    const [newInfo, setNewInfo] = useState<info>(new info());
     const [message, setMessage] = useState("");
-    const [arrayhistory, setArrayhistory] = useState<info[]>([]);
 
-    /*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
-    socket.emit("joinroom");
+    useEffect(() => {
+        let tmp = [...arrayHistory];
+        tmp.push(newInfo);
+        setArrayhistory(tmp);
+    }, [newInfo]);
 
-    /*fonction qui sera executer quand l'utilisateur  aura appuyer pour envoyer le message*/
-    function sendInput(message: string)
-    {
-        // future post a envoyer au back ...
-        
-       
-
-
-        infoInputChat.inputValue = message;
-        // envoi d'un message au serveur. Le Json.stringify sert a transformer un objet en string
-        socket.emit("bonjour du client",  JSON.stringify(infoInputChat));
-    }
-
-    // réception d'un message envoyé par le serveur
-    socket.on("bonjour du serveur", (message: string) => {
-            // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-
-            setInputValue(JSON.parse(message));
-
-            let tmp = [...arrayhistory];
-            tmp.push(JSON.parse(message));
-           
-   
-            
-            setArrayhistory(tmp);
-  
-    });
-
-    infoInputChat.name = "rayane";
-
+    useEffect(() => {
+        // réception d'un message envoyé par le serveur
+        socket.on("bonjour du serveur", (message: string) => {
+        // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+            setNewInfo(JSON.parse(message));
+        });
+    }, []);
 
     return (
         <>
@@ -126,37 +121,27 @@ function Bodychat() {
                         <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
                         <button className="buttonInviteUsers"> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
                     </div>
-
-
                 </div>
 
                 <div className="centerChat">
-                    {/* condition qui sert a afficher le name de la personne 
-                    qui envoi le message que si un input est rentrer */}
-                        {infoInputChat.inputValue != "" ? (
-            
-                        <h1 className="inputName"> {infoInputChat.name} </h1>
-                      
-                        )
-                    :
-                    (
-                        ""
-                    )}
-                        {arrayhistory.map((item) => {
-                   
-                        return <h1 className="chathistory"> {item.inputValue} </h1>
-                        
+                    {arrayHistory.map((item) => {
+                        return (
+                            <div key={item.key}>
+                                <h1 className="inputName"> {item.name} </h1>
+                                <h1 className="chathistory"> {item.inputValue} </h1>
+                            </div>
+                        );
                     })}
-
                 </div>
+
                 <div className="footerChat">
-                    
+
                     <input id="inputrayane" type="text" placeholder="Write message" value={message} onChange={(e) => setMessage(e.target.value)} onKeyPress={(e) => {if (e.key === "Enter") {sendInput(message); setMessage("");}}}/>
 
                     <div className="submitChat">
                         <button className="buttonSubmit" onClick={() => {  sendInput(message); setMessage("");}}> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
 
-                    </div> 
+                    </div>
                 </div>
 
             </div>
@@ -170,16 +155,19 @@ function Channel() {
     const [channelName, setChannelName] = useState("");
     const [arrayChannelName, setArrayChannelName] = useState<string[]>([]);
 
-    // réception d'un message envoyé par le serveur
-    socket.on("CHANNEL_CREATED", (message: string) => {
-        // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-        //setInputValue(message);
-        setChannelName(message);
+    useEffect(() => {
+      // réception d'un message envoyé par le serveur
+        socket.on("CHANNEL_CREATED", (message: string) => {
+            // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+            //setInputValue(message);
+            setChannelName(message);
 
-        let tmp = [...arrayChannelName];
-        tmp.push(message);
-        setArrayChannelName(tmp);
-    });
+            let tmp = [...arrayChannelName];
+            tmp.push(message);
+            setArrayChannelName(tmp);
+        });
+      }, []);
+
 
     return (
         <>
@@ -193,20 +181,20 @@ function Channel() {
                 <div className="centerChat">
 
                     {arrayChannelName.map((item) => {
-                        
+
                         return <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)} </h1>
-                        
+
                     })}
 
 
                 </div>
                 <div className="footerChatchannel">
-                    
 
-                </div> 
+
+                </div>
 
             </div>
-                    
+
         </>
     );
 }
@@ -226,13 +214,13 @@ function ListChannel() {
 
                 </div>
                 <div className="footerChatList">
-                    
 
-                </div> 
+
+                </div>
 
             </div>
-            
-            
+
+
         </>
     );
 }
@@ -248,9 +236,9 @@ function Chat() {
                 <ListChannel/>
             </div>
             {/* <DirectMessages /> */}
-            
-            
-            
+
+
+
         </>
     );
 }
@@ -274,12 +262,12 @@ function DirectMessages(props: any) {
                     <h1> {props.text} </h1>
                 </div>
                 <div className="footerChat">
-                    
+
                     <input id="inputrayane" type="text" placeholder="Write message" />
                     <div className="submitChat">
                         <button className="buttonSubmit"> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
 
-                    </div> 
+                    </div>
                 </div>
 
             </div>
