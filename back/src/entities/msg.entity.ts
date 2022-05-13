@@ -24,6 +24,7 @@ import { ChatEntity } from './chat.entity';
   created: Date;
 
   @OneToOne(() => MemberEntity)
+  @JoinColumn()
   member: MemberEntity;
 
   @Column()

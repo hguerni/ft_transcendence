@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { All, Injectable } from "@nestjs/common";
 import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { ChatEntity, chat_status } from "../entities/chat.entity";
 import { AddMemberDTO, ChatDTO } from "../models/chat.model";
-import { EntityManager, Repository } from "typeorm";
+import { createQueryBuilder, EntityManager, Repository } from "typeorm";
 import { MsgEntity } from "../entities/msg.entity";
 import { MemberEntity } from "../entities/member.entity";
 import { MsgDTO } from "../models/chat.model";
@@ -69,16 +69,8 @@ export class ChatService {
     {
         const user = await this.userRepo.findOne({where: {login: login}});
         console.log(user);
-        const members = await this.membersRepo.find({select: ['id', 'chat'], where: {user: user}, relations: ['chat']});
+        const members = await this.membersRepo.find({select: ['id', 'chat'], where: {user: user}, relations: ['chat', 'chat.messages']});
         console.log(members);
-        const chat = await this.manager.createQueryBuilder()
-        .from(UserEntity, "user")
-        .addFrom(MemberEntity, "member");
-        // const chat = await this.chatRepository.createQueryBuilder("chat")
-        //     .leftJoinAndSelect("chat.members", "members")
-        //     .where("members = :mb", {members})
-        //     .getManyAndCount();
-        console.log(chat[0]);
     }
 
     async getUser(name: string)
@@ -95,10 +87,17 @@ export class ChatService {
 
     async addMsg(data: MsgDTO){
         const chat = await this.chatRepository.findOne(data.chatId, {relations: ["messages"]});
-        const message = this.msgRepo.create({ "message": data.message, "chat": chat});
+        console.log(chat);
+        const member = await this.membersRepo.findOne(data.userId);
+        console.log(member);
+        const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
+        console.log(message);
         chat.messages.push(message);
-        await this.chatRepository.save(chat);
-        return await this.msgRepo.save(message);
+        console.log(chat);
+        const resu = await this.chatRepository.save(chat).catch((e) => console.log(e));
+        console.log(resu);
+        const resu2 = await this.msgRepo.save(message).catch((e) => console.log(e));
+        return resu2;
     }
 
     async addMember(data: AddMemberDTO)

@@ -8,6 +8,7 @@ import {
 	OnGatewayInit,
 	OnGatewayDisconnect
   } from '@nestjs/websockets';
+import { subscribeOn } from 'rxjs';
 
   import { Server, Socket } from 'socket.io'
   import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
@@ -52,6 +53,17 @@ import {
 			return;
 		}
 		});
+	}
+
+	@SubscribeMessage('addmsg')
+	addmsg(
+		@MessageBody() msg: MsgDTO,
+		@ConnectedSocket() client: Socket
+	): void
+	{
+		this.chatService.addMsg(msg)
+		.then((val) => client.emit('addmsg', val))
+		.catch((error) => client.emit('addmsg', error));
 	}
 
 	@SubscribeMessage('addchat')
