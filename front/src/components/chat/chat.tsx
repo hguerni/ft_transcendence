@@ -79,8 +79,7 @@ function CreatePopup() {
   }
 
 /*fonction qui sera executer quand l'utilisateur  aura appuyer pour envoyer le message*/
-function sendInput(message: string)
-{
+function sendInput(message: string) {
     let infoInputChat = new info(); // créé infoInputChat avec une nouvelle clé unique
 
     // future post a envoyer au back ...
@@ -101,7 +100,7 @@ function Bodychat() {
         let tmp = [...arrayHistory];
         tmp.push(newInfo);
         setArrayhistory(tmp);
-    }, [newInfo]);
+    }, [newInfo]); // useEffect est appelé uniquement quand newInfo change
 
     useEffect(() => {
         // réception d'un message envoyé par le serveur
@@ -109,7 +108,7 @@ function Bodychat() {
         // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             setNewInfo(JSON.parse(message));
         });
-    }, []);
+    }, []); // useEffect est appelé uniquement lors du premier render du composant
 
     return (
         <>
