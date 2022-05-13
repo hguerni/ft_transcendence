@@ -12,7 +12,7 @@ export default class UserService {
   }
 
   static async getActiveUserID() {
-    return await axios.get("users/getActiveUserID");
+    return await axios.get("userID");
   }
 
   static async getUserData() {

@@ -16,6 +16,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   private clientsToRoom: Map<string, string> = new Map();
   private getRoomsGroup: string = v4(); // room name of clients who wants infos on games (or rooms) in progress
   private watchersIds: string[] = [""];
+  private usersToClients: Map<number, string> = new Map();
 
   constructor() {
     this.gameRooms = new Map();
@@ -26,6 +27,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   handleConnection(client: Socket, ...args: any[]) {
+    const cookies = client.request.headers.cookie;
+    this.logger.log(cookies);
     this.logger.log(`Client connected: ${client.id}`);
   }
 
@@ -53,6 +56,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     let room: RoomProps = this.gameRooms.get(this.clientsToRoom.get(clientId)).getRoomProps();
     this.wsServer.to(clientId).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(room))
     this.logger.log("SEND_CURRENT_ROOM_INFOS");
+  }
+
+  @SubscribeMessage('LINK_CLIENT_TO_USER')
+  handleLinkClientToUser(client: Socket, userID: number) {
+    if (this.usersToClients.get(userID)) {
+      this.clientsToRoom.set(client.id, this.usersToClients.get(userID));
+      this.usersToClients.set(userID, client.id);
+    }
   }
 
   @SubscribeMessage('MOVE_PADDLE_UP')
@@ -121,7 +132,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('GAME_CREATE')
   handleCreatingRoom(client: Socket, room: string) {
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
-      this.wsServer.to(client.id).emit("USER_ALREADY_CREATED_GAME");
+      this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
       return ;
     }
     this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1);
@@ -139,10 +150,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('GAME_JOIN')
   handleJoiningRoom(client: Socket, room: string) {
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
-      this.wsServer.to(client.id).emit("USER_ALREADY_JOINED_GAME")
+      this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
       return ;
     }
-    this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1);
+    this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1)
     this.clientsToRoom.set(client.id, room);
     this.gameRooms.get(room).setPlayersIds(client.id);
     client.join(room);
@@ -165,7 +176,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('GAME_WATCH')
   handleWatchingGame(client: Socket, roomToWatch: string) {
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
-      this.wsServer.to(client.id).emit("USER_ALREADY_JOINED_GAME")
+      this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
       return ;
     }
     this.watchersIds.push(client.id);
