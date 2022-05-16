@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from "class-validator";
+import { isNumber, IsNumber, IsString } from "class-validator";
 
 export class ChatDTO {
     @IsString()
@@ -9,4 +9,23 @@ export class ChatDTO {
 
     @IsString()
     password: string
+}
+
+export class MsgDTO {
+    @IsString()
+    message: string;
+
+    @IsNumber()
+    chatId: number;
+
+    @IsNumber()
+    userId: number;
+}
+
+export class AddMemberDTO {
+    @IsNumber()
+    userId: string;
+
+    @IsNumber()
+    chatId: number;
 }

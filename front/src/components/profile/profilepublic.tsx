@@ -16,79 +16,21 @@ import lose_image from "../../images/lose-icon.svg";
 import rond_vert from "../../images/icons8-green-circle-48.svg";
 import rond_rouge from "../../images/icons8-red-circle-48.png";
 import nitendo from "../../images/nitendo.svg";
-import crayon from "../../images/crayon-de-couleur.png";
+import add_friend from "../../images/add-friend.png";
 // import { userInfo } from 'os';
 import TimeAgo from 'react-timeago';
-import Avatar from './avatar.component';
+import { User } from '../../models/user.model';
 
-function Profile() {
-
+function Profiles(props : any) {
   const [unauthorized, setUnauthorized] = useState(false);
   const [avatar, setAvatar] = useState('');
-  const[modifyName, setModify] = useState(true);
-  const[twofa, setToggle] = useState(false)
-  const[activateTwoFa, setTwofa] = useState(false);
   const [user, setUser] = useState({
+      online: 0,
       username: '',
       avatar: '',
       email: '',
       id: 0,
-      twofa: false
   });
-
-   const hiddenFileInput = React.useRef<HTMLInputElement>(null);
-
-   // Programatically click the hidden file input element
-   // when the Button component is clicked
-   const handleClick = () => {
-     hiddenFileInput.current!.click();
-   };
-
-   const handleClickName = () => {setModify(false)} 
-
-   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target;
-    if (target.checked) {
-        target.checked = true;
-        console.log(target.checked);
-        setTwofa(true);
-        setToggle(true)
-    }
-    else {
-        console.log(target.checked);
-        target.checked = false
-        user.twofa = false;
-        setUser(user);
-        setToggle(false)
-        axios.get("2fa/disable");
-    }
-  };
-
-  const handleKey = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter"){
-      let mounted = true
-      user.username = e.currentTarget.value;
-      await axios.put('update' , user);
-      setUser(user);
-      mounted = false;
-      setModify(true);
-    }
-  };
-
-   const upload = async (files: FileList | null ) => {
-    if (files === null) return;
-
-    const formData = new FormData();
-    formData.append('image', files[0]);
-
-    try {
-        const {data} = await axios.post('user/upload', formData);
-        await axios.put('updateAvatar', {avatar: data.url});
-        setAvatar(data.url);
-    }
-    catch (err) {setAvatar('http://localhost:3030/uploads/avatar.png')}
-
-    }
 
   useEffect(() => {
       let mounted = true;
@@ -105,13 +47,12 @@ function Profile() {
       let mounted = true;
       const getUser = async () => {
           try {
-              const {data} = await axios.get('userData')
+              const {data} = await axios.get('user/' + props.location.state.id);
               console.log(data);
               if (mounted) setUser(data);
               if (mounted) setAvatar(data.avatar);
-              if (mounted) setToggle(data.twofa)
           }
-          catch(err){if(mounted) setUnauthorized(true);}
+          catch(err){if(mounted) console.log("oof");}
       }
       getUser();
       return () => {mounted = false;}
@@ -121,25 +62,11 @@ function Profile() {
   if (unauthorized)
       return <Redirect to={'/'}/>;
 
-  if (activateTwoFa)
-    return <Redirect to={'/activate2fa'}/>;
 
   return (
     <>
-        <h1>authen 2FA
-
-            <label className="switch">
-            <input type="checkbox" checked={twofa} onChange={handleChange} />
-                <span className="slider round"></span>
-            </label>
-            </h1>
         <div className="bigOne">
 
-
-            <div className="img-holder">
-                <button className="btn" onClick={handleClick}> <img src={camera} alt="account" id="camera" title="Changer l'avatar"/></button>
-                <input className="btn" type="file" ref={hiddenFileInput} hidden onChange={e => upload(e.target.files)} style={{display: 'none'}}/>
-            </div>
             <div className="conteneur-info">
                  {/* <div id="title"><h1>Profil</h1></div> */}
 
@@ -147,11 +74,7 @@ function Profile() {
                 <img src={avatar} alt="account" id="acc-img"/>
 
                 <div className="login">
-                    <h1>{ modifyName ? user.username : <input
-                        type="text"
-                        placeholder="Search"
-                        onKeyDown={handleKey}
-                        /> } <button className="btncrayon" > <img src={crayon} alt="account" id="crayon" onClick={handleClickName}/></button></h1>
+                    <h1>{user.username} <button className="btncrayon" > <img src={add_friend} alt="account" id="crayon"/></button> </h1>
                 </div>
                 <div className="rank">
                     <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1>
@@ -307,7 +230,7 @@ function Game(props: any) {
 }
 
 
-export default Profile;
+export default Profiles;
 
 
 

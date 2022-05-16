@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { logger } from 'src/websockets/game.gateway';
+import { logger } from '../websockets/game.gateway';
 import { v4 } from 'uuid'
 
 export class PongProps {
@@ -19,11 +19,15 @@ export class PongProps {
 }
 
 export class RoomProps {
-  name: string = `room_${v4()}`;
+  name: string = v4().substring(0, 10);
   trainingMode: boolean = false;
   canJoinGame: boolean = true;
-  player1: string = "";
-  palyer2?: string;
+  p1_name: string = "p1_name";
+  p2_name: string = "p2_name";
+  p1_readyToStart: boolean = false;
+  p2_readyToStart: boolean = false;
+  p1_score: number = 0;
+  p2_score: number = 0;
 }
 
 function genRandomInt(min, max) {
@@ -35,6 +39,9 @@ function genRandomVelocity() {
   if (Math.random() * 2 < 1)
     velocity *= -1;
   return velocity
+}
+
+function collision() {
 }
 
 @Injectable()
@@ -64,11 +71,20 @@ export class GameService {
     if (game.pong.ball_x < 0 || game.pong.ball_x > game.pong.width)
     {
       if (game.pong.ball_x < 0)
+      {
         game.pong.score_r++;
+        game.room.p2_score++;
+      }
       else
+      {
         game.pong.score_l++;
+        game.room.p1_score++;
+      }
       game.launchBall(game);
       wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(game.pong));
+      wsServer.to(game.room.name).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(game.room))
+      if (game.room.p1_score >= 2 || game.room.p2_score >= 2)
+        clearInterval(game.intervalId_0);
     }
   }
 
@@ -93,7 +109,7 @@ export class GameService {
     pong.ball_x += pong.ball_vx;
     pong.ball_y += pong.ball_vy;
     //pong.paddle_l_y = pong.ball_y - 25;
-    if (game.room.trainingMode)
+    if (game.room.trainingMode && pong.ball_y - 25 < pong.height - 55 && pong.ball_y - 25 > 5)
       pong.paddle_r_y = pong.ball_y - 25;
     wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(pong));
   }
@@ -171,10 +187,19 @@ export class GameService {
     }
   }
 
+  setPlayerReady(clientId: string) {
+    if (this.playersIds.get("left") === clientId)
+      this.room.p1_readyToStart = true;
+    else
+      this.room.p2_readyToStart = true;
+  }
+
   setTrainingModeOn(clientId: string) {
     this.room.trainingMode = true;
     this.playersIds.set("left", clientId);
     this.playersIds.set("right", "Bob");
+    this.room.p2_name = "Bob";
+    this.room.p2_readyToStart = true;
   }
 
   getPongProps(): PongProps {
@@ -187,5 +212,9 @@ export class GameService {
 
   getRoomProps(): RoomProps {
     return this.room;
+  }
+
+  getPlayerId(id: string): string {
+    return this.playersIds.get(id);
   }
 }

@@ -44,9 +44,9 @@ import {
 	ft_id: number;
 	
 	@IsOptional()
-	image: string;
+	avatar: string;
 
-	authentication: boolean;
+	twofa: boolean;
   }
   
   export class UpdateUserDTO {

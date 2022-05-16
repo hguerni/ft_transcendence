@@ -7,9 +7,12 @@ import {  BaseEntity,
   JoinColumn,
   OneToOne,
   ManyToMany,
+  OneToMany,
   Entity} from 'typeorm';
-import { IsBoolean, IsEmail, IsString } from 'class-validator';
+import { isBoolean, IsBoolean, IsEmail, IsString } from 'class-validator';
 import File from './file.entity';
+import { FriendEntity } from './friend.entity';
+import { MemberEntity } from './member.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
@@ -30,17 +33,9 @@ updated: Date;
 @IsString()
 email: string;
 
-@JoinColumn({ name: 'avatarId' })
-@OneToOne(
-  () => File,
-  {
-    nullable: true
-  }
-)
-public avatar?: File;
-
-@Column({ nullable: true })
-public avatarId?: number;
+@Column()
+@IsString()
+avatar: string;
 
 @Column({unique: true})
 @IsString()
@@ -50,15 +45,20 @@ login: string;
 @IsString()
 username: string;
 
-@ManyToMany(() => UserEntity)
-@JoinTable()
-friends: UserEntity[];
+@OneToMany(() => FriendEntity, friend => friend.user)
+friends: FriendEntity[];
 
 @Column({default: false})
 @IsBoolean()
 isBan: boolean;
 
-@IsBoolean()
-online: boolean;
 
+online: number;
+
+@Column()
+@IsBoolean()
+twofa: boolean;
+
+@Column({ nullable: true })
+twofaSecret?: string;
 }

@@ -23,7 +23,9 @@
     "@types/ws": "^8.5.3",
     "axios": "^0.26.1",
     "eiows": "^4.0.1",
+    "i": "^0.3.7",
     "jsx-runtime": "^1.2.0",
+    "npm": "^8.8.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-p5": "^1.3.28",
@@ -31,9 +33,18 @@
     "react-scripts": "5.0.0",
     "react-timeago": "^6.2.1",
     "reactjs-popup": "^2.0.5",
+<<<<<<< HEAD
+=======
+    "socket.io-client": "^4.5.0",
+>>>>>>> master
     "styled-components": "^5.3.5",
+    "svgo": "^2.8.0",
     "typescript": "^4.6.2",
+<<<<<<< HEAD
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.4.0",
+=======
+    "uuid": "^8.3.2",
+>>>>>>> master
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -63,9 +74,12 @@
   "devDependencies": {
     "@types/styled-components": "^5.1.25",
     "@types/uuid": "^8.3.4"
+<<<<<<< HEAD
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.6",
     "utf-8-validate": "^5.0.9"
+=======
+>>>>>>> master
   }
 }
