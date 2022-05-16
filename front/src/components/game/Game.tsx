@@ -6,8 +6,6 @@ import { useState, useEffect } from 'react';
 
 export const socket: Socket = io("ws://localhost:3030/game");
 
-//export const user: UserService = new UserService();
-
 function linkClientToUser(client: Socket, userID: number) {
 	client.emit("LINK_CLIENT_TO_USER", userID);
 }
