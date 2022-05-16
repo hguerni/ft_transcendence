@@ -117,4 +117,30 @@ import { subscribeOn } from 'rxjs';
 			}
 		});
 	}
+
+	  /* fonction pour le chat */
+
+	  @SubscribeMessage('bonjour du client')
+	  handleSendingInputChat(client: Socket,  message: string) {
+	
+		client.join("channel1"); // sert a connecter le client sur le channel1
+		this.io.to("channel1").emit("bonjour du serveur",  message) // le serveur se connect sur le channel1 et retour le message
+		
+	  }
+	
+	
+		@SubscribeMessage('joinroom')
+		handleJoinRoomChat(client: Socket) {
+	  
+		  client.join("channel1");
+		
+		}
+	
+		@SubscribeMessage('CREATE_CHANNEL')
+		handleCreateChannel(client: Socket, channelName: string) {
+	  
+		  client.join("channel2");
+		  this.io.to("channel2").emit("CHANNEL_CREATED",  channelName) // le serveur se connect sur le channel1 et retour le message
+		
+		}
   }

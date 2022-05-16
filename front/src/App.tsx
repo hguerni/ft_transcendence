@@ -24,6 +24,7 @@ function App() {
         <Route exact path={"/game"} component={Game} />
         <Route exact path={"/game/training"} component={Game} />
         <Route exact path={"/game/fighting"} component={Game} />
+        <Route exact path={"/chat"} component={Chat} />
       </main>
     </BrowserRouter>
   );
