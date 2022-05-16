@@ -13,7 +13,7 @@ function Game() {
   return (
     <>
       <div>
-        <h1></h1>
+        <h1 id="test"></h1>
       </div>
       <GameTabs/>
     </>

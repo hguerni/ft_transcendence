@@ -1,0 +1,400 @@
+.rayaneleboloss {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+/* ===================== Css Rayane ===================== */
+
+.allBodyChat {
+    margin-top: 5.75rem;
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+    width: 40%;
+
+ 
+    padding-top: 0.5rem;
+
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+
+
+    /* color: white; */
+    /* position: relative; */
+    /* align-items: flex-start; */
+
+}
+
+.headerChat {
+    margin-top: 5.75rem;
+
+
+    background-color: rgb(15, 15, 15);
+    padding-top: 2rem;
+    /* width: 20%; */
+    height: 4.8%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+
+
+    /* color: white; */
+    /* position: relative; */
+    /* align-items: flex-start; */
+
+}
+
+.centerChat {
+    
+
+    
+
+    background-color: rgb(8, 3, 75);
+    padding-top: 0.5rem;
+    /* width: 20%; */
+    height: 60%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    overflow: auto;
+    
+
+
+
+    /* color: white; */
+    /* position: relative; */
+    /* align-items: flex-start; */
+
+}
+.centerChat::-webkit-scrollbar {
+    display: none;
+}
+
+.footerChat {
+    display: flex;
+    align-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+
+
+    background-color: rgb(94, 91, 91);
+    /* padding-top: 0.5rem; */
+    /* width: 20%; */
+    height: 8.98%;
+    padding-left: 1.5rem;
+    /* padding-right: 1.5rem; */
+
+
+
+    /* color: white; */
+    /* position: relative; */
+    /* align-items: flex-start; */
+
+}
+
+.submitChat {
+   
+    /* margin-left: auto;
+    position: relative; */
+    /* bottom: 24px;
+    left: 23px; */
+
+
+    background-color: rgb(34, 7, 131);
+
+    /* width: 8%; */
+    height: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+    
+    
+
+
+
+    /* color: white; */
+    /* position: relative; */
+    /* align-items: flex-start; */
+
+}
+
+/* .inputChat {
+   
+ 
+    margin-left: auto;
+    position: relative;
+    bottom: 8px;
+    left: 23px;
+
+
+    
+    height: 110%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    
+    
+
+
+
+    color: white; 
+    position: relative;
+    align-items: flex-start;
+
+} */
+
+#imgSubmit {
+    width: 100%;
+    height: 100%;
+    
+    background-color: transparent;
+}
+
+.buttonSubmit {
+    
+    /* bottom: 5px;
+    top: 24px;
+    left: 20px;
+    margin-left: -25px; */
+    top : 1.25rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+ 
+
+
+    
+    
+}
+
+#imgDirectChat {
+    width: 100%;
+    height: 100%;
+    
+    background-color: transparent;
+
+}
+
+.buttonDirectChat {
+    /* bottom: 5px;
+    top: 24px;
+    left: 55px;
+    margin-left: -25px; */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+#imgLoupe {
+    width: 100%;
+    height: 100%;
+    
+    background-color: transparent;
+}
+
+.buttonInviteUsers {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+#imgaddgroup {
+    width: 100%;
+    height: 100%;
+    
+    background-color: transparent;
+
+}
+
+.buttonaddgroup {
+    /* bottom: 5px;
+    top: 24px;
+    left: 20px;
+    margin-left: -25px; */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+
+
+.iconeChat {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+    justify-content: left;
+}
+
+#inputrayane
+{
+    width: 80%;
+    border: none;
+    outline: none ;
+    background-color: transparent;
+    color: white;
+    font-family: 'CrickxRegular';
+ 
+   
+}
+
+/* Channel composant */
+
+.Allbodychannel {
+
+    margin-top: 5.75rem;
+
+
+
+    width: 13%;
+
+ 
+    padding-top: 0.5rem;
+
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    position: relative;
+    left: 2.7rem;
+
+
+}
+
+.footerChatchannel {
+
+    background-color: rgb(14, 13, 13);
+    padding-top: 0.5rem;
+    /* width: 20%; */
+    height: 8%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+
+    border-radius: 0px 0px 0px 20px;
+      
+
+}
+
+.headerChatchannel {
+    margin-top: 5.75rem;
+
+
+    background-color: rgb(15, 15, 15);
+    padding-top: 0.5rem;
+    /* width: 20%; */
+    height: 8%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    border-radius: 20px 0px 0px 0px;
+}
+
+#h1channel {
+    text-align: center;
+    color: rgb(185, 174, 174);
+    width: 100%;
+    word-wrap: break-word
+
+}
+
+.popup-content {
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #5701C8;
+    color: white;
+  }
+  
+  .popup-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+
+/* Composant List */
+
+.AllbodyList {
+
+    margin-top: 5.75rem;
+
+
+    width: 13%;
+
+ 
+    padding-top: 0.5rem;
+
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    position: relative;
+    right: 2.7rem;
+
+
+}
+
+.footerChatList {
+
+    background-color: rgb(14, 13, 13);
+    padding-top: 0.5rem;
+    /* width: 20%; */
+    height: 8%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+
+
+    border-radius: 0px 0px 20px 0px;
+      
+
+}
+
+.headerChatList {
+    margin-top: 5.75rem;
+
+
+    background-color: rgb(15, 15, 15);
+    padding-top: 0.5rem;
+    /* width: 20%; */
+    height: 8%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    border-radius: 0px 20px 0px 0px;
+}
+
+.inputName {
+    color: white;
+    font-size: 25px;
+}
+
+.inputValue {
+    color: rgb(184, 190, 190);
+    font-size: 20px;
+
+}
+
+.channelName {
+    color: aliceblue;
+    font-size: 25px;
+}
+
+.dieseChannel {
+    color: rgb(185, 174, 174);
+    font-size: 35px;
+}
+
+.chathistory {
+    font-size: 20px;
+    color: rgb(184, 190, 190);
+    overflow: auto;
+    margin-left: 1rem;
+    word-wrap: break-word
+}
+
+.chathistory::-webkit-scrollbar {
+    display: none;
+}
+

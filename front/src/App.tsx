@@ -5,6 +5,7 @@ import Login from "./components/login.component";
 import Profile from './components/profile/profile';
 import Navbar from './components/navbar.component';
 import Game from './components/game/Game';
+import Chat from "./components/chat/chat";
 import Profiles from './components/profile/profilepublic';
 import './App.css';
 import TwoFa from "./components/2fa/login2fa.component";
