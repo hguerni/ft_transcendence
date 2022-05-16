@@ -37,6 +37,13 @@ import { subscribeOn } from 'rxjs';
 		//console.log(client.conn.request);
 		let ret = {name: client.handshake.headers.name, socket: client};
 		this.Connected.push(ret);
+		this.chatService.getPvmsg("psemsari").then((ret) => {
+			const toemit = {
+				getmsg: ret,
+				connect: this.Connected.toString()
+			}
+			client.emit("ready", toemit);
+		})
 	}
 
 	@SubscribeMessage('private-message')
@@ -88,13 +95,13 @@ import { subscribeOn } from 'rxjs';
 		.catch((error) => client.emit('addchat', error));
 	}
 
-	@SubscribeMessage('test')
-	test(
-		@ConnectedSocket() client: Socket
-	): void
-	{
-		this.chatService.getPvmsg("psemsari").then( (v) => console.log(v));
-	}
+	// @SubscribeMessage('test')
+	// test(
+	// 	@ConnectedSocket() client: Socket
+	// ): void
+	// {
+	// 	this.chatService.getPvmsg("psemsari").then( (v) => console.log(v));
+	// }
 
     @SubscribeMessage('disconnect')
 	handleDisconnect(

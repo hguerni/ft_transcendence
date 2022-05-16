@@ -68,9 +68,8 @@ export class ChatService {
     async getPvmsg(login: string)
     {
         const user = await this.userRepo.findOne({where: {login: login}});
-        console.log(user);
-        const members = await this.membersRepo.find({select: ['id', 'chat'], where: {user: user}, relations: ['chat', 'chat.messages']});
-        console.log(members);
+        const members = await this.membersRepo.find({where: {user: user}, relations: ['chat', 'chat.messages', 'chat.messages.member']});
+        return members;
     }
 
     async getUser(name: string)
@@ -87,15 +86,10 @@ export class ChatService {
 
     async addMsg(data: MsgDTO){
         const chat = await this.chatRepository.findOne(data.chatId, {relations: ["messages"]});
-        console.log(chat);
         const member = await this.membersRepo.findOne(data.userId);
-        console.log(member);
         const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
-        console.log(message);
         chat.messages.push(message);
-        console.log(chat);
-        const resu = await this.chatRepository.save(chat).catch((e) => console.log(e));
-        console.log(resu);
+        await this.chatRepository.save(chat).catch((e) => console.log(e));
         const resu2 = await this.msgRepo.save(message).catch((e) => console.log(e));
         return resu2;
     }
