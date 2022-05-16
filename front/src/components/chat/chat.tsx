@@ -49,7 +49,7 @@ function ButtonCreateCanal(){
      );
 }
 
-function CreatePopup() {
+function CreatePopupChannel() {
     const [channelName, setChannelName] = useState("");
     const [open, setOpen] = useState(false);
 
@@ -116,7 +116,7 @@ function Bodychat() {
                 <div className="headerChat">
 
                     <div className="iconeChat">
-                        <CreatePopup/>
+                        <CreatePopupChannel/>
                         <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
                         <button className="buttonInviteUsers"> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
                     </div>
