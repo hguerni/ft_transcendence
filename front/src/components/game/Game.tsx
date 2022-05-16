@@ -1,8 +1,9 @@
 import './Game.css';
 import GameTabs from './GameTabs';
 import { Socket, io } from 'socket.io-client';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { GetUserData } from '../../services/user.service';
+import UserService from '../../services/user.service';
 
 export const socket: Socket = io("ws://localhost:3030/game");
 
@@ -11,21 +12,14 @@ function linkClientToUser(client: Socket, userID: number) {
 }
 
 function Game() {
-  const [userID, setUserID] = useState<number>(-1);
-
+  GetUserData();
+  linkClientToUser(socket, UserService.getUserId())
   useEffect(() => {
-    async function getActiveUserID() {
-      const {data} = await axios.get("userID");
-      setUserID(data);
-    }
-    getActiveUserID();
-    if (userID != -1)
-      linkClientToUser(socket, userID);
+    socket.on("ALERT", (message: string) => {
+      alert(message);
+      console.log("test alert!")
+    });
   }, []);
-
-  socket.on("ALERT", (message: string) => {
-		alert(message);
-	});
 
   return (
     <>

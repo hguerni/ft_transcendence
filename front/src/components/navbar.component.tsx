@@ -105,6 +105,6 @@ const Li = styled.li`
   text-decoration: none;
   background-color: transparent;
   white-space: nowrap;`
-  
+
 
 export default Navbar;

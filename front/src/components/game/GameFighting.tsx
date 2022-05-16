@@ -1,6 +1,5 @@
 import { useState } from "react";
 import GameArea, { GameStart, GameCreate } from './GameArea';
-import { io, Socket } from "socket.io-client";
 import Popup from 'reactjs-popup';
 import { v4 } from 'uuid'
 import { GameSearching } from "./GameSearching";

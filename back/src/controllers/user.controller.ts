@@ -3,10 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Req,
-  Res,
-  UseGuards,
   Param,
   ParseIntPipe,
   UseInterceptors,
@@ -18,7 +14,6 @@ import { UpdateUserDTO } from '../models/user.model';
 import { AuthService } from '../services/auth.service';
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
-import { Response } from 'express';
 
 @Controller('user')
 export class UserController {

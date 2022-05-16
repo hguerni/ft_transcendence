@@ -1,7 +1,5 @@
 import './profile.css';
-import account_image from '../../images/avatar.png';
 import camera from '../../images/camera-solid.svg';
-import UserService from '../../services/user.service';
 import level_up from '../../images/level_up.svg';
 import rank from '../../images/rank.svg';
 import React, {useEffect, useState} from "react";
@@ -19,7 +17,6 @@ import nitendo from "../../images/nitendo.svg";
 import crayon from "../../images/crayon-de-couleur.png";
 // import { userInfo } from 'os';
 import TimeAgo from 'react-timeago';
-import Avatar from './avatar.component';
 
 function Profile() {
 
@@ -44,7 +41,7 @@ function Profile() {
      hiddenFileInput.current!.click();
    };
 
-   const handleClickName = () => {setModify(false)} 
+   const handleClickName = () => {setModify(false)}
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
