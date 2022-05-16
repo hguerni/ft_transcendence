@@ -8,6 +8,7 @@ import {
 	OnGatewayInit,
 	OnGatewayDisconnect
   } from '@nestjs/websockets';
+import { subscribeOn } from 'rxjs';
 
   import { Server, Socket } from 'socket.io'
   import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
@@ -33,9 +34,16 @@ import {
 	)
 	{
 		//console.log(client.handshake);
-		console.log(client.conn.request);
+		//console.log(client.conn.request);
 		let ret = {name: client.handshake.headers.name, socket: client};
 		this.Connected.push(ret);
+		this.chatService.getPvmsg("psemsari").then((ret) => {
+			const toemit = {
+				getmsg: ret,
+				connect: this.Connected.toString()
+			}
+			client.emit("ready", toemit);
+		})
 	}
 
 	@SubscribeMessage('private-message')
@@ -52,6 +60,17 @@ import {
 			return;
 		}
 		});
+	}
+
+	@SubscribeMessage('addmsg')
+	addmsg(
+		@MessageBody() msg: MsgDTO,
+		@ConnectedSocket() client: Socket
+	): void
+	{
+		this.chatService.addMsg(msg)
+		.then((val) => client.emit('addmsg', val))
+		.catch((error) => client.emit('addmsg', error));
 	}
 
 	@SubscribeMessage('addchat')
@@ -76,13 +95,13 @@ import {
 		.catch((error) => client.emit('addchat', error));
 	}
 
-	@SubscribeMessage('test')
-	test(
-		@ConnectedSocket() client: Socket
-	): void
-	{
-		this.chatService.getPvmsg("psemsari").then( (v) => console.log(v));
-	}
+	// @SubscribeMessage('test')
+	// test(
+	// 	@ConnectedSocket() client: Socket
+	// ): void
+	// {
+	// 	this.chatService.getPvmsg("psemsari").then( (v) => console.log(v));
+	// }
 
     @SubscribeMessage('disconnect')
 	handleDisconnect(

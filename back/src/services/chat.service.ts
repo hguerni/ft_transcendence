@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { All, Injectable } from "@nestjs/common";
+import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { ChatEntity, chat_status } from "../entities/chat.entity";
 import { AddMemberDTO, ChatDTO } from "../models/chat.model";
-import { Repository } from "typeorm";
+import { createQueryBuilder, EntityManager, Repository } from "typeorm";
 import { MsgEntity } from "../entities/msg.entity";
 import { MemberEntity } from "../entities/member.entity";
 import { MsgDTO } from "../models/chat.model";
@@ -28,7 +28,9 @@ export class ChatService {
         @InjectRepository(UserEntity)
         private userRepo: Repository<UserEntity>,
         @InjectRepository(MemberEntity)
-        private membersRepo: Repository<MemberEntity>
+        private membersRepo: Repository<MemberEntity>,
+        @InjectEntityManager()
+        private manager: EntityManager
       ) {}
     
     async pvmsg_init(login1: string, login2:string)
@@ -58,17 +60,16 @@ export class ChatService {
         return await this.chatRepository.findOne(name);
     }
 
+    // {login: psemsari,
+    // group: {name, message:[]}}
+
+    // {group: name,
+    // mess}
     async getPvmsg(login: string)
     {
-        const chat = await this.chatRepository.find({
-            select: ["id", "members"],
-            relations: ["members", "user"],
-            where: {
-                status: chat_status.pv_message,
-                // members: [{user: {login}}]
-            }
-        });
-        return chat;
+        const user = await this.userRepo.findOne({where: {login: login}});
+        const members = await this.membersRepo.find({where: {user: user}, relations: ['chat', 'chat.messages', 'chat.messages.member']});
+        return members;
     }
 
     async getUser(name: string)
@@ -85,10 +86,12 @@ export class ChatService {
 
     async addMsg(data: MsgDTO){
         const chat = await this.chatRepository.findOne(data.chatId, {relations: ["messages"]});
-        const message = this.msgRepo.create({ "message": data.message, "chat": chat});
+        const member = await this.membersRepo.findOne(data.userId);
+        const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
         chat.messages.push(message);
-        await this.chatRepository.save(chat);
-        return await this.msgRepo.save(message);
+        await this.chatRepository.save(chat).catch((e) => console.log(e));
+        const resu2 = await this.msgRepo.save(message).catch((e) => console.log(e));
+        return resu2;
     }
 
     async addMember(data: AddMemberDTO)
