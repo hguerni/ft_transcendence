@@ -100,8 +100,8 @@ import { subscribeOn } from 'rxjs';
 	): void
 	{
 		this.chatService.addMember(data)
-		.then((val) => client.emit('addchat', val))
-		.catch((error) => client.emit('addchat', error));
+		.then((val) => client.emit('addmember', val))
+		.catch((error) => client.emit('addmember', error));
 	}
 
 	// @SubscribeMessage('test')

@@ -96,8 +96,8 @@ export class ChatService {
 
     async addMember(data: AddMemberDTO)
     {
-        const chat = await this.chatRepository.findOne(data.channel);
-        const user = await this.userRepo.findOne(data.login);
+        const chat = await this.chatRepository.findOne({where: {name: data.channel}});
+        const user = await this.userRepo.findOne({where: {login: data.login}});
         const member = this.membersRepo.create({user: user, status: status.default, mute: false, chat: chat});
         return await this.membersRepo.save(member);
     }
