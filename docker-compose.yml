@@ -17,8 +17,8 @@ services:
     build:
       context: ./back
       dockerfile: Dockerfile
-    env_file:
-      - ./back/.env
+    #env_file:
+    #  - ./back/.env
     environment:
       - NODE_ENV= production
     depends_on:
