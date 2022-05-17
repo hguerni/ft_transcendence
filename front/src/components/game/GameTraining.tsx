@@ -1,5 +1,8 @@
 import GameArea, { GameStartTraining, GameReset } from './GameArea';
-import { socket } from './Game';
+import { Socket, io } from 'socket.io-client';
+
+const socket: Socket = io("ws://localhost:3030/game");
+
 
 export default function GameTraining() {
   return (
