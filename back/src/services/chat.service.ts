@@ -43,16 +43,16 @@ export class ChatService {
         }
         await this.addOne(chat);
         const chat_result: ChatEntity = await this.getChat(name);
-        const member1: AddMemberDTO =  {
-            chatId: chat_result.id,
-            userId: (await this.getUser(login1)).login
-        };
-        const member2: AddMemberDTO =  {
-            chatId: chat_result.id,
-            userId: (await this.getUser(login2)).login
-        }
-        await this.addMember(member1);
-        await this.addMember(member2);
+        // const member1: AddMemberDTO =  {
+        //     channel: chat_result.id,
+        //     userId: (await this.getUser(login1)).login
+        // };
+        // const member2: AddMemberDTO =  {
+        //     channel: chat_result.id,
+        //     userId: (await this.getUser(login2)).login
+        // }
+        // await this.addMember(member1);
+        // await this.addMember(member2);
     }
 
     async getChat(name: string)
@@ -96,8 +96,8 @@ export class ChatService {
 
     async addMember(data: AddMemberDTO)
     {
-        const chat = await this.chatRepository.findOne(data.chatId);
-        const user = await this.userRepo.findOne(data.userId);
+        const chat = await this.chatRepository.findOne(data.channel);
+        const user = await this.userRepo.findOne(data.login);
         const member = this.membersRepo.create({user: user, status: status.default, mute: false, chat: chat});
         return await this.membersRepo.save(member);
     }

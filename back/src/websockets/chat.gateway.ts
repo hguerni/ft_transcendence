@@ -37,14 +37,23 @@ import { subscribeOn } from 'rxjs';
 		//console.log(client.conn.request);
 		let ret = {name: client.handshake.headers.name, socket: client};
 		this.Connected.push(ret);
-		this.chatService.getPvmsg("rqouchic").then((ret) => {
+
+	}
+
+	@SubscribeMessage('ready')
+	handleReady(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() login: string
+	)
+	{
+		this.chatService.getPvmsg(login).then((ret) => {
 			const toemit = {
-				getmsg: ret,
-				connect: this.Connected.toString()
+				getmsg: ret
 			}
 			client.emit("ready", toemit);
-		})
+		}).catch((error) => {client.emit("ready", error)});
 	}
+
 
 	@SubscribeMessage('private-message')
 	handleEvent(

@@ -23,9 +23,9 @@ export class MsgDTO {
 }
 
 export class AddMemberDTO {
-    @IsNumber()
-    userId: string;
+    @IsString()
+    login: string;
 
-    @IsNumber()
-    chatId: number;
+    @IsString()
+    channel: string;
 }
