@@ -30,6 +30,16 @@ export class RoomProps {
   p2_score: number = 0;
 }
 
+export class GameStats {
+  gameName: string;
+  playerId: number;
+  adversaryId: number;
+  playerScore: number;
+  adversaryScore: number;
+  isWinner: boolean;
+  endGameTime: Date;
+}
+
 function genRandomInt(min, max) {
  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -46,7 +56,6 @@ function collision() {
 
 @Injectable()
 export class GameService {
-
   private room: RoomProps = new RoomProps();
 
   private nb_players: number = 0;
@@ -84,7 +93,10 @@ export class GameService {
       wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(game.pong));
       wsServer.to(game.room.name).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(game.room))
       if (game.room.p1_score >= 2 || game.room.p2_score >= 2)
+      {
         clearInterval(game.intervalId_0);
+        wsServer.to(game.room.name).emit('GAME_END', game.room.name);
+      }
     }
   }
 

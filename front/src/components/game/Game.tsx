@@ -12,6 +12,9 @@ function Game() {
     socket.on("ALERT", (message: string) => {
       alert(message);
     });
+    socket.on("GAME_END", (game: string) => {
+      socket.emit('GAME_END', game);
+    });
   }, []);
 
   return (

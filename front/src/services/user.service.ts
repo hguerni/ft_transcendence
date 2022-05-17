@@ -12,7 +12,7 @@ class DefaultUser implements User {
 }
 
 export function GetUserData() { //works only for UserId for now
-  const [userID, setUserID] = useState<number>(-1);
+  const [userID, setUserID] = useState<number>(42);
 
   useEffect(() => {
     async function getActiveUserID() {

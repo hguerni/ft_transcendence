@@ -58,6 +58,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.logger.log("SEND_CURRENT_ROOM_INFOS");
   }
 
+  @SubscribeMessage('GAME_END')
+  handleEndGamer(client: Socket, game: string) {
+    if (this.gameRooms.has(game))
+      this.gameRooms.delete(game);
+    this.logger.log(`Client ${client.id} is ending game`);
+  }
+
   @SubscribeMessage('LINK_CLIENT_TO_USER')
   handleLinkClientToUser(client: Socket, userID: number) {
     if (!this.usersToClients.has(userID)) {
