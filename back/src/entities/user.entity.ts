@@ -13,6 +13,7 @@ import { isBoolean, IsBoolean, IsEmail, IsString } from 'class-validator';
 import File from './file.entity';
 import { FriendEntity } from './friend.entity';
 import { MemberEntity } from './member.entity';
+import { GameEntity } from './game.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
@@ -47,6 +48,9 @@ username: string;
 
 @OneToMany(() => FriendEntity, friend => friend.user)
 friends: FriendEntity[];
+
+@OneToMany(() => GameEntity, games => games.user)
+games: GameEntity[];
 
 @Column({default: false})
 @IsBoolean()

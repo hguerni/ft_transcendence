@@ -113,6 +113,24 @@ export class AuthController {
         return await this.userService.findByFtId(clientID);
     }
 
+    @Get('userModel')
+    async getUserModel(@Req() request: Request) {
+        console.log(request.cookies)
+        const clientID = await this.authService.clientID(request);
+        console.log(clientID);
+        const user = await this.userService.findByFtId(clientID);
+        if (!user)
+            return null;
+        let usermodel = {id: 0, username: '', online: 0, email: '', avatar: '', twofa: false}
+        usermodel.id = user.id;
+        usermodel.username = user.username;
+        usermodel.online = user.online;
+        usermodel.email = user.email
+        usermodel.avatar = user.avatar;
+        usermodel.twofa = user.twofa;
+        return usermodel;
+    }
+
     @Get('userID')
     async getUserID(@Req() request: Request) {
         console.log(request.cookies)
@@ -140,6 +158,12 @@ export class AuthController {
 
         return {message: 'Success'}
 
+    }
+
+    @Put("EndGame")
+    async endGame(@Body() data: any, @Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        return await this.userService.saveGame(clientID, data);
     }
 
     @Get('uploads/:path')

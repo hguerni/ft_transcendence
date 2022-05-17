@@ -4,6 +4,7 @@ import { UserEntity } from '../entities/user.entity';
 import { FriendEntity } from '../entities/friend.entity';
 import { getRepository, Repository } from 'typeorm';
 import { UpdateUserDTO, RegisterDTO } from '../models/user.model';
+import { GameEntity } from '../entities/game.entity';
 
 @Injectable()
 export class UserService {
@@ -13,6 +14,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity) private userRepo: Repository<UserEntity>,
     @InjectRepository(FriendEntity)private friendRepo: Repository<FriendEntity>,
+    @InjectRepository(GameEntity)private gameRepo: Repository<GameEntity>,
   ) {}
 
   async saveTwoFactorSecret(secret: string, clientID: number): Promise<any> {
@@ -58,6 +60,22 @@ export class UserService {
   async createUser(data: RegisterDTO) {
     return await this.userRepo.save(data);
   }
+
+  async saveGame(clientid: number, data: any) {
+    this.findByFtId(clientid).then(async(client) =>{
+        let game = new GameEntity;
+        game.adversary = await this.userRepo.findOne(data.player_two);
+        game.gameName = data.gameName;
+        if (game.adversary.id === data.player_two) 
+          game.winner = false;
+        else
+          game.winner = true
+        game.userscore = data.player_one_score;
+        game.adversaryscore = data.player_two_score;
+        game.user = client;
+        await this.gameRepo.save(game);
+    });
+  } 
 
   async addFriend(clientid: number, friendid: number) {
     this.findByFtId(clientid).then((client) =>{
