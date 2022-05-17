@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GameArea, { GameStart, GameCreate } from './GameArea';
 import Popup from 'reactjs-popup';
 import { v4 } from 'uuid'
 import { GameSearching } from "./GameSearching";
 import { GameInProgress } from "./GameInProgress";
 import { socket } from "./Game";
+import UserService from '../../services/user.service';
+import { Socket } from "socket.io-client";
+
+function linkClientToUser(client: Socket, userID: number) {
+	client.emit("LINK_CLIENT_TO_USER", userID);
+}
 
 export function CreateGamePopUp() {
   const [gameName, setGameName] = useState<string>(v4().substring(0, 10));
@@ -29,9 +35,12 @@ export function CreateGamePopUp() {
 export default function GameFighting() {
   const [msg, setMsg] = useState<string>("");
 
-  socket.on("PLAYER_IS_READY", (msg: string) => {
-    setMsg(msg);
-  });
+  useEffect(() => {
+    linkClientToUser(socket, UserService.getUserId())
+    socket.on("PLAYER_IS_READY", (msg: string) => {
+      setMsg(msg);
+    });
+  }, [])
 
   return (
     <div className="gameFighting">
