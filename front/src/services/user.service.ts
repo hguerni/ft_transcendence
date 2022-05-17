@@ -11,23 +11,23 @@ class DefaultUser implements User {
   twofa: boolean = false;
 }
 
-export function GetUserData() { //works only for UserId for now
-  const [userID, setUserID] = useState<number>(42);
+export function GetUserData() { //do not call this function more than one time
+  const [userData, setUserData] = useState<User>(new DefaultUser());
 
   useEffect(() => {
-    async function getActiveUserID() {
-      const {data} = await axios.get("userID");
-      setUserID(data);
+    async function getActiveUserData() {
+      const {data} = await axios.get("userModel");
+      if (data)
+        setUserData(data);
     }
-    getActiveUserID();
+    setInterval(getActiveUserData, 1000);
   }, []);
 
-  let user = new DefaultUser();
-  user.id = userID;
-  localStorage.setItem("userData", JSON.stringify(user))
+  if (userData.id != 0)
+    localStorage.setItem("userData", JSON.stringify(userData))
 }
 
-export default class UserService { //works only for isUserConnected() & getUserId() for now
+export default class UserService {
   static isUserConnected() {
     const userData = localStorage.getItem("userData");
 
@@ -40,7 +40,7 @@ export default class UserService { //works only for isUserConnected() & getUserI
     const userData = localStorage.getItem("userData");
 
     if (userData)
-      return JSON.parse(userData);
+      return userData;
     return 0;
   }
 
