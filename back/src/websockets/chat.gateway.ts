@@ -118,7 +118,15 @@ import { subscribeOn } from 'rxjs';
 		else
 			client.emit('LIST_NAME', ['rayane','pierre']);
 		
-		client.emit('LIST_CHAT', [{name: 'pierre', message: 'message1'}, {name: 'rayane', message: 'message2'}])
+		if (name == "coucou")
+			client.emit('LIST_CHAT', [
+				{name: 'pierre', message: 'message1'}, 
+				{name: 'rayane', message: 'message2'}])
+		else
+			client.emit('LIST_CHAT', [
+				{name: 'have', message: 'message3'}, 
+				{name: 'elias', message: 'message4'},
+				{name: 'leo', message: 'message5'}])
 		// this.chatService.memberInChannel(name)
 		// .then((val) => {
 		// 	client.emit('LIST_NAME', val)
