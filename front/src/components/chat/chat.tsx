@@ -28,6 +28,13 @@ class info {
     inputValue: string = "";
 }
 
+class info2 {
+    /*creation d'une class qui servira a determiner le nom
+    ainsi l'input de la personne qui envoi le message*/
+    key: string = v4();
+    name: string = "";
+    message: string = "";
+}
 
 function ButtonCreateCanal(){
 
@@ -79,12 +86,12 @@ function CreatePopupChannel() {
   }
 
   function CreatePopupInviteUser() {
-    const [channelName, setChannelName] = useState("");
+    const [InvitUserName, setChannelName] = useState("");
     const [open, setOpen] = useState(false);
 
    function sendChannelName ()
    {
-        socket.emit("INVITE_USER",  channelName);
+        socket.emit("addmember",  {login: InvitUserName});
    }
 
 
@@ -95,7 +102,7 @@ function CreatePopupChannel() {
           <div>Login de la personne a ajouter dans le channel</div>
           <input className="input"
             type="text"
-            value={channelName}
+            value={InvitUserName}
 
             onChange={(e) => setChannelName(e.target.value)}
           />
@@ -125,17 +132,37 @@ function Bodychat() {
     const [newInfo, setNewInfo] = useState<info>(new info());
     const [message, setMessage] = useState("");
 
+/*************************************************** */
+    const [arrayChat, setArraylistChat] = useState<info2[]>([]);
+    
+    useEffect(() => {    
+        socket.on("LIST_CHAT", (message: info2[]) => {
+        // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+        //setInputValue(message);
+        // setlistName(message);
+        
+
+        // let tmp = [...arraylistName];
+        // tmp.push(message);
+        setArraylistChat(message);
+        });
+    },[])
+
+  
+/********************************************************** */
+
     useEffect(() => {
         let tmp = [...arrayHistory];
         tmp.push(newInfo);
         setArrayhistory(tmp);
+   
     }, [newInfo]); // useEffect est appelé uniquement quand newInfo change
 
     useEffect(() => {
         // réception d'un message envoyé par le serveur
-        socket.on("bonjour du serveur", (message: string) => {
+        socket.on("bonjour du serveur", (message: info) => {
         // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-            setNewInfo(JSON.parse(message));
+            setNewInfo(message);
         });
     }, []); // useEffect est appelé uniquement lors du premier render du composant
 
@@ -152,14 +179,28 @@ function Bodychat() {
                 </div>
 
                 <div className="centerChat">
-                    {arrayHistory.map((item) => {
+                    {arrayChat.map((item) => {
                         return (
-                            <div key={item.key}>
+                            <div >
+                              { console.log(item)};
                                 <h1 className="inputName"> {item.name} </h1>
-                                <h1 className="chathistory"> {item.inputValue} </h1>
+                                <h1 className="chathistory"> {item.message} </h1>
+                                <h1> </h1>
                             </div>
                         );
                     })}
+
+                    {/* {arrayHistory.map((item) => {
+                        return (
+                            <div >
+                              { console.log(item)};
+                                <h1 className="inputName"> {item.name} </h1>
+                                <h1 className="chathistory"> {item.inputValue} </h1>
+                                <h1> </h1>
+                            </div>
+                        );
+                    })} */}
+
                 </div>
 
                 <div className="footerChat">
@@ -183,7 +224,7 @@ function Channel() {
     const [channelName, setChannelName] = useState("");
     const [arrayChannelName, setArrayChannelName] = useState<string[]>([]);
 
-    useEffect(() => {
+    // useEffect(() => {
 
         // socket.on("ready", (ready_chat: object) => {
 
@@ -193,12 +234,15 @@ function Channel() {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             setChannelName(message);
+            
 
             let tmp = [...arrayChannelName];
             tmp.push(message);
             setArrayChannelName(tmp);
         });
-      }, []);
+
+
+    //   }, []);
 
 
     return (
@@ -214,7 +258,7 @@ function Channel() {
 
                     {arrayChannelName.map((item) => {
 
-                        return <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)} </h1>
+                        return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  item); console.log(item); }}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
 
                     })}
 
@@ -232,6 +276,28 @@ function Channel() {
 }
 
 function ListChannel() {
+
+    const [arraylistName, setArraylistName] = useState<string[]>([]);
+
+    // useEffect(() => {
+
+        // socket.on("ready", (ready_chat: object) => {
+
+        // })
+      // réception d'un message envoyé par le serveur
+        socket.on("LIST_NAME", (message: string[]) => {
+            // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+            //setInputValue(message);
+            // setlistName(message);
+            
+
+            // let tmp = [...arraylistName];
+            // tmp.push(message);
+            setArraylistName(message);
+        });
+    //   }, []);
+
+
     return (
         <>
             <div className="AllbodyList">
@@ -242,7 +308,12 @@ function ListChannel() {
                 </div>
 
                 <div className="centerChat">
+                {arraylistName.map((item) => {
+                    console.log(item);
 
+                    return   <h1 className="channelName"> {item}  </h1>
+
+                })}
 
                 </div>
                 <div className="footerChatList">
@@ -258,7 +329,8 @@ function ListChannel() {
 }
 
 function Chat() {
-
+    //all ready
+    
     return (
         <>
             <div className="rayaneleboloss">
@@ -308,3 +380,4 @@ function DirectMessages(props: any) {
 }
 
 export default Chat;
+
