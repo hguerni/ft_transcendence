@@ -115,20 +115,23 @@ export class AuthController {
 
     @Get('userModel')
     async getUserModel(@Req() request: Request) {
-        console.log(request.cookies)
-        const clientID = await this.authService.clientID(request);
-        console.log(clientID);
-        const user = await this.userService.findByFtId(clientID);
-        if (!user)
+        //console.log(request.cookies)
+        try {
+            const clientID = await this.authService.clientID(request);
+            //console.log(clientID);
+            const user = await this.userService.findByFtId(clientID);
+            let usermodel = {id: 0, username: '', online: 0, email: '', avatar: '', twofa: false}
+            usermodel.id = user.ft_id;
+            usermodel.username = user.username;
+            usermodel.online = user.online;
+            usermodel.email = user.email
+            usermodel.avatar = user.avatar;
+            usermodel.twofa = user.twofa;
+            return usermodel;
+        }
+        catch (err) {
             return null;
-        let usermodel = {id: 0, username: '', online: 0, email: '', avatar: '', twofa: false}
-        usermodel.id = user.id;
-        usermodel.username = user.username;
-        usermodel.online = user.online;
-        usermodel.email = user.email
-        usermodel.avatar = user.avatar;
-        usermodel.twofa = user.twofa;
-        return usermodel;
+        }
     }
 
     @Get('userID')

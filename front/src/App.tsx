@@ -10,8 +10,10 @@ import Profiles from './components/profile/profilepublic';
 import './App.css';
 import TwoFa from "./components/2fa/login2fa.component";
 import ActivateTwoFa from "./components/2fa/activate2fa.component";
+import { GetUserData } from "./services/user.service";
 
 function App() {
+  GetUserData();
   return (
     <BrowserRouter>
       <main>
