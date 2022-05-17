@@ -97,7 +97,13 @@ export class ChatService {
     async memberInChannel(name: string)
     {
         const chat = await this.chatRepository.findOne({select: ["members"], where: {name: name}, relations: ['members', 'members.user']});
-        return chat.members;
+        console.log(chat);
+        const result = [];
+        chat.members.forEach(member => {
+            result.push(member.user.login);
+        });
+        return result;
+
     }
 
     async addMember(data: AddMemberDTO)
