@@ -7,10 +7,11 @@ import {JwtModule} from "@nestjs/jwt";
 import {jwtConstants} from "../models/user.model";
 import {AuthService} from "../services/auth.service";
 import { FriendEntity } from '../entities/friend.entity';
+import { GameEntity } from '../entities/game.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([UserEntity, FriendEntity]),
+        TypeOrmModule.forFeature([UserEntity, FriendEntity, GameEntity]),
         JwtModule.register({
             secret: jwtConstants.secret,
             signOptions: { expiresIn: '1d' },
