@@ -78,6 +78,35 @@ function CreatePopupChannel() {
     );
   }
 
+  function CreatePopupInviteUser() {
+    const [channelName, setChannelName] = useState("");
+    const [open, setOpen] = useState(false);
+
+   function sendChannelName ()
+   {
+        socket.emit("INVITE_USER",  channelName);
+   }
+
+
+    return (
+      <div>
+          <button className="buttonInviteUsers" onClick={() => setOpen(true)}> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
+        <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+          <div>Login de la personne a ajouter dans le channel</div>
+          <input className="input"
+            type="text"
+            value={channelName}
+
+            onChange={(e) => setChannelName(e.target.value)}
+          />
+          <button className="gameButton" onClick={() => { setOpen(false); sendChannelName(); setChannelName("")}}>SEND</button>
+        </Popup>
+
+      </div>
+
+    );
+  }
+
 /*fonction qui sera executer quand l'utilisateur  aura appuyer pour envoyer le message*/
 function sendInput(message: string) {
     let infoInputChat = new info(); // créé infoInputChat avec une nouvelle clé unique
@@ -118,7 +147,7 @@ function Bodychat() {
                     <div className="iconeChat">
                         <CreatePopupChannel/>
                         <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
-                        <button className="buttonInviteUsers"> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
+                        <CreatePopupInviteUser/>
                     </div>
                 </div>
 
@@ -155,6 +184,10 @@ function Channel() {
     const [arrayChannelName, setArrayChannelName] = useState<string[]>([]);
 
     useEffect(() => {
+
+        // socket.on("ready", (ready_chat: object) => {
+
+        // })
       // réception d'un message envoyé par le serveur
         socket.on("CHANNEL_CREATED", (message: string) => {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet

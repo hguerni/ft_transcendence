@@ -37,7 +37,7 @@ import { subscribeOn } from 'rxjs';
 		//console.log(client.conn.request);
 		let ret = {name: client.handshake.headers.name, socket: client};
 		this.Connected.push(ret);
-		this.chatService.getPvmsg("psemsari").then((ret) => {
+		this.chatService.getPvmsg("rqouchic").then((ret) => {
 			const toemit = {
 				getmsg: ret,
 				connect: this.Connected.toString()
@@ -118,7 +118,7 @@ import { subscribeOn } from 'rxjs';
 		});
 	}
 
-	  /* fonction pour le chat */
+	  /* fonction pour le chat rayane et elias */
 
 	  @SubscribeMessage('bonjour du client')
 	  handleSendingInputChat(client: Socket,  message: string) {
@@ -140,7 +140,13 @@ import { subscribeOn } from 'rxjs';
 		handleCreateChannel(client: Socket, channelName: string) {
 	  
 		  client.join("channel2");
-		  this.io.to("channel2").emit("CHANNEL_CREATED",  channelName) // le serveur se connect sur le channel1 et retour le message
-		
+			const resu = this.chatService.addOne({
+				name: channelName,
+				password: "",
+				status: 0
+			});
+			resu.then((test) => {
+				this.io.to("channel2").emit("CHANNEL_CREATED",  test.name) // le serveur se connect sur le channel1 et retour le message
+			})
 		}
   }
