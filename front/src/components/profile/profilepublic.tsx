@@ -1,10 +1,7 @@
 import './profile.css';
-import account_image from '../../images/avatar.png';
-import camera from '../../images/camera-solid.svg';
-import UserService from '../../services/user.service';
 import level_up from '../../images/level_up.svg';
 import rank from '../../images/rank.svg';
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {Redirect} from "react-router-dom"
 import axios from "axios";
 // import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';

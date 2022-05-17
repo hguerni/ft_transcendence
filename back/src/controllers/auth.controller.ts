@@ -113,6 +113,14 @@ export class AuthController {
         return await this.userService.findByFtId(clientID);
     }
 
+    @Get('userID')
+    async getUserID(@Req() request: Request) {
+        console.log(request.cookies)
+        const clientID = await this.authService.clientID(request);
+        console.log(clientID);
+        return clientID;
+    }
+
     @Post('publicUserData')
     async getPublicUserData(@Req() request: Request, @Body() data) {
         return await this.userService.getById(data.id);
@@ -131,7 +139,7 @@ export class AuthController {
         //await this.userService.setOffline(clientID);
 
         return {message: 'Success'}
-        
+
     }
 
     @Get('uploads/:path')

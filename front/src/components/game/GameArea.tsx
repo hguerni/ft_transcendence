@@ -33,7 +33,6 @@ export function GameReset(client: Socket) {
 }
 
 export function GameJoin(client: Socket, room: string) {
-	console.log(client.id);
 	client.emit("GAME_JOIN", room);
 }
 

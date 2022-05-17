@@ -1,4 +1,3 @@
-import React from "react";
 import axios from 'axios';
 import camera from '../../images/camera-solid.svg';
 import './profile.css';

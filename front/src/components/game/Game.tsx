@@ -1,15 +1,26 @@
 import './Game.css';
 import GameTabs from './GameTabs';
 import { Socket, io } from 'socket.io-client';
+import { useEffect } from 'react';
+import { GetUserData } from '../../services/user.service';
 import UserService from '../../services/user.service';
 
 export const socket: Socket = io("ws://localhost:3030/game");
 
-export const userService: UserService = new UserService();
+function linkClientToUser(client: Socket, userID: number) {
+	client.emit("LINK_CLIENT_TO_USER", userID);
+}
 
 function Game() {
-  //const userID = UserService.getActiveUserID();
-  //console.log(userID);
+  GetUserData();
+  linkClientToUser(socket, UserService.getUserId())
+  useEffect(() => {
+    socket.on("ALERT", (message: string) => {
+      alert(message);
+      console.log("test alert!")
+    });
+  }, []);
+
   return (
     <>
       <div>

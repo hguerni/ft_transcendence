@@ -9,9 +9,9 @@ export function TabNav() {
 
   const usePathname = () => {
     const location = useLocation();
-    console.log(location.pathname);
     return location.pathname;
   }
+
   return (
     <div className='gameTabs'>
       <button onClick={() => history.push('/game/training')} className={usePathname() === '/game/training' ? 'tabButton tabButtonActive'  : 'tabButton' }>
