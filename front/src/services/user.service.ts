@@ -27,7 +27,15 @@ export function GetUserData() { //works only for UserId for now
   localStorage.setItem("userData", JSON.stringify(user))
 }
 
-export default class UserService { //works only for UserId for now
+export default class UserService { //works only for isUserConnected() & getUserId() for now
+  static isUserConnected() {
+    const userData = localStorage.getItem("userData");
+
+    if (userData)
+      return true;
+    return false;
+  }
+
   static getUserData() {
     const userData = localStorage.getItem("userData");
 
