@@ -101,7 +101,22 @@ import { subscribeOn } from 'rxjs';
 	{
 		this.chatService.addMember(data)
 		.then((val) => client.emit('addmember', val.user.login))
-		.catch((error) => client.emit('addmember', error));
+		.catch((error) => {
+			//client.emit('addmember', error)
+		});
+	}
+
+	@SubscribeMessage('JUST_NAME_CHANNEL')
+	getchannel(
+		@MessageBody() name: string,
+		@ConnectedSocket() client: Socket
+	)
+	{
+		client.emit('LIST_NAME', ['rayane','pierre']);
+		// this.chatService.memberInChannel(name)
+		// .then((val) => {
+		// 	client.emit('LIST_NAME', val)
+		// })
 	}
 
 	// @SubscribeMessage('test')

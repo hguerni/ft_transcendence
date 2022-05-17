@@ -1,4 +1,4 @@
-import { All, Injectable } from "@nestjs/common";
+import { All, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { ChatEntity, chat_status } from "../entities/chat.entity";
 import { AddMemberDTO, ChatDTO } from "../models/chat.model";
@@ -94,10 +94,20 @@ export class ChatService {
         return resu2;
     }
 
+    async memberInChannel(name: string)
+    {
+        const chat = await this.chatRepository.findOne({select: ["members"], where: {name: name}, relations: ['members', 'members.user']});
+        return chat.members;
+    }
+
     async addMember(data: AddMemberDTO)
     {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
+        if (!chat)
+            throw new NotFoundException();
         const user = await this.userRepo.findOne({where: {login: data.login}});
+        if (!user)
+            throw new NotFoundException();
         const member = this.membersRepo.create({user: user, status: status.default, mute: false, chat: chat});
         return await this.membersRepo.save(member);
     }
