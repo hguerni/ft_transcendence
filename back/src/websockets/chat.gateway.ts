@@ -113,7 +113,7 @@ import { subscribeOn } from 'rxjs';
 	)
 	{
 		
-		if (name === "coucou")
+		if (name == "coucou")
 			client.emit('LIST_NAME', ['elias','hava', 'leo']);
 		else
 			client.emit('LIST_NAME', ['rayane','pierre']);
