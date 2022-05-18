@@ -23,10 +23,10 @@ export class AuthController {
         const clientData = await this.userService.findByFtId(client['id']);
 
         if(!clientData)
-            return response.redirect('http://localhost:3000/')
+            return response.redirect('http://54.245.74.93:3000/')
         if(clientData.twofa)
-            return response.redirect('http://localhost:3000/2fa')
-        return response.redirect('http://localhost:3000/profile')
+            return response.redirect('http://54.245.74.93:3000/2fa')
+        return response.redirect('http://54.245.74.93:3000/profile')
     }
 
     @Post('register')
@@ -93,6 +93,12 @@ export class AuthController {
         return await this.userService.addFriend(clientID, id)
     }
 
+    @Get("acceptfriend/:id")
+    async acceptFriend(@Param('id', new ParseIntPipe()) id, @Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        return await this.userService.acceptFriend(clientID, id)
+    }
+
     @Get("removefriend/:id")
     async removeFriend(@Param('id', new ParseIntPipe()) id, @Req() request: Request) {
         const clientID = await this.authService.clientID(request);
@@ -151,6 +157,12 @@ export class AuthController {
     async getFriends(@Req() request: Request) {
         const clientID = await this.authService.clientID(request);
         return await this.userService.getFriends(clientID);
+    }
+
+    @Get("friendrequests")
+    async getRequests(@Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        return await this.userService.getRequest(clientID);
     }
 
     @Get('logout')

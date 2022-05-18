@@ -15,7 +15,7 @@ import { V4MAPPED } from "dns";
 import { v4 } from 'uuid'
 
 
-const socket = io("ws://localhost:3030/chat");
+const socket = io("ws://54.245.74.93:3030/chat");
 
 /*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
 socket.emit("joinroom");

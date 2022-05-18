@@ -80,6 +80,10 @@ export class UserService {
   async addFriend(clientid: number, friendid: number) {
     this.findByFtId(clientid).then((client) =>{
       this.getById(friendid).then(async (friend) => {
+        let previousfriend = await this.friendRepo.findOne({where: {friend: client, user: friend}});
+        console.log("LOL" + previousfriend);
+        if (previousfriend)
+          return ;
         let friendship1 = new FriendEntity;
         let friendship2 = new FriendEntity;
         friendship1.status = "requesting";
@@ -88,11 +92,8 @@ export class UserService {
         friendship2.status = "pending";
         friendship2.friend = client;
         friendship2.user = friend;
-        await this.friendRepo.save(friendship1)
-        this.friendRepo.findOne({where: {friend: friend, user: client}}).then(async (friendship) => {
-          friendship2.friendship = friendship;
-          await this.friendRepo.save(friendship2);
-        });
+        await this.friendRepo.save(friendship2);
+        await this.friendRepo.save(friendship1);
       });
     });
   }
@@ -102,7 +103,9 @@ export class UserService {
       this.getById(friendid).then(async (friend) => {
         this.friendRepo.findOne({where: {friend: friend, user: client}}).then(async (friendship) => {
           this.friendRepo.update(friendship.id, {status: "accepted"});
-          this.friendRepo.update(friendship.friendship.id, {status: "accepted"});
+          this.friendRepo.findOne({where: {friend: client, user: friend}}).then(async (friendship2) => {
+            this.friendRepo.update(friendship2.id, {status: "accepted"});
+          });
         });
       });
     });
@@ -128,11 +131,8 @@ export class UserService {
         friendship2.status = "blocked";
         friendship2.friend = client;
         friendship2.user = friend;
-        await this.friendRepo.save(friendship1)
-        this.friendRepo.findOne({where: {friend: friend, user: client}}).then(async (friendship) => {
-          friendship2.friendship = friendship;
-          await this.friendRepo.save(friendship2);
-        });
+        await this.friendRepo.save(friendship1);
+        await this.friendRepo.save(friendship2);
       });
     });
   }

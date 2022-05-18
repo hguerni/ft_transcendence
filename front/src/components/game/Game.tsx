@@ -4,7 +4,7 @@ import { Socket, io } from 'socket.io-client';
 import { useEffect } from 'react';
 import { GetUserData } from '../../services/user.service';
 
-export const socket: Socket = io("ws://localhost:3030/game");
+export const socket: Socket = io("ws://54.245.74.93:3030/game");
 
 function Game() {
   GetUserData();

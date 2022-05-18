@@ -49,6 +49,9 @@ username: string;
 @OneToMany(() => FriendEntity, friend => friend.user)
 friends: FriendEntity[];
 
+@OneToMany(() => FriendEntity, friend => friend.friend)
+donotuse: FriendEntity[];
+
 @OneToMany(() => GameEntity, games => games.user)
 games: GameEntity[];
 

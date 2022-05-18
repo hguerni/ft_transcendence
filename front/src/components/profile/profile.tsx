@@ -2,7 +2,7 @@ import './profile.css';
 import camera from '../../images/camera-solid.svg';
 import level_up from '../../images/level_up.svg';
 import rank from '../../images/rank.svg';
-import React, {useEffect, useState} from "react";
+import React, {ReactEventHandler, useEffect, useState} from "react";
 import {Redirect} from "react-router-dom"
 import axios from "axios";
 // import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
@@ -83,7 +83,7 @@ function Profile() {
         await axios.put('updateAvatar', {avatar: data.url});
         setAvatar(data.url);
     }
-    catch (err) {setAvatar('http://localhost:3030/uploads/avatar.png')}
+    catch (err) {setAvatar('http://54.245.74.93:3030/uploads/avatar.png')}
 
     }
 
@@ -171,14 +171,29 @@ function Profile() {
 
 function Amis() {
 
-    const data : {nom: string, online: number}[] = [
-        {nom: "rayane", online: 1},
-        {nom: "elias", online: 0},
-        {nom: "pierre", online: 0},
-        {nom: "ava", online: 0},
-        {nom: "leo", online: 2}
-    ];
-    let online = 0;
+    let friends : any;
+    let frrequests : any;
+    useEffect(() => {
+        let mounted = true;
+        const getUser = async () => {
+            try {
+                friends = await (await axios.get('friends')).data;
+                frrequests = await (await axios.get('friendrequests')).data;
+                console.log(friends);
+                console.log(frrequests)
+            }
+            catch(err){}
+        }
+        getUser();
+        return () => {mounted = false;}
+    }, []);
+
+    const handleClick = (e : React.MouseEvent<HTMLElement>) => {
+        const appMode = e.currentTarget.getAttribute('data-appmode');
+        console.log(appMode);
+        //axios.get('acceptfriend/' + id);
+      };
+
     return (
         <>
 
@@ -189,7 +204,7 @@ function Amis() {
                {/* faire  une boucle ici qui check dabbord si les ami son en ligne */}
 
                <h1 id='info-online'>Online</h1>
-               {data.map((element, i) => {
+               {friends ? friends.map((element : any) => {
                 console.log(element);
 
            // Affichage
@@ -198,12 +213,12 @@ function Amis() {
 
                         element.online === 1 ? (
                         <ul>
-                            <h1 id='texteh1'> <img src={rond_vert} alt="account" id="rondstatus" /> {element.nom} </h1>
+                            <h1 id='texteh1'> <img src={rond_vert} alt="account" id="rondstatus" /> {element.user.username} </h1>
                         </ul>
                         )
                         :(
                             <ul>
-                            <h1 id='texteh1'> <img src={nitendo} alt="account" id="rondstatus" /> {element.nom} </h1>
+                            <h1 id='texteh1'> <img src={nitendo} alt="account" id="rondstatus" /> {element.user.username} </h1>
                         </ul>
                         )
 
@@ -213,9 +228,9 @@ function Amis() {
                     )
                 )
 
-                    })}
+                    }): 0}
                           <h1 id='info-offline'>Offline</h1>
-               {data.map((element, i) => {
+               {friends ? friends.map((element: any) => {
                 console.log(element);
 
            // Affichage
@@ -224,7 +239,7 @@ function Amis() {
 
 
                         <ul>
-                            <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.nom}</h1>
+                            <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.user.username}</h1>
                         </ul>
 
                     )
@@ -233,7 +248,21 @@ function Amis() {
                     )
                 )
 
-                    })}
+                    }) : 0 }
+                        <h1 id='info-online'>Pending</h1>
+                        {frrequests ? frrequests.map((element: any) => {
+                console.log(element);
+
+           // Affichage
+                return (
+                        <ul>
+                            <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.user.username}</h1>
+                            <button className="btncrayon" onClick={handleClick} data-arg1={element.user.id}></button>
+                        </ul>
+
+                )
+
+                    }) : 0}
             </div>
         </>
     );
