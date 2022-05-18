@@ -155,7 +155,10 @@ import { subscribeOn } from 'rxjs';
 	{
 		this.chatService.getPvmsg(name)
 		.then((val) => {
-			client.emit('CHANNEL_CREATED', val);
+			const filteredArray = val.filter(function(ele , pos){
+                return val.indexOf(ele) == pos;
+            }) 
+			client.emit('CHANNEL_CREATED', filteredArray);
 		})
 	}
 		
@@ -173,7 +176,10 @@ import { subscribeOn } from 'rxjs';
 			await this.chatService.addMember(channelcreation)
 			const ret = await this.chatService.getPvmsg(channelcreation.login)
 			//client.join(channelcreation.channel);
-			client.emit('CHANNEL_CREATED', ret);
+			const filteredArray = ret.filter(function(ele , pos){
+                return ret.indexOf(ele) == pos;
+            }) 
+			client.emit('CHANNEL_CREATED', filteredArray);
 		}
 		catch (e) {
 			client.emit('error', "une erreur est survenue");

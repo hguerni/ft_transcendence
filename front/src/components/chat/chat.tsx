@@ -33,8 +33,7 @@ class info {
 }
 
 class info2 {
-    /*creation d'une class qui servira a determiner le nom
-    ainsi l'input de la personne qui envoi le message*/
+
     key: string = v4();
     name: string = "";
     message: string = "";
@@ -66,7 +65,7 @@ function CreatePopupChannel() {
 
    function sendChannelName ()
    {
-        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: "psemsari"});
+        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: "rqouchic"});
    }
 
 
@@ -126,7 +125,7 @@ function sendInput(message: string) {
     infoInputChat.name = "rayane";
     infoInputChat.inputValue = message;
     // envoi d'un message au serveur. Le Json.stringify sert a transformer un objet en string
-    socket.emit("addmsg",  {message: message, channel: global_channel, login: "psemsari"});//changer login
+    socket.emit("addmsg",  {message: message, channel: global_channel, login: "rqouchic"});//changer login
 }
 
 function Bodychat() {
@@ -228,7 +227,7 @@ function Channel() {
     const [channelName, setChannelName] = useState("");
     const [arrayChannelName, setArrayChannelName] = useState<string[]>([]);
 
-    // useEffect(() => {
+     useEffect(() => {
 
         // socket.on("ready", (ready_chat: object) => {
 
@@ -238,11 +237,15 @@ function Channel() {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             //setChannelName(message);
+          
+            const filteredArray = message.filter(function(ele , pos){
+                return message.indexOf(ele) == pos;
+            }) 
             
             setArrayChannelName(message);
         });
 
-    //   }, []);
+       }, []);
 
 
     return (
@@ -257,6 +260,7 @@ function Channel() {
                 <div className="centerChat">
 
                     {arrayChannelName.map((item) => {
+                        console.log(item);
 
                         return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  item); console.log(item); global_channel = item;}}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
 
@@ -311,7 +315,8 @@ function ListChannel() {
                 {arraylistName.map((item) => {
                     console.log(item);
 
-                    return   <h1 className="channelName"> {item}  </h1>
+                    return  <button className="btnpersonneDansChannel"> <h1 className="personneDansChannel"> {item}  </h1> </button>
+                   
 
                 })}
 
@@ -332,7 +337,7 @@ function Chat() {
     //all ready
     
 
-    socket.emit("GET_CHANNEL", "psemsari"); // remplacer par votre pseudo
+    socket.emit("GET_CHANNEL", "rqouchic"); // remplacer par votre pseudo
     return (
         <>
             <div className="rayaneleboloss">
