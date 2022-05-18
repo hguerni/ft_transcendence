@@ -78,7 +78,12 @@ import { subscribeOn } from 'rxjs';
 	): void
 	{
 		this.chatService.addMsg(msg)
-		.then((val) => client.emit('addmsg', val))
+		.then(() => {
+			this.chatService.messageInChannel(msg.channel)
+			.then((val) => {
+				client.emit('LIST_CHAT', val);
+			})
+		})
 		.catch((error) => client.emit('addmsg', error));
 	}
 
@@ -100,37 +105,81 @@ import { subscribeOn } from 'rxjs';
 	): void
 	{
 		this.chatService.addMember(data)
-		.then((val) => client.emit('addmember', val.user.login))
+		.then(()=>{
+			this.chatService.messageInChannel(data.channel)
+			.then((val) => {
+				client.emit('LIST_CHAT', val);
+		})
+		})
 		.catch((error) => {
 			//client.emit('addmember', error)
 		});
 	}
 
 	@SubscribeMessage('JUST_NAME_CHANNEL')
-	getchannel(
+	getchannelinfo(
 		@MessageBody() name: string,
 		@ConnectedSocket() client: Socket
 	)
 	{
 		
-		if (name == "coucou")
-			client.emit('LIST_NAME', ['elias','hava', 'leo']);
-		else
-			client.emit('LIST_NAME', ['rayane','pierre']);
+		//if (name == "coucou")
+		//	client.emit('LIST_NAME', ['elias','hava', 'leo']);
+		//else
+		//	client.emit('LIST_NAME', ['rayane','pierre']);
 		
-		if (name == "coucou")
-			client.emit('LIST_CHAT', [
-				{name: 'pierre', message: 'message1'}, 
-				{name: 'rayane', message: 'message2'}])
-		else
-			client.emit('LIST_CHAT', [
-				{name: 'have', message: 'message3'}, 
-				{name: 'elias', message: 'message4'},
-				{name: 'leo', message: 'message5'}])
-		// this.chatService.memberInChannel(name)
-		// .then((val) => {
-		// 	client.emit('LIST_NAME', val)
-		// })
+		//if (name == "coucou")
+		//	client.emit('LIST_CHAT', [
+		//		{name: 'hava', message: 'message3'}, 
+		//		{name: 'elias', message: 'message4'},
+		//		{name: 'leo', message: 'message5'}])
+		//else
+		//	client.emit('LIST_CHAT', [
+		//		{name: 'pierre', message: 'message1'}, 
+		//		{name: 'rayane', message: 'message2'}])
+		this.chatService.memberInChannel(name)
+		.then((val) => {
+			client.emit('LIST_NAME', val)
+		})
+		this.chatService.messageInChannel(name)
+		.then((val) => {
+			client.emit('LIST_CHAT', val);
+		})
+	}
+
+	@SubscribeMessage('GET_CHANNEL')
+	getchannelname(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() name: string
+	)
+	{
+		this.chatService.getPvmsg(name)
+		.then((val) => {
+			client.emit('CHANNEL_CREATED', val);
+		})
+	}
+		
+	@SubscribeMessage('CREATE_CHANNEL')
+	async handleCreateChannel(
+		@ConnectedSocket() client: Socket, 
+		@MessageBody() channelcreation: {channel: string, login: string})
+	{
+		try {
+			await this.chatService.addOne({
+				name: channelcreation.channel,
+				status: 0,
+				password: ""
+			})
+			await this.chatService.addMember(channelcreation)
+			const ret = await this.chatService.getPvmsg(channelcreation.login)
+			//client.join(channelcreation.channel);
+			client.emit('CHANNEL_CREATED', ret);
+		}
+		catch (e) {
+			client.emit('error', "une erreur est survenue");
+		}
+
+		// le serveur se connect sur le channel1 et retour le message
 	}
 
 	// @SubscribeMessage('test')
@@ -160,7 +209,6 @@ import { subscribeOn } from 'rxjs';
 
 	  @SubscribeMessage('bonjour du client')
 	  handleSendingInputChat(client: Socket,  message: string) {
-	
 		client.join("channel1"); // sert a connecter le client sur le channel1
 		this.io.to("channel1").emit("bonjour du serveur",  message) // le serveur se connect sur le channel1 et retour le message
 		
@@ -173,18 +221,5 @@ import { subscribeOn } from 'rxjs';
 		  client.join("channel1");
 		
 		}
-	
-		@SubscribeMessage('CREATE_CHANNEL')
-		handleCreateChannel(client: Socket, channelName: string) {
-	  
-		  client.join("channel2");
-			const resu = this.chatService.addOne({
-				name: channelName,
-				password: "",
-				status: 0
-			});
-			resu.then((test) => {
-				this.io.to("channel2").emit("CHANNEL_CREATED",  test.name) // le serveur se connect sur le channel1 et retour le message
-			})
-		}
+
   }

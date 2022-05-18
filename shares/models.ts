@@ -8,3 +8,11 @@ export class AddMemberDTO {
 
     channel: string;
 }
+
+export class getchannel {
+    id: number;
+
+    chat: {
+        name: string;
+    }
+}

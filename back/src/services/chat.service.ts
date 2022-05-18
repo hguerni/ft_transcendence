@@ -9,6 +9,7 @@ import { MsgDTO } from "../models/chat.model";
 import { UserEntity } from "../entities/user.entity";
 import { getgroups } from "process";
 import { getHeapCodeStatistics } from "v8";
+import { Console } from "console";
 
 enum status {
     owner,
@@ -68,8 +69,13 @@ export class ChatService {
     async getPvmsg(login: string)
     {
         const user = await this.userRepo.findOne({where: {login: login}});
-        const members = await this.membersRepo.find({where: {user: user}, relations: ['chat', 'chat.messages', 'chat.messages.member']});
-        return members;
+        const channels = await this.membersRepo.find({select: ['id'], where: {user: user}, relations: ['chat']});
+
+        const tmp: string[] = [];
+        channels.forEach((element) => {
+            tmp.push(element.chat.name);
+        })
+        return tmp;
     }
 
     async getUser(name: string)
@@ -79,31 +85,47 @@ export class ChatService {
 
     async addOne(data: ChatDTO){
 
-        const chat = this.chatRepository.create({...data, messages: []});
-        console.log(chat);
+        const chat = this.chatRepository.create({...data, messages: [], members: []});
         return await this.chatRepository.save(chat);
     }
 
     async addMsg(data: MsgDTO){
-        const chat = await this.chatRepository.findOne(data.chatId, {relations: ["messages"]});
-        const member = await this.membersRepo.findOne(data.userId);
+        console.log(data);
+        const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["messages"]});
+        console.log(2);
+        const user = await this.userRepo.findOne({where: {login: data.login}});
+        console.log(3);
+        const member = await this.membersRepo.findOne({where: {user: user, chat: chat}, relations: ['chat', 'chat.messages']});
+        console.log(4);
         const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
+        console.log(5);
         chat.messages.push(message);
+        console.log(6);
         await this.chatRepository.save(chat).catch((e) => console.log(e));
+        console.log(7);
         const resu2 = await this.msgRepo.save(message).catch((e) => console.log(e));
+        console.log(8);
         return resu2;
     }
 
     async memberInChannel(name: string)
     {
-        const chat = await this.chatRepository.findOne({select: ["members"], where: {name: name}, relations: ['members', 'members.user']});
-        console.log(chat);
-        const result = [];
-        chat.members.forEach(member => {
-            result.push(member.user.login);
-        });
-        return result;
+        const chat = await this.chatRepository.findOne({select: ["id"], where: {name: name}, relations: ['members', 'members.user']});
+        const tmp: string[] = [];
+        chat.members.forEach((element) => {
+            tmp.push(element.user.login);
+        })
+        return tmp;
+    }
 
+    async messageInChannel(name: string)
+    {
+        const chat = await this.chatRepository.findOne({select: ["id"], where: {name: name}, relations: ['messages', 'messages.member', 'messages.member.user']});
+        const tmp: {name: string, message: string}[] = [];
+        chat.messages.forEach((element) => {
+            tmp.push({name: element.member.user.login, message: element.message});
+        })
+        return tmp;
     }
 
     async addMember(data: AddMemberDTO)

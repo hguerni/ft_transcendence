@@ -23,8 +23,7 @@ import { ChatEntity } from './chat.entity';
   @CreateDateColumn()
   created: Date;
 
-  @OneToOne(() => MemberEntity)
-  @JoinColumn()
+  @ManyToOne(() => MemberEntity)
   member: MemberEntity;
 
   @Column()

@@ -8,24 +8,24 @@ export class ChatDTO {
     status: number;
 
     @IsString()
-    password: string
+    password: string;
 }
 
 export class MsgDTO {
     @IsString()
     message: string;
 
-    @IsNumber()
-    chatId: number;
+    @IsString()
+    channel: string;
 
-    @IsNumber()
-    userId: number;
+    @IsString()
+    login: string;
 }
 
 export class AddMemberDTO {
     @IsString()
-    login: string;
+    channel: string;
 
     @IsString()
-    channel: string;
+    login: string;
 }
