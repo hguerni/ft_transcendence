@@ -1,6 +1,7 @@
 import Sketch from "react-p5";
 import p5Types from "p5";
 import { Socket } from 'socket.io-client';
+import UserService from "../../services/user.service";
 
 const UP_ARROW = 38;
 const DOWN_ARROW = 40;
@@ -32,8 +33,8 @@ export function GameReset(client: Socket) {
 	client.emit("GAME_RESET");
 }
 
-export function GameJoin(client: Socket, room: string) {
-	client.emit("GAME_JOIN", room);
+export function GameJoin(client: Socket, roomName: string) {
+	client.emit("GAME_JOIN", UserService.getUsername(), roomName);
 }
 
 export function GameWatch(client: Socket, room: string) {
@@ -48,8 +49,8 @@ export function GetCurrentRoom(client: Socket) {
 	client.emit("GET_CURRENT_ROOM");
 }
 
-export function GameCreate(client: Socket, room: string) {
-	client.emit("GAME_CREATE", room);
+export function GameCreate(client: Socket, roomName: string) {
+	client.emit("GAME_CREATE", UserService.getUsername(), roomName);
 }
 
 export function GameLeave(client: Socket) {

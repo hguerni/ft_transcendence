@@ -11,7 +11,7 @@ class DefaultUser implements User {
   twofa: boolean = false;
 }
 
-export function GetUserData() { //do not call this function more than one time
+export function GetUserData() { //do not call this function more than one time, userData is updated every one second
   const [userData, setUserData] = useState<User>(new DefaultUser());
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default class UserService {
 
     if (userData)
       return userData;
-    return 0;
+    return null;
   }
 
   static getUserId() {
@@ -57,7 +57,7 @@ export default class UserService {
 
     if (userData)
       return JSON.parse(userData).username;
-    return 0;
+    return "";
   }
 
   static getOnlineStatus() {
@@ -73,7 +73,7 @@ export default class UserService {
 
     if (userData)
       return JSON.parse(userData).avatar;
-    return 0;
+    return "";
   }
 
   static getEmail() {
@@ -81,7 +81,7 @@ export default class UserService {
 
     if (userData)
       return JSON.parse(userData).email;
-    return 0;
+    return "";
   }
 
   static getTwofaStatus() {
@@ -89,7 +89,7 @@ export default class UserService {
 
     if (userData)
       return JSON.parse(userData).twofa;
-    return 0;
+    return false;
   }
 
   //old function

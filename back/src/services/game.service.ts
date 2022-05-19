@@ -22,8 +22,8 @@ export class RoomProps {
   name: string = v4().substring(0, 10);
   trainingMode: boolean = false;
   canJoinGame: boolean = true;
-  p1_name: string = "p1_name";
-  p2_name: string = "p2_name";
+  p1_name: string = "";
+  p2_name: string = "";
   p1_readyToStart: boolean = false;
   p2_readyToStart: boolean = false;
   p1_score: number = 0;
@@ -197,6 +197,13 @@ export class GameService {
       this.nb_players++;
       this.room.canJoinGame = false;
     }
+  }
+
+  setPlayersNames(p_name: string) {
+    if (this.room.p1_name === "")
+      this.room.p1_name = p_name;
+    else
+      this.room.p2_name = p_name;
   }
 
   setPlayerReady(clientId: string) {
