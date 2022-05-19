@@ -11,7 +11,7 @@ class DefaultUser implements User {
   twofa: boolean = false;
 }
 
-export function GetUserData() { //do not call this function more than one time
+export function GetUserData() { //do not call this function more than one time, userData is updated every one second
   const [userData, setUserData] = useState<User>(new DefaultUser());
 
   useEffect(() => {

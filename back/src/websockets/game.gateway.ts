@@ -35,7 +35,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const room = this.clientsToRoom.get(client.id);
     if (room != undefined)
     {
-      //this.clientsToRoom.delete(client.id);
+      //this.clientsToRoom.delete(client.id);g
       client.leave(room);
     }
     this.logger.log(`Client disconnected: ${client.id}`);
@@ -52,10 +52,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   private handleSendingCurrentRoom(clientId: string) {
-    let room: RoomProps = this.gameRooms.get(this.clientsToRoom.get(clientId)).getRoomProps();
-
-    this.wsServer.to(clientId).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(room))
-    this.logger.log("SEND_CURRENT_ROOM_INFOS");
+    let room: GameService = this.gameRooms.get(this.clientsToRoom.get(clientId));
+    if (room) {
+      this.wsServer.to(clientId).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(room.getRoomProps()))
+      this.logger.log("SEND_CURRENT_ROOM_INFOS");
+    }
   }
 
   @SubscribeMessage('GAME_END')
