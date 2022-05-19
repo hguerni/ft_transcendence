@@ -61,9 +61,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('GAME_END')
   handleEndGamer(client: Socket, game: string) {
-    if (this.gameRooms.has(game))
+    this.logger.log(`Client ${client.id} want to end game ${game}`);
+    if (this.gameRooms.has(game)) {
       this.gameRooms.delete(game);
-    this.logger.log(`Client ${client.id} is ending game`);
+      this.clientsToRoom.delete(client.id);
+      this.logger.log(`Client ${client.id} is ending game ${game}`);
+    }
   }
 
   @SubscribeMessage('LINK_CLIENT_TO_USER')

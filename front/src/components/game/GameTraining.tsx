@@ -5,6 +5,9 @@ const socket: Socket = io("ws://localhost:3030/game");
 
 
 export default function GameTraining() {
+  socket.on("GAME_END", (game: string) => {
+    socket.emit("GAME_END", game);
+  });
   return (
     <div>
       <div className="gameArea">
