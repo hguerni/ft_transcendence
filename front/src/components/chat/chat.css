@@ -398,6 +398,11 @@
     color: aliceblue;
 
     font-size: 25px;
+    cursor: pointer;
+}
+
+.personneDansChannel:hover {
+    color: blue;
 
 }
 

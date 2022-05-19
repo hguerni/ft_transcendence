@@ -1,9 +1,8 @@
 import React, { Component, useEffect } from "react";
 import { useState } from 'react';
 import './chat.css';
-import { RestaurantRounded } from "@mui/icons-material";
+import { AppSettingsAltRounded, RestaurantRounded } from "@mui/icons-material";
 import ClearIcon from '@mui/icons-material/Clear';
-import { Button } from "@mui/material";
 import loupe from "../../images/loupe.png";
 import buttonsubmit from "../../images/submitChat2.png";
 import directmessage from "../../images/directChat.png";
@@ -13,6 +12,9 @@ import { Server } from "socket.io";
 import { io } from "socket.io-client";
 import { V4MAPPED } from "dns";
 import { v4 } from 'uuid'
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
 
 //import { getchannel } from "../../../../shares/models"
 
@@ -65,7 +67,7 @@ function CreatePopupChannel() {
 
    function sendChannelName ()
    {
-        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: "rqouchic"});
+        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: "ellarbi"});
    }
 
 
@@ -125,7 +127,7 @@ function sendInput(message: string) {
     infoInputChat.name = "rayane";
     infoInputChat.inputValue = message;
     // envoi d'un message au serveur. Le Json.stringify sert a transformer un objet en string
-    socket.emit("addmsg",  {message: message, channel: global_channel, login: "rqouchic"});//changer login
+    socket.emit("addmsg",  {message: message, channel: global_channel, login: "ellarbi"});//changer login
 }
 
 function Bodychat() {
@@ -279,6 +281,49 @@ function Channel() {
     );
 }
 
+function Menu_Membre(props: {item: string}) {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      <Button
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+        style={{
+            padding: "0.01px",
+        }}
+      >
+        <h1 className="personneDansChannel"> {props.item}  </h1>
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={handleClose}>Profil</MenuItem>
+        <MenuItem onClick={handleClose}>Inviter a jouer</MenuItem>
+        <MenuItem onClick={handleClose}>Envoyer un message</MenuItem>
+        <MenuItem onClick={handleClose}>Promouvoir en admin</MenuItem>
+        <MenuItem onClick={handleClose}>Bloquer</MenuItem>
+      </Menu>
+    </div>
+  );
+}
+
 function ListChannel() {
 
     const [arraylistName, setArraylistName] = useState<string[]>([]);
@@ -312,14 +357,11 @@ function ListChannel() {
                 </div>
 
                 <div className="centerChat">
+                {/* <Menu_Membre/> */}
                 {arraylistName.map((item) => {
-                    console.log(item);
-
-                    return  <button className="btnpersonneDansChannel"> <h1 className="personneDansChannel"> {item}  </h1> </button>
-                   
-
+                    return <Menu_Membre item={item}/>
                 })}
-
+                
                 </div>
                 <div className="footerChatList">
 
@@ -337,7 +379,7 @@ function Chat() {
     //all ready
     
 
-    socket.emit("GET_CHANNEL", "rqouchic"); // remplacer par votre pseudo
+    socket.emit("GET_CHANNEL", "ellarbi"); // remplacer par votre pseudo
     return (
         <>
             <div className="rayaneleboloss">
