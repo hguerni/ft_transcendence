@@ -43,8 +43,8 @@ function Routes() {
 }
 
 function App() {
-  GetUserData(); //userData is updated every second, see 'src/service/user.service.ts' for more info
-
+  GetUserData();
+  console.log("heyheyhey");
   return (
     <Routes/>
   );

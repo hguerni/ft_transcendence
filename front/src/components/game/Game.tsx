@@ -7,7 +7,6 @@ import { GetUserData } from '../../services/user.service';
 export const socket: Socket = io("ws://localhost:3030/game");
 
 function Game() {
-  GetUserData();
   useEffect(() => {
     socket.on("ALERT", (message: string) => {
       alert(message);
@@ -16,7 +15,6 @@ function Game() {
       socket.emit('GAME_END', game);
     });
   }, []);
-
   return (
     <>
       <div>
