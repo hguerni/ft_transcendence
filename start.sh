@@ -5,6 +5,5 @@ echo  "${RED} Npm install dans le front"
 cd front && npm i
 echo  "${RED} Npm install dans le back"
 cd ../back && npm i
-echo  "${RED}Build"${NC} 
-docker system prune && docker compose up --build
- 
+echo  "${RED}Build"${NC}
+docker system prune -f && docker compose up --build
