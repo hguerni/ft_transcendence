@@ -35,9 +35,16 @@ import { subscribeOn } from 'rxjs';
 	{
 		//console.log(client.handshake);
 		//console.log(client.conn.request);
-		let ret = {name: client.handshake.headers.name, socket: client};
-		this.Connected.push(ret);
+		let login: string = client.handshake.query.login as string;
 
+		console.log(login);
+		let ret = {name: login, socket: client};
+		this.Connected.push(ret);
+		this.chatService.getPvmsg(ret.name)
+		.then((val) => {
+			console.log(val);
+			client.join(val);
+		})
 	}
 
 	@SubscribeMessage('ready')
@@ -99,20 +106,26 @@ import { subscribeOn } from 'rxjs';
 	}
 
 	@SubscribeMessage('addmember')
-	addmember(
+	async addmember(
 		@MessageBody() data: AddMemberDTO,
 		@ConnectedSocket() client: Socket
-	): void
+	)
 	{
-		this.chatService.addMember(data)
-		.then(()=>{
-			this.chatService.messageInChannel(data.channel)
-			.then((val) => {
-				client.emit('LIST_CHAT', val);
-		})
-		})
-		.catch((error) => {
-			//client.emit('addmember', error)
+		await this.chatService.addMember(data);
+		const ret = await this.chatService.memberInChannel(data.channel);
+		this.Connected.forEach(element => {
+			if (element.name == data.login)
+			{
+				element.socket.join(data.channel);
+				this.getchannelname(element.socket, element.name);
+				return;
+			}
+		});
+		console.log(data.channel);
+		this.io.to(data.channel).emit('LIST_NAME', 
+		{
+			channel: data.channel,
+			list: ret
 		});
 	}
 
@@ -139,7 +152,10 @@ import { subscribeOn } from 'rxjs';
 		//		{name: 'rayane', message: 'message2'}])
 		this.chatService.memberInChannel(name)
 		.then((val) => {
-			client.emit('LIST_NAME', val)
+			client.emit('LIST_NAME', {
+				channel: name,
+				list: val
+			})
 		})
 		this.chatService.messageInChannel(name)
 		.then((val) => {
@@ -155,10 +171,10 @@ import { subscribeOn } from 'rxjs';
 	{
 		this.chatService.getPvmsg(name)
 		.then((val) => {
-			const filteredArray = val.filter(function(ele , pos){
-                return val.indexOf(ele) == pos;
-            }) 
-			client.emit('CHANNEL_CREATED', filteredArray);
+			//const filteredArray = val.filter(function(ele , pos){
+            //    return val.indexOf(ele) == pos;
+            //}) 
+			client.emit('CHANNEL_CREATED', val);
 		})
 	}
 		
@@ -176,10 +192,11 @@ import { subscribeOn } from 'rxjs';
 			await this.chatService.addMember(channelcreation)
 			const ret = await this.chatService.getPvmsg(channelcreation.login)
 			//client.join(channelcreation.channel);
-			const filteredArray = ret.filter(function(ele , pos){
-                return ret.indexOf(ele) == pos;
-            }) 
-			client.emit('CHANNEL_CREATED', filteredArray);
+			//const filteredArray = ret.filter(function(ele , pos){
+            //    return ret.indexOf(ele) == pos;
+            //}) 
+			client.emit('CHANNEL_CREATED', ret);
+			client.join(channelcreation.channel);
 		}
 		catch (e) {
 			client.emit('error', "une erreur est survenue");
