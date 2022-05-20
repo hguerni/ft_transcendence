@@ -56,7 +56,7 @@ export default function GameFighting() {
         <GameArea client={socket}/>
       </div>
       <div className="gameArea">
-        <button className="gameButton" onClick={() => GameStart(socket)}>START GAME</button>
+        <button className="gameButtonStart" onClick={() => GameStart(socket)}>START GAME</button>
       </div>
       <div className="gameArea">{msg}</div>
     </div>

@@ -1,8 +1,8 @@
 import "./Game.css"
 import { BrowserRouter, Route, useHistory, useLocation } from "react-router-dom";
-
 import GameTraining from './GameTraining';
 import GameFighting from './GameFighting';
+import { Redirect } from "react-router-dom";
 
 export function TabNav() {
   const history = useHistory();
@@ -30,7 +30,6 @@ export default function GameTabs() {
       <TabNav/>
       <BrowserRouter>
         <div>
-          <Route exact path={"/game"} component={GameTraining} />
           <Route exact path={"/game/training"} component={GameTraining} />
           <Route exact path={"/game/fighting"} component={GameFighting} />
         </div>
