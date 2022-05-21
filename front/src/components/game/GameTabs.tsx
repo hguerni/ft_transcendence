@@ -29,10 +29,8 @@ export default function GameTabs() {
     <div>
       <TabNav/>
       <BrowserRouter>
-        <div>
           <Route exact path={"/game/training"} component={GameTraining} />
           <Route exact path={"/game/fighting"} component={GameFighting} />
-        </div>
       </BrowserRouter>
     </div>
 
