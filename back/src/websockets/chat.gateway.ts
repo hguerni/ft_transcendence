@@ -36,7 +36,7 @@ import { subscribeOn } from 'rxjs';
 		//console.log(client.handshake);
 		//console.log(client.conn.request);
 		let login: string = client.handshake.query.login as string;
-
+		login = "psemsari";
 		console.log(login);
 		let ret = {name: login, socket: client};
 		this.Connected.push(ret);
@@ -45,6 +45,7 @@ import { subscribeOn } from 'rxjs';
 			console.log(val);
 			client.join(val);
 		})
+		client.join(login);
 	}
 
 	@SubscribeMessage('ready')
@@ -79,30 +80,32 @@ import { subscribeOn } from 'rxjs';
 	}
 
 	@SubscribeMessage('addmsg')
-	addmsg(
+	async addmsg(
 		@MessageBody() msg: MsgDTO,
 		@ConnectedSocket() client: Socket
-	): void
+	)
 	{
-		this.chatService.addMsg(msg)
-		.then(() => {
-			this.chatService.messageInChannel(msg.channel)
-			.then((val) => {
-				client.emit('LIST_CHAT', val);
-			})
-		})
-		.catch((error) => client.emit('addmsg', error));
+		try {
+			await this.chatService.addMsg(msg);
+			const val = await this.chatService.messageInChannel(msg.channel);
+			this.io.to(msg.channel).emit('LIST_CHAT', {channel: msg.channel, list: val});
+		}
+		catch (error) {console.log(error);}
 	}
 
 	@SubscribeMessage('addchat')
-	addchat(
+	async addchat(
 		@MessageBody() chat: ChatDTO,
 		@ConnectedSocket() client: Socket
-	): void
+	)
 	{
-		this.chatService.addOne(chat)
-		.then((val) => client.emit('addchat', val))
-		.catch((error) => client.emit('addchat', error));
+		// try {
+		// 	const val = await this.chatService.addOne(chat);
+		// 	this.io.to(chat.)
+		// .then((val) => client.emit('addchat', val))
+		// .catch((error) => client.emit('addchat', error));
+		// }
+		// catch (e) { console.log(e);}
 	}
 
 	@SubscribeMessage('addmember')
@@ -159,7 +162,7 @@ import { subscribeOn } from 'rxjs';
 		})
 		this.chatService.messageInChannel(name)
 		.then((val) => {
-			client.emit('LIST_CHAT', val);
+			client.emit('LIST_CHAT', {channel: name, list: val});
 		})
 	}
 
@@ -188,18 +191,14 @@ import { subscribeOn } from 'rxjs';
 				name: channelcreation.channel,
 				status: 0,
 				password: ""
-			})
-			await this.chatService.addMember(channelcreation)
-			const ret = await this.chatService.getPvmsg(channelcreation.login)
-			//client.join(channelcreation.channel);
-			//const filteredArray = ret.filter(function(ele , pos){
-            //    return ret.indexOf(ele) == pos;
-            //}) 
-			client.emit('CHANNEL_CREATED', ret);
+			});
+			await this.chatService.addMember(channelcreation);
+			const ret = await this.chatService.getPvmsg(channelcreation.login);
+			this.io.to(channelcreation.login).emit('CHANNEL_CREATED', ret);
 			client.join(channelcreation.channel);
 		}
 		catch (e) {
-			client.emit('error', "une erreur est survenue");
+			console.log(e);
 		}
 
 		// le serveur se connect sur le channel1 et retour le message
@@ -219,7 +218,7 @@ import { subscribeOn } from 'rxjs';
 	): void
 	{
 		this.Connected.forEach(element => {
-			if (element.socket = client)
+			if (element.socket == client)
 			{
 				let index = this.Connected.indexOf(element);
 				this.Connected.splice(index);

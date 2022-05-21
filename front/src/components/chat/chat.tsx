@@ -39,11 +39,21 @@ class info {
     channel: string = "coucou";
 }
 
-class info2 {
+// class info2 {
 
-    key: string = v4();
-    name: string = "";
-    message: string = "";
+//     channel: string = "";
+//     list: {name: string, message: string}[] = [];
+// }
+
+interface message {
+    name: string;
+    message: string;
+}
+
+interface info2 {
+
+    channel: string;
+    list: message[];
 }
 
 function ButtonCreateCanal(){
@@ -143,20 +153,22 @@ function Bodychat() {
     const [message, setMessage] = useState("");
 
 /*************************************************** */
-    const [arrayChat, setArraylistChat] = useState<info2[]>([]);
+    const [arrayChat, setArraylistChat] = useState<message[]>([]);
+    socket.on("LIST_CHAT", (message: info2) => {
+    // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+    //setInputValue(message);
+    // setlistName(message);
     
-    useEffect(() => {    
-        socket.on("LIST_CHAT", (message: info2[]) => {
-        // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-        //setInputValue(message);
-        // setlistName(message);
-        
 
-        // let tmp = [...arraylistName];
-        // tmp.push(message);
-        setArraylistChat(message);
-        });
-    },[])
+    // let tmp = [...arraylistName];
+    // tmp.push(message);
+    console.log("<List chat>", global_channel, message.channel)
+    if (global_channel == message.channel)
+        setArraylistChat(message.list);
+    });
+    // useEffect(() => {    
+    
+    // },[])
 
   
 /********************************************************** */
@@ -192,7 +204,6 @@ function Bodychat() {
                     {arrayChat.map((item) => {
                         return (
                             <div >
-                              { console.log(item)};
                                 <h1 className="inputName"> {item.name} </h1>
                                 <h1 className="chathistory"> {item.message} </h1>
                                 <h1> </h1>
@@ -235,24 +246,24 @@ function Channel() {
     const [arrayChannelName, setArrayChannelName] = useState<string[]>([]);
 
      useEffect(() => {
-
+       }, []);
         // socket.on("ready", (ready_chat: object) => {
 
         // })
       // réception d'un message envoyé par le serveur
-        socket.on("CHANNEL_CREATED", (message: string[]) => {
-            // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-            //setInputValue(message);
-            //setChannelName(message);
-          
-            //const filteredArray = message.filter(function(ele , pos){
-            //    return message.indexOf(ele) == pos;
-            //}) 
-            
-            setArrayChannelName(message);
-        });
+    socket.on("CHANNEL_CREATED", (message: string[]) => {
+        // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+        //setInputValue(message);
+        //setChannelName(message);
+        
+        //const filteredArray = message.filter(function(ele , pos){
+        //    return message.indexOf(ele) == pos;
+        //}) 
+        
+        setArrayChannelName(message);
+    });
 
-       }, []);
+
 
 
     return (
@@ -267,7 +278,7 @@ function Channel() {
                 <div className="centerChat">
 
                     {arrayChannelName.map((item) => {
-                        return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  item); console.log(item); global_channel = item;}}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
+                        return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  item); global_channel = item;}}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
 
                     })}
 
@@ -337,7 +348,7 @@ function ListChannel() {
 
         // })
       // réception d'un message envoyé par le serveur
-        socket.on("LIST_NAME", (message: {name: string, list: string[]}) => {
+        socket.on("LIST_NAME", (message: {channel: string, list: string[]}) => {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             // setlistName(message);
@@ -345,9 +356,9 @@ function ListChannel() {
 
             // let tmp = [...arraylistName];
             // tmp.push(message);
-            //if (message.name == global_channel)
-            console.log(global_channel);
-            setArraylistName(message.list);
+            console.log("<List name>", global_channel, message.channel);
+            if (message.channel == global_channel)
+                setArraylistName(message.list);
         });
     //   }, []);
 
