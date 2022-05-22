@@ -16,7 +16,7 @@ export default function Header() {
     <div className="navBar">
       <a className="siteTitle" href="/">FT_TRANSCENDANCE</a>
       <HeaderTabs/>
-      <HeaderProfile/>
+      {/*<HeaderProfile/>*/}
     </div>
   );
 }

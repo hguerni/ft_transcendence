@@ -21,18 +21,19 @@
   position: absolute;
   background-color: #450FBF;
   color: white;
-  font-size: 20px;
-  padding: 5px 10px 5px 10px;
+  font-family: 'CrickxRegular';
+  font-size: 24px;
+  padding: 0px 10px 0px 10px;
   border-radius: 8px;
   width: fit-content;
   border: solid 5px white;
   margin-left: auto;
   margin-right: auto;
-  height: 50px;
+  height: 40px;
+  line-height: 40px;
   top: -28px;
   left: 0;
   right: 0;
-  box-sizing: border-box;
 }
 
 .tabButton {

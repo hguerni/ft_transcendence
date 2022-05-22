@@ -6,24 +6,23 @@
   margin-left: 50px;
   border: solid 2px rgba(255, 255, 255);
   border-radius: 8px;
+  background-color: rgb(69,15,191, 0.4);
 }
 
 .siteTitle {
   position: absolute;
   color: white;
   font-family: 'CrickxRegular';
-  font-weight: lighter;
-  font-style: normal;
   text-decoration: none;
-  font-size: 21px;
+  font-size: 24px;
   line-height: 70px;
-  left: 50px;
+  left: 40px;
 
 }
 
 .accountImg {
   position: absolute;
-  right: 50px;
+  right: 40px;
   width: 50px;
   height: 70px;
 }
@@ -40,6 +39,7 @@
   background-color: transparent;
   border-radius: 0px;
   align-self: center;
+  font-family: 'CrickxRegular';
 }
 
 .headerTabButton:hover {
@@ -55,12 +55,8 @@
 }
 
 .headerTabs {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  width: 350px;
+  margin-left: auto;
+  width: fit-content;
   height: 70px;
   text-align: center;
   display: flex;
