@@ -11,6 +11,7 @@ export default function Header() {
 
   if (usePathname() === "/")
     return (<></>);
+
   return (
     <div className="navBar">
       <a className="siteTitle" href="/">FT_TRANSCENDANCE</a>
