@@ -16,11 +16,9 @@ function Game() {
     });
   }, []);
   return (
-    <>
       <div className='gameWrap'>
         <GameTabs/>
       </div>
-    </>
   );
 }
 

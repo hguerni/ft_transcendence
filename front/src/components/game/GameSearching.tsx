@@ -27,7 +27,7 @@ function GamesCards(props: {room: RoomProps}) {
     props.room.p2_name = "?"
   return (
     <div className='gameCards'>
-      <div style={{color: '#5701C8'}}>
+      <div style={{color: 'red'}}>
         <span>{props.room.name.substring(0, 10)}</span>
       </div>
       {/*<div style={{marginBottom: '10px'}}>

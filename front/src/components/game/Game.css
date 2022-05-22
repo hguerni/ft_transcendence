@@ -5,9 +5,10 @@
 }
 
 .gameTabs {
-  background-color: #5701C8;
+  background-color: #450FBF;
   border-radius: 8px;
   width: fit-content;
+  border: solid 5px white;
   //box-shadow: 0px 3px 15px rgba(34, 35, 58, 0.5);
   margin-left: auto;
   margin-right: auto;
@@ -26,7 +27,7 @@
   border-radius: 8px;
   border: none;
   color: white;
-  padding: 15px 32px;
+  padding: 10px 32px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -38,15 +39,15 @@
 }
 
 .tabButtonActive {
-  background-color: rgba(255, 255, 255, .2);
+  border: solid 2px white;
 }
 
 .gameButton {
   padding: 10px;
   color: white;
   border-radius: 8px;
-  background-color: #5701C8;
-  border: 2px solid black;
+  background-color: #450FBF;
+  border: 1px solid white;
 }
 
 .gameButton:hover {
@@ -58,7 +59,8 @@
   margin: 15px auto 0px auto;
   padding: 15px 10px 15px 10px ;
   width: 150px;
-  background-color: #8854d0;
+  //background-color: #450FBF;
+  border: solid 1px white;
   color: white;
   text-align: center;
 }
@@ -67,7 +69,7 @@
   margin-top: 10px;
   height: 350px;
   overflow: auto;
-  border: solid 5px #4b00ad;
+  border: solid 2px white;
   border-radius: 8px;
 }
 
@@ -79,13 +81,14 @@
 }
 
 .searchGame {
+  border: solid 5px white;
   margin: auto;
   top: 0px;
   bottom: 0px;
   left: -112px;
   position: absolute;
   border-radius: 8px;
-  background-color: #5701C8;
+  background-color: #450FBF;
   padding: 15px 15px 15px 15px;
   width: 200px;
   height: fit-content;
@@ -95,7 +98,7 @@
   margin: auto;
   padding: 20px;
   border-radius: 8px;
-  background-color: #5701C8;
+  background-color: #450FBF;
   color: white;
 }
 
@@ -116,9 +119,9 @@
   top: 0px;
   bottom: 0px;
   right: -140px;
-  border: solid 5px #5701C8;
+  border: solid 5px white;
   border-radius: 8px;
-  background-color: #5701C8;
+  background-color: #450FBF;
   padding: 15px;
   width: 220px;
   height: 220px;
@@ -132,11 +135,11 @@
 }
 
 .gameWrap {
-  margin-top: 50px;
+  margin-top: 100px;
   margin-left: 250px;
   margin-right: 250px;
   height: 650px;
-  border: solid 20px #5701C8;
+  border: solid 8px white;
   border-radius: 150px;
   position: relative;
   display: flex;
@@ -146,29 +149,13 @@
 
 .gameButtonStart {
   position: absolute;
-  bottom: -40px;
+  bottom: -34px;
   color: white;
   font-size: 16px;
-  background-color: #5701C8;
-  border: none;
+  background-color: #450FBF;
+  border: solid 5px white;
   border-radius: 8px;
-  padding: 20px;
-  height: 60px;
-}
-
-.gameButtonStart:hover {
-  color: black;
-}
-
-.gameButtonStart {
-  position: absolute;
-  bottom: -40px;
-  color: white;
-  font-size: 16px;
-  background-color: #5701C8;
-  border: none;
-  border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   height: 60px;
 }
 
@@ -178,7 +165,7 @@
 
 .gameTrainingButtonsWrap {
   position: absolute;
-  bottom: -40px;
+  bottom: -34px;
   color: white;
   font-size: 16px;
   border: none;
@@ -192,11 +179,11 @@
 .gameTrainingButton {
   color: white;
   font-size: 16px;
-  background-color: #5701C8;
-  border: none;
+  background-color: #450FBF;
+  border: solid 5px white;
   border-radius: 8px;
-  padding: 20px;
-  width: 175px;
+  padding: 15px;
+  width: 184px;
 }
 
 .gameTrainingButton:hover {
