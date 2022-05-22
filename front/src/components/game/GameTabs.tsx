@@ -27,7 +27,9 @@ export function TabNav() {
 export default function GameTabs() {
   return (
     <div>
-      <TabNav/>
+      <div className="gameTitle">
+        <span>PONG</span>
+      </div>
       <BrowserRouter>
           <Route exact path={"/game/training"} component={GameTraining} />
           <Route exact path={"/game/fighting"} component={GameFighting} />

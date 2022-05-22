@@ -1,23 +1,38 @@
+.gameWrap {
+  margin-top: 45px;
+  margin-left: 250px;
+  margin-right: 250px;
+  height: 650px;
+  border: solid 8px white;
+  border-radius: 150px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .gameArea {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.gameTabs {
+.gameTitle {
+  position: absolute;
   background-color: #450FBF;
+  color: white;
+  font-size: 20px;
+  padding: 5px 10px 5px 10px;
   border-radius: 8px;
   width: fit-content;
   border: solid 5px white;
-  //box-shadow: 0px 3px 15px rgba(34, 35, 58, 0.5);
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 25px;
-  height: 70px;
-  position: absolute;
-  top: -45px;
+  height: 50px;
+  top: -28px;
   left: 0;
   right: 0;
+  box-sizing: border-box;
 }
 
 .tabButton {
@@ -85,7 +100,7 @@
   margin: auto;
   top: 0px;
   bottom: 0px;
-  left: -112px;
+  left: -106px;
   position: absolute;
   border-radius: 8px;
   background-color: #450FBF;
@@ -118,7 +133,7 @@
   margin: auto;
   top: 0px;
   bottom: 0px;
-  right: -140px;
+  right: -134px;
   border: solid 5px white;
   border-radius: 8px;
   background-color: #450FBF;
@@ -131,20 +146,7 @@
   display: grid;
   column-gap: 20px;
   row-gap: 20px;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-.gameWrap {
-  margin-top: 100px;
-  margin-left: 250px;
-  margin-right: 250px;
-  height: 650px;
-  border: solid 8px white;
-  border-radius: 150px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  grid-template-columns: 1.25fr 0.5fr 1.25fr;
 }
 
 .gameButtonStart {
@@ -188,6 +190,13 @@
 
 .gameTrainingButton:hover {
   color: black;
+}
+
+.gameStatus {
+  border: solid 2px white;
+  border-radius: 8px;
+  height: 80px;
+  padding: 5px;
 }
 
 .gridStatsItem {

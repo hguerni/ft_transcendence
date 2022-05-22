@@ -120,13 +120,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       this.wsServer.to(this.clientsToRoom.get(client.id)).emit("PLAYER_IS_READY", "");
     else if (this.gameRooms.get(room).getPlayerId('left') === client.id)
     {
-      this.wsServer.to(p2_id).emit("PLAYER_IS_READY", `${p1_name} is ready to start!`);
-      this.wsServer.to(p1_id).emit("PLAYER_IS_READY", `Waiting for ${p2_name} to start...`);
+      this.wsServer.to(p2_id).emit("SEND_GAME_STATUS", `${p1_name} is ready to start!`);
+      this.wsServer.to(p1_id).emit("SEND_GAME_STATUS", `Waiting for ${p2_name} to start...`);
     }
     else
     {
-      this.wsServer.to(p1_id).emit("PLAYER_IS_READY", `${p2_name} is ready to start!`);
-      this.wsServer.to(p2_id).emit("PLAYER_IS_READY", `Waiting for ${p1_name} to start...`);
+      this.wsServer.to(p1_id).emit("SEND_GAME_STATUS", `${p2_name} is ready to start!`);
+      this.wsServer.to(p2_id).emit("SEND_GAME_STATUS", `Waiting for ${p1_name} to start...`);
     }
   }
 

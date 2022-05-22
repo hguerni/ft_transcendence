@@ -12,13 +12,15 @@ import TwoFa from "./components/2fa/login2fa.component";
 import ActivateTwoFa from "./components/2fa/activate2fa.component";
 import { GetUserData } from "./services/user.service";
 import UserService from "./services/user.service";
+import Header from "./components/header/Header";
 
 function Routes() {
   if (UserService.isUserConnected())
     return (
       <BrowserRouter>
         <main>
-          {/*<Navbar/>*/}
+        {/*<Navbar/>*/}
+          <Header/>
           <Route exact path={"/"} component={Login} />
           <Route exact path={"/profile"} component={Profile} />
           <Route exact path={"/profiles"} component={Profiles} />

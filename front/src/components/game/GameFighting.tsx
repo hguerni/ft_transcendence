@@ -33,14 +33,10 @@ export function CreateGamePopUp() {
 }
 
 export default function GameFighting() {
-  const [msg, setMsg] = useState<string>("");
 
   useEffect(() => {
     linkClientToUser(socket, UserService.getUserId())
-    socket.on("PLAYER_IS_READY", (msg: string) => {
-      setMsg(msg);
-    });
-  }, [])
+  }, []);
 
   return (
     <div className="gameFighting">
@@ -59,10 +55,6 @@ export default function GameFighting() {
 
       <div className="gameArea">
         <button className="gameButtonStart" onClick={() => GameStart(socket)}>START GAME</button>
-      </div>
-
-      <div className="gameArea">
-        {msg}
       </div>
 
     </div>
