@@ -124,7 +124,6 @@ import { subscribeOn } from 'rxjs';
 				return;
 			}
 		});
-		console.log(data.channel);
 		this.io.to(data.channel).emit('LIST_NAME', 
 		{
 			channel: data.channel,
@@ -195,7 +194,7 @@ import { subscribeOn } from 'rxjs';
 			await this.chatService.addMember(channelcreation);
 			const ret = await this.chatService.getPvmsg(channelcreation.login);
 			this.io.to(channelcreation.login).emit('CHANNEL_CREATED', ret);
-			client.join(channelcreation.channel);
+			this.io.to(channelcreation.login).socketsJoin(channelcreation.channel);
 		}
 		catch (e) {
 			console.log(e);
@@ -229,19 +228,19 @@ import { subscribeOn } from 'rxjs';
 
 	  /* fonction pour le chat rayane et elias */
 
-	  @SubscribeMessage('bonjour du client')
-	  handleSendingInputChat(client: Socket,  message: string) {
-		client.join("channel1"); // sert a connecter le client sur le channel1
-		this.io.to("channel1").emit("bonjour du serveur",  message) // le serveur se connect sur le channel1 et retour le message
+	//   @SubscribeMessage('bonjour du client')
+	//   handleSendingInputChat(client: Socket,  message: string) {
+	// 	client.join("channel1"); // sert a connecter le client sur le channel1
+	// 	this.io.to("channel1").emit("bonjour du serveur",  message) // le serveur se connect sur le channel1 et retour le message
 		
-	  }
+	//   }
 	
 	
-		@SubscribeMessage('joinroom')
-		handleJoinRoomChat(client: Socket) {
+	// 	@SubscribeMessage('joinroom')
+	// 	handleJoinRoomChat(client: Socket) {
 	  
-		  client.join("channel1");
+	// 	  client.join("channel1");
 		
-		}
+	// 	}
 
   }

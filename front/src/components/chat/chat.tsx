@@ -28,7 +28,7 @@ const socket = io("ws://localhost:3030/chat", {
 
 let global_channel = "";
 /*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
-socket.emit("joinroom");
+//socket.emit("joinroom");
 
 class info {
     /*creation d'une class qui servira a determiner le nom
@@ -154,39 +154,37 @@ function Bodychat() {
 
 /*************************************************** */
     const [arrayChat, setArraylistChat] = useState<message[]>([]);
-    socket.on("LIST_CHAT", (message: info2) => {
-    // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-    //setInputValue(message);
-    // setlistName(message);
     
-
-    // let tmp = [...arraylistName];
-    // tmp.push(message);
-    console.log("<List chat>", global_channel, message.channel)
-    if (global_channel == message.channel)
-        setArraylistChat(message.list);
-    });
-    // useEffect(() => {    
-    
-    // },[])
+    useEffect(() => {    
+        socket.on("LIST_CHAT", (message: info2) => {
+        // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+        //setInputValue(message);
+        // setlistName(message);
+        // let tmp = [...arraylistName];
+        // tmp.push(message);
+        console.log("<List chat>", global_channel, message.channel)
+        if (global_channel == message.channel)
+            setArraylistChat(message.list);
+        });
+    },[])
 
   
 /********************************************************** */
 
-    useEffect(() => {
-        let tmp = [...arrayHistory];
-        tmp.push(newInfo);
-        setArrayhistory(tmp);
+    // useEffect(() => {
+    //     let tmp = [...arrayHistory];
+    //     tmp.push(newInfo);
+    //     setArrayhistory(tmp);
    
-    }, [newInfo]); // useEffect est appelé uniquement quand newInfo change
+    // }, [newInfo]); // useEffect est appelé uniquement quand newInfo change
 
-    useEffect(() => {
-        // réception d'un message envoyé par le serveur
-        socket.on("bonjour du serveur", (message: info) => {
-        // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-            setNewInfo(message);
-        });
-    }, []); // useEffect est appelé uniquement lors du premier render du composant
+    // useEffect(() => {
+    //     // réception d'un message envoyé par le serveur
+    //     socket.on("bonjour du serveur", (message: info) => {
+    //     // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+    //         setNewInfo(message);
+    //     });
+    // }, []); // useEffect est appelé uniquement lors du premier render du composant
 
     return (
         <>
@@ -245,23 +243,23 @@ function Channel() {
     const [channelName, setChannelName] = useState("");
     const [arrayChannelName, setArrayChannelName] = useState<string[]>([]);
 
-     useEffect(() => {
-       }, []);
+    useEffect(() => {
         // socket.on("ready", (ready_chat: object) => {
 
         // })
       // réception d'un message envoyé par le serveur
-    socket.on("CHANNEL_CREATED", (message: string[]) => {
-        // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-        //setInputValue(message);
-        //setChannelName(message);
-        
-        //const filteredArray = message.filter(function(ele , pos){
-        //    return message.indexOf(ele) == pos;
-        //}) 
-        
-        setArrayChannelName(message);
-    });
+        socket.on("CHANNEL_CREATED", (message: string[]) => {
+            // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
+            //setInputValue(message);
+            //setChannelName(message);
+            
+            //const filteredArray = message.filter(function(ele , pos){
+            //    return message.indexOf(ele) == pos;
+            //}) 
+            console.log("<List channel>", message);
+            setArrayChannelName(message);
+        });
+    }, []);
 
 
 
@@ -278,7 +276,7 @@ function Channel() {
                 <div className="centerChat">
 
                     {arrayChannelName.map((item) => {
-                        return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  item); global_channel = item;}}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
+                        return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  item); global_channel = item; console.log(global_channel);}}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
 
                     })}
 
@@ -342,12 +340,12 @@ function ListChannel() {
 
     const [arraylistName, setArraylistName] = useState<string[]>([]);
 
-    // useEffect(() => {
 
         // socket.on("ready", (ready_chat: object) => {
 
         // })
       // réception d'un message envoyé par le serveur
+    useEffect(() => {
         socket.on("LIST_NAME", (message: {channel: string, list: string[]}) => {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
@@ -360,7 +358,7 @@ function ListChannel() {
             if (message.channel == global_channel)
                 setArraylistName(message.list);
         });
-    //   }, []);
+      }, []);
 
 
     return (
@@ -394,8 +392,8 @@ function ListChannel() {
 function Chat() {
     //all ready
     
-
-    socket.emit("GET_CHANNEL", login); // remplacer par votre pseudo
+    useEffect(() => {socket.emit("GET_CHANNEL", login); }, []);
+    // remplacer par votre pseudo
     return (
         <>
             <div className="rayaneleboloss">
