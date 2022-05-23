@@ -356,7 +356,10 @@
 
 }
 
-.headerChatList {
+.headerChatList {  
+     
+
+
     margin-top: 5.75rem;
 
 
@@ -383,8 +386,11 @@
 .channelName {
     color: aliceblue;
 
-    font-size: 25px;
+    font-size: 20px;
+    
+    
 }
+
 .channelName:hover {
     color: blue;
 
@@ -431,4 +437,8 @@
 .chathistory::-webkit-scrollbar {
     display: none;
 }
+
+
+
+
 
