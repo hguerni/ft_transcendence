@@ -15,7 +15,7 @@
     /* margin-right: auto; */
     width: 40%;
 
- 
+
     padding-top: 0.5rem;
 
     padding-left: 1.5rem;
@@ -49,9 +49,9 @@
 }
 
 .centerChat {
-    
 
-    
+
+
 
     background-color: rgb(8, 3, 75);
     padding-top: 0.5rem;
@@ -60,7 +60,7 @@
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     overflow: auto;
-    
+
 
 
 
@@ -96,7 +96,7 @@
 }
 
 .submitChat {
-   
+
     /* margin-left: auto;
     position: relative; */
     /* bottom: 24px;
@@ -110,8 +110,8 @@
     padding-left: 1.5rem;
     padding-right: 1.5rem;
 
-    
-    
+
+
 
 
 
@@ -122,15 +122,15 @@
 }
 
 /* .inputChat {
-   
- 
+
+
     margin-left: auto;
     position: relative;
     bottom: 8px;
     left: 23px;
 
 
-    
+
     height: 110%;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -138,12 +138,12 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
-    
-    
 
 
 
-    color: white; 
+
+
+    color: white;
     position: relative;
     align-items: flex-start;
 
@@ -152,12 +152,12 @@
 #imgSubmit {
     width: 100%;
     height: 100%;
-    
+
     background-color: transparent;
 }
 
 .buttonSubmit {
-    
+
     /* bottom: 5px;
     top: 24px;
     left: 20px;
@@ -167,17 +167,17 @@
     border: none;
     cursor: pointer;
     position: relative;
- 
 
 
-    
-    
+
+
+
 }
 
 #imgDirectChat {
     width: 100%;
     height: 100%;
-    
+
     background-color: transparent;
 
 }
@@ -196,7 +196,7 @@
 #imgLoupe {
     width: 100%;
     height: 100%;
-    
+
     background-color: transparent;
 }
 
@@ -212,7 +212,7 @@
 #imgaddgroup {
     width: 100%;
     height: 100%;
-    
+
     background-color: transparent;
 
 }
@@ -235,7 +235,7 @@
 .iconeChat {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     justify-content: left;
 }
 
@@ -247,8 +247,8 @@
     background-color: transparent;
     color: white;
     font-family: 'CrickxRegular';
- 
-   
+
+
 }
 
 /* Channel composant */
@@ -261,7 +261,7 @@
 
     width: 13%;
 
- 
+
     padding-top: 0.5rem;
 
     padding-left: 1.5rem;
@@ -283,7 +283,7 @@
 
 
     border-radius: 0px 0px 0px 20px;
-      
+
 
 }
 
@@ -315,7 +315,7 @@
     background-color: #5701C8;
     color: white;
   }
-  
+
   .popup-overlay {
     background: rgba(0, 0, 0, 0.5);
   }
@@ -330,7 +330,7 @@
 
     width: 13%;
 
- 
+
     padding-top: 0.5rem;
 
     padding-left: 1.5rem;
@@ -352,7 +352,7 @@
 
 
     border-radius: 0px 0px 20px 0px;
-      
+
 
 }
 
@@ -431,4 +431,3 @@
 .chathistory::-webkit-scrollbar {
     display: none;
 }
-

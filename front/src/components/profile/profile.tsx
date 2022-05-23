@@ -3,7 +3,7 @@ import camera from '../../images/camera-solid.svg';
 import level_up from '../../images/level_up.svg';
 import rank from '../../images/rank.svg';
 import React, {useEffect, useState} from "react";
-import {Redirect} from "react-router-dom"
+import {Redirect, useHistory} from "react-router-dom"
 import axios from "axios";
 // import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 // import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -17,6 +17,42 @@ import nitendo from "../../images/nitendo.svg";
 import crayon from "../../images/crayon-de-couleur.png";
 // import { userInfo } from 'os';
 import TimeAgo from 'react-timeago';
+
+function SearchUser () {
+  const [user, setUser] = React.useState({
+    online: 0,
+    username: '',
+    avatar: '',
+    email: '',
+    id: 0
+  });
+
+  const history = useHistory();
+
+  const handleKey = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter"){
+      let mounted = true
+      const {data} = await axios.get('user/name/' + e.currentTarget.value);
+      console.log(data);
+      if (mounted && data) setUser(data);
+      mounted = false;
+    }
+  };
+
+  if (user.id !== 0) {
+    let id  = user.id;
+    history.push("/profiles", {id: user.id});
+    user.id = 0;
+  }
+
+  return (
+    <input
+        type="text"
+        placeholder="Search"
+        onKeyDown={handleKey}
+      />
+  );
+}
 
 function Profile() {
 
@@ -130,6 +166,7 @@ function Profile() {
                 <span className="slider round"></span>
             </label>
             </h1>
+        <SearchUser/>
         <div className="bigOne">
 
 

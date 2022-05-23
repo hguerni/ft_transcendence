@@ -4,18 +4,18 @@ import { logger } from '../websockets/game.gateway';
 import { v4 } from 'uuid'
 
 export class PongProps {
-  width: number = 600;
-  height: number = 400;
-  score_l: number = 0;
-  score_r: number = 0;
-  ball_x: number = 600 / 2;
-  ball_y: number = 400 / 2;
-  ball_vx: number = 2;
-  ball_vy: number = 2;
-  paddle_l_x: number = 15;
-  paddle_l_y: number = 50;
-  paddle_r_x: number = 575;
-  paddle_r_y: number = 50;
+	width: number = 700;
+	height: number = 500;
+	score_l: number = 0;
+	score_r: number = 0;
+	ball_x: number = this.width / 2;
+	ball_y: number = this.height / 2;
+	ball_vx: number = 2;
+	ball_vy: number = 2;
+	paddle_l_x: number = 15;
+	paddle_l_y: number = 50;
+	paddle_r_x: number = this.width - 25;
+	paddle_r_y: number = 50;
 }
 
 export class RoomProps {
