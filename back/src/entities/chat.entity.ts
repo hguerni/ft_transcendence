@@ -29,7 +29,7 @@ import { MsgEntity } from './msg.entity';
   @CreateDateColumn()
   created: Date;
 
-  @Column()
+  @Column({unique: true})
   @IsString()
   name: string;
 

@@ -207,6 +207,8 @@
     position: relative;
 }
 
+
+
 #imgaddgroup {
     width: 100%;
     height: 100%;
@@ -225,6 +227,8 @@
     cursor: pointer;
     position: relative;
 }
+
+
 
 
 
@@ -378,8 +382,38 @@
 
 .channelName {
     color: aliceblue;
+
     font-size: 25px;
 }
+.channelName:hover {
+    color: blue;
+
+}
+.channelName:active {
+    color: blue;
+
+}
+
+.personneDansChannel {
+    color: aliceblue;
+
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.personneDansChannel:hover {
+    color: blue;
+
+}
+
+.btnpersonneDansChannel {
+
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
 
 .dieseChannel {
     color: rgb(185, 174, 174);
