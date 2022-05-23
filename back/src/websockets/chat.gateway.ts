@@ -33,19 +33,6 @@ import { subscribeOn } from 'rxjs';
 		@ConnectedSocket() client: Socket
 	)
 	{
-		//console.log(client.handshake);
-		//console.log(client.conn.request);
-		let login: string = client.handshake.query.login as string;
-		console.log(login);
-		login = "psemsari";
-		let ret = {name: login, socket: client};
-		this.Connected.push(ret);
-		this.chatService.getPvmsg(ret.name)
-		.then((val) => {
-			console.log(val);
-			client.join(val);
-		})
-		client.join(login);
 	}
 
 	@SubscribeMessage('ready')
@@ -54,12 +41,14 @@ import { subscribeOn } from 'rxjs';
 		@MessageBody() login: string
 	)
 	{
-		this.chatService.getPvmsg(login).then((ret) => {
-			const toemit = {
-				getmsg: ret
-			}
-			client.emit("ready", toemit);
-		}).catch((error) => {client.emit("ready", error)});
+		let ret = {name: login, socket: client};
+		this.Connected.push(ret);
+		this.chatService.getPvmsg(ret.name)
+		.then((val) => {
+			console.log(val);
+			client.join(val);
+		})
+		client.join(login);
 	}
 
 

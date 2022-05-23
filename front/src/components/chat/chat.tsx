@@ -20,12 +20,8 @@ import UserService from '../../services/user.service'
 //import { getchannel } from "../../../../shares/models"
 const login = UserService.getUsername(); // à récupérer
 
-const socket = io("ws://localhost:3030/chat", {
-    query: {
-          login: login, //'Bearer h93t4293t49jt34j9rferek...'
-        }
-    }
- );
+const socket = io("ws://localhost:3030/chat");
+socket.emit('ready', login);
 
 let global_channel = "";
 /*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
