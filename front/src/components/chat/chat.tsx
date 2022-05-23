@@ -85,7 +85,7 @@ function CreatePopupChannel() {
 
     return (
       <div>
-          <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
+          <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
         <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
           <div>Nom du Channel a creer</div>
           <input className="input"
@@ -114,8 +114,9 @@ function CreatePopupChannel() {
 
     return (
       <div>
-          <button className="buttonInviteUsers" onClick={() => setOpen(true)}> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
+          <button className="buttonInviteUsers" onClick={() => setOpen(true)}> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
         <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+
           <div>Login de la personne a ajouter dans le channel</div>
           <input className="input"
             type="text"
@@ -187,12 +188,18 @@ function Bodychat() {
         <>
           <div className="allBodyChat">
                 <div className="headerChat">
-
+                
                     <div className="iconeChat">
                         <CreatePopupChannel/>
-                        <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
+                        {/* <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button> */}
                         <CreatePopupInviteUser/>
+
+                        
+                    
+                        
                     </div>
+
+                   
                 </div>
 
                 <div className="centerChat">

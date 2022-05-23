@@ -34,6 +34,7 @@ import { subscribeOn } from 'rxjs';
 		@ConnectedSocket() client: Socket
 	)
 	{
+		
 	}
 
 	@SubscribeMessage('ready')
