@@ -33,28 +33,6 @@ export class ChatService {
         @InjectEntityManager()
         private manager: EntityManager
       ) {}
-    
-    async pvmsg_init(login1: string, login2:string)
-    {
-        const name: string = "pv-" + login1 + login2;
-        const chat: ChatDTO = {
-            name: name,
-            status: chat_status.private,
-            password: ""
-        }
-        await this.addOne(chat);
-        const chat_result: ChatEntity = await this.getChat(name);
-        // const member1: AddMemberDTO =  {
-        //     channel: chat_result.id,
-        //     userId: (await this.getUser(login1)).login
-        // };
-        // const member2: AddMemberDTO =  {
-        //     channel: chat_result.id,
-        //     userId: (await this.getUser(login2)).login
-        // }
-        // await this.addMember(member1);
-        // await this.addMember(member2);
-    }
 
     async getChat(name: string)
     {
@@ -84,7 +62,6 @@ export class ChatService {
     }
 
     async addOne(data: ChatDTO){
-
         const chat = this.chatRepository.create({...data, messages: [], members: []});
         return await this.chatRepository.save(chat);
     }

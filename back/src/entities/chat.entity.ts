@@ -10,7 +10,7 @@ import {  BaseEntity,
 	Entity,
   OneToOne,
   JoinColumn} from 'typeorm';
-  import { IsBoolean, IsEmail, IsString } from 'class-validator';
+  import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
   import { MemberEntity } from './member.entity';
 import { MsgEntity } from './msg.entity';
 
@@ -34,6 +34,7 @@ import { MsgEntity } from './msg.entity';
   name: string;
 
   @Column()
+  @IsNumber()
   status: number;
 
   @Column()

@@ -13,6 +13,7 @@ import { subscribeOn } from 'rxjs';
   import { Server, Socket } from 'socket.io'
   import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
   import { ChatService } from '../services/chat.service';
+  import { chat_status } from 'src/entities/chat.entity';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
@@ -51,23 +52,6 @@ import { subscribeOn } from 'rxjs';
 		client.join(login);
 	}
 
-
-	@SubscribeMessage('private-message')
-	handleEvent(
-		@MessageBody() {name, message}: {name: string, message: string},
-		@ConnectedSocket() client : Socket
-	): void
-	{
-		//this.chatService.getChat("pv-")
-		this.Connected.forEach(element => {
-		if (element.name == name)
-		{
-			element.socket.emit('private-message', {name, message});
-			return;
-		}
-		});
-	}
-
 	@SubscribeMessage('addmsg')
 	async addmsg(
 		@MessageBody() msg: MsgDTO,
@@ -80,21 +64,6 @@ import { subscribeOn } from 'rxjs';
 			this.io.to(msg.channel).emit('LIST_CHAT', {channel: msg.channel, list: val});
 		}
 		catch (error) {console.log(error);}
-	}
-
-	@SubscribeMessage('addchat')
-	async addchat(
-		@MessageBody() chat: ChatDTO,
-		@ConnectedSocket() client: Socket
-	)
-	{
-		// try {
-		// 	const val = await this.chatService.addOne(chat);
-		// 	this.io.to(chat.)
-		// .then((val) => client.emit('addchat', val))
-		// .catch((error) => client.emit('addchat', error));
-		// }
-		// catch (e) { console.log(e);}
 	}
 
 	@SubscribeMessage('addmember')
@@ -126,21 +95,6 @@ import { subscribeOn } from 'rxjs';
 		@ConnectedSocket() client: Socket
 	)
 	{
-		
-		//if (name == "coucou")
-		//	client.emit('LIST_NAME', ['elias','hava', 'leo']);
-		//else
-		//	client.emit('LIST_NAME', ['rayane','pierre']);
-		
-		//if (name == "coucou")
-		//	client.emit('LIST_CHAT', [
-		//		{name: 'hava', message: 'message3'}, 
-		//		{name: 'elias', message: 'message4'},
-		//		{name: 'leo', message: 'message5'}])
-		//else
-		//	client.emit('LIST_CHAT', [
-		//		{name: 'pierre', message: 'message1'}, 
-		//		{name: 'rayane', message: 'message2'}])
 		this.chatService.memberInChannel(name)
 		.then((val) => {
 			client.emit('LIST_NAME', {
@@ -162,9 +116,6 @@ import { subscribeOn } from 'rxjs';
 	{
 		this.chatService.getPvmsg(name)
 		.then((val) => {
-			//const filteredArray = val.filter(function(ele , pos){
-            //    return val.indexOf(ele) == pos;
-            //}) 
 			client.emit('CHANNEL_CREATED', val);
 		})
 	}
@@ -172,14 +123,13 @@ import { subscribeOn } from 'rxjs';
 	@SubscribeMessage('CREATE_CHANNEL')
 	async handleCreateChannel(
 		@ConnectedSocket() client: Socket, 
-		@MessageBody() channelcreation: {channel: string, login: string})
+		@MessageBody() channelcreation: {channel: string, login: string,
+										status: number, password: string})
 	{
 		try {
-			await this.chatService.addOne({
-				name: channelcreation.channel,
-				status: 0,
-				password: ""
-			});
+			const copy = channelcreation;
+			delete copy.login;
+			await this.chatService.addOne(copy);
 			await this.chatService.addMember(channelcreation);
 			const ret = await this.chatService.getPvmsg(channelcreation.login);
 			this.io.to(channelcreation.login).emit('CHANNEL_CREATED', ret);
@@ -191,14 +141,6 @@ import { subscribeOn } from 'rxjs';
 
 		// le serveur se connect sur le channel1 et retour le message
 	}
-
-	// @SubscribeMessage('test')
-	// test(
-	// 	@ConnectedSocket() client: Socket
-	// ): void
-	// {
-	// 	this.chatService.getPvmsg("psemsari").then( (v) => console.log(v));
-	// }
 
     @SubscribeMessage('disconnect')
 	handleDisconnect(
@@ -214,22 +156,4 @@ import { subscribeOn } from 'rxjs';
 			}
 		});
 	}
-
-	  /* fonction pour le chat rayane et elias */
-
-	//   @SubscribeMessage('bonjour du client')
-	//   handleSendingInputChat(client: Socket,  message: string) {
-	// 	client.join("channel1"); // sert a connecter le client sur le channel1
-	// 	this.io.to("channel1").emit("bonjour du serveur",  message) // le serveur se connect sur le channel1 et retour le message
-		
-	//   }
-	
-	
-	// 	@SubscribeMessage('joinroom')
-	// 	handleJoinRoomChat(client: Socket) {
-	  
-	// 	  client.join("channel1");
-		
-	// 	}
-
   }

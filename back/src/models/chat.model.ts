@@ -2,7 +2,7 @@ import { isNumber, IsNumber, IsString } from "class-validator";
 
 export class ChatDTO {
     @IsString()
-    name: string;
+    channel: string;
 
     @IsNumber()
     status: number;
