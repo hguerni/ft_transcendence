@@ -36,8 +36,8 @@ import { subscribeOn } from 'rxjs';
 		//console.log(client.handshake);
 		//console.log(client.conn.request);
 		let login: string = client.handshake.query.login as string;
-		login = "psemsari";
 		console.log(login);
+		login = "psemsari";
 		let ret = {name: login, socket: client};
 		this.Connected.push(ret);
 		this.chatService.getPvmsg(ret.name)

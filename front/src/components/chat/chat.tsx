@@ -15,9 +15,10 @@ import { v4 } from 'uuid'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import UserService from '../../services/user.service'
 
 //import { getchannel } from "../../../../shares/models"
-const login = 'psemsari'; // à récupérer
+const login = UserService.getUsername(); // à récupérer
 
 const socket = io("ws://localhost:3030/chat", {
     query: {
