@@ -14,9 +14,8 @@ import { Console } from "console";
 enum status {
     owner,
     admin,
-    modo,
-    ban,
-    default
+    default,
+    ban
   }
 
 @Injectable()
@@ -39,11 +38,6 @@ export class ChatService {
         return await this.chatRepository.findOne(name);
     }
 
-    // {login: psemsari,
-    // group: {name, message:[]}}
-
-    // {group: name,
-    // mess}
     async getPvmsg(login: string)
     {
         const user = await this.userRepo.findOne({where: {login: login}});
@@ -67,21 +61,13 @@ export class ChatService {
     }
 
     async addMsg(data: MsgDTO){
-        console.log(data);
         const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["messages"]});
-        console.log(2);
         const user = await this.userRepo.findOne({where: {login: data.login}});
-        console.log(3);
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}, relations: ['chat', 'chat.messages']});
-        console.log(4);
         const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
-        console.log(5);
         chat.messages.push(message);
-        console.log(6);
         await this.chatRepository.save(chat).catch((e) => console.log(e));
-        console.log(7);
         const resu2 = await this.msgRepo.save(message).catch((e) => console.log(e));
-        console.log(8);
         return resu2;
     }
 
@@ -103,6 +89,49 @@ export class ChatService {
             tmp.push({name: element.member.user.login, message: element.message});
         })
         return tmp;
+    }
+
+    async getAccessibleChan()
+    {
+        const chat = await this.chatRepository.find({
+            select: ['name', "status"],
+            where: [{status: chat_status.public},
+            {status: chat_status.private}]
+        });
+        return chat;
+    }
+
+    async getMember(chat: ChatEntity, login: string)
+    {
+        const user = await this.userRepo.findOne({where: {login: login}});
+        if (!user)
+            throw new NotFoundException();
+        const member = await this.membersRepo.findOne({where: {user: user, chat: chat}});
+        if (!member)
+            throw new NotFoundException();
+        return member;
+    }
+
+    async changeStatus(data: {channel: string, target: string, sender: string, status: number})
+    {
+        const chat = await this.chatRepository.findOne({where: {name: data.channel}});
+        const target = await this.getMember(chat, data.target);
+        const sender = await this.getMember(chat, data.sender);
+        if (sender.status >= data.status && (data.status == status.ban && sender.status == status.default))
+            throw new Error("you cant up this user");
+        target.status = data.status;
+        this.membersRepo.save(target);
+    }
+
+    async joinChan(data: {channel: string, login: string, password: string})
+    {
+        const chat = await this.chatRepository.findOne({where: {name: data.channel}});
+        if (!chat)
+            throw new NotFoundException();
+        if (chat.status == chat_status.protected && data.password != chat.password)
+            throw new Error("not good password");
+        if (chat.status == chat_status.private)
+            throw new Error("cant join private chan");
     }
 
     async addMember(data: AddMemberDTO)

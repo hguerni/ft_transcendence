@@ -67,6 +67,39 @@ import { subscribeOn } from 'rxjs';
 		catch (error) {console.log(error);}
 	}
 
+	@SubscribeMessage('CHANGE_STATUS')
+	async statusChan(
+		@MessageBody() data: {channel: string, target: string, sender: string, status: number},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		try {
+			await this.chatService.changeStatus(data);
+			const ret = await this.chatService.memberInChannel(data.channel);
+			this.io.to(data.channel).emit('LIST_NAME', 
+			{
+				channel: data.channel,
+				list: ret
+			});
+		}
+		catch (e) { console.log(e) }
+	}
+
+	@SubscribeMessage('JOIN_CHAN')
+	async joinChan(
+		@MessageBody() data: {channel: string, login: string, password: string},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		try {
+			await this.chatService.joinChan(data);
+			await this.addmember(data, client);
+		}
+		catch (e) {
+			console.log(e);
+		}
+	}
+
 	@SubscribeMessage('addmember')
 	async addmember(
 		@MessageBody() data: AddMemberDTO,
