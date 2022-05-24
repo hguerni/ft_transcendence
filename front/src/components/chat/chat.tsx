@@ -76,6 +76,7 @@ function ButtonCreateCanal(){
 function CreatePopupChannel() {
     const [channelName, setChannelName] = useState("");
     const [channelAttribute, setChannelAttribute] = useState<string>("public");
+    const [channelPassword, setChannelPassword] = useState<string>("");
     const [open, setOpen] = useState(false);
 
    function sendChannelName ()
@@ -107,7 +108,18 @@ function CreatePopupChannel() {
             <input type="checkbox" id="protected" name="protected"
                 onChange={(e) => {setChannelAttribute("protected")}} checked={channelAttribute === "protected"}/>
             <label htmlFor="horns">Protected</label>
-        </div>
+
+            <div>
+              {channelAttribute === "protected" &&
+                <input className="input"
+                  type="text"
+                  value={channelPassword}
+                  onChange={(e) => setChannelPassword(e.target.value)}
+                />
+              }
+            </div>
+          </div>
+
 
           <button className="gameButton" onClick={() => { setOpen(false); sendChannelName(); setChannelName("")}}>SEND</button>
         </Popup>
