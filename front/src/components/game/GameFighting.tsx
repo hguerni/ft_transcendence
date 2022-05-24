@@ -18,7 +18,7 @@ export function CreateGamePopUp() {
 
   return (
     <div>
-      <button className="gameButton" onClick={() => setOpen(true)}> CREATE GAME</button>
+      <button className="gameButton" onClick={() => setOpen(true)}>CREATE GAME</button>
       <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
         <div>Enter a name for your game:</div>
         <input className="input"
@@ -33,32 +33,30 @@ export function CreateGamePopUp() {
 }
 
 export default function GameFighting() {
-  const [msg, setMsg] = useState<string>("");
 
   useEffect(() => {
     linkClientToUser(socket, UserService.getUserId())
-    socket.on("PLAYER_IS_READY", (msg: string) => {
-      setMsg(msg);
-    });
-  }, [])
+  }, []);
 
   return (
     <div className="gameFighting">
-      <div>
-        <div className="searchGame">
-          <GameSearching/>
-        </div>
-        <div className="gameInProgress">
-          <GameInProgress/>
-        </div>
+
+      <div className="searchGame">
+        <GameSearching/>
       </div>
+
+      <div className="gameInProgress">
+        <GameInProgress/>
+      </div>
+
       <div className='gameArea'>
-        <GameArea client={socket}/>
+          <GameArea client={socket}/>
       </div>
+
       <div className="gameArea">
-        <button className="gameButton" onClick={() => GameStart(socket)}>START GAME</button>
+        <button className="gameButtonStart" onClick={() => GameStart(socket)}>START GAME</button>
       </div>
-      <div className="gameArea">{msg}</div>
+
     </div>
   );
 }

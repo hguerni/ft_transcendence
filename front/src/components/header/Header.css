@@ -1,0 +1,65 @@
+.navBar {
+  position: relative;
+  height: 70px;
+  margin-top: 20px;
+  margin-right: 50px;
+  margin-left: 50px;
+  border: solid 2px rgba(255, 255, 255);
+  border-radius: 8px;
+  background-color: rgb(69,15,191, 0.4);
+}
+
+.siteTitle {
+  position: absolute;
+  color: white;
+  font-family: 'CrickxRegular';
+  text-decoration: none;
+  font-size: 24px;
+  line-height: 70px;
+  left: 40px;
+
+}
+
+.accountImg {
+  position: absolute;
+  right: 40px;
+  width: 50px;
+  height: 70px;
+}
+
+.headerTabButton {
+  font-size: 20px;
+  margin: 0px 15px 0px 15px;
+  padding: 8px;
+  border: none;
+  color: white;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  background-color: transparent;
+  border-radius: 0px;
+  align-self: center;
+  font-family: 'CrickxRegular';
+}
+
+.headerTabButton:hover {
+  //border-bottom: solid 2px rgba(255, 255, 255, .5);
+}
+
+.headerTabButtonActive {
+  //border-bottom: solid 2px white;
+  //background-color: rgba(255, 255, 255, 0.3);
+  border: solid 2px white;
+  border-radius: 8px 8px 8px 8px;
+  //border-bottom: 0px
+}
+
+.headerTabs {
+  margin-left: auto;
+  width: fit-content;
+  height: 70px;
+  text-align: center;
+  display: flex;
+  //background-color: rgba(69, 15, 191, 0.7);
+  //border-bottom: solid 5px white;
+}
