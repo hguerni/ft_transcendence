@@ -75,6 +75,7 @@ function ButtonCreateCanal(){
 
 function CreatePopupChannel() {
     const [channelName, setChannelName] = useState("");
+    const [channelAttribute, setChannelAttribute] = useState<string>("public");
     const [open, setOpen] = useState(false);
 
    function sendChannelName ()
@@ -82,18 +83,32 @@ function CreatePopupChannel() {
         socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login});
    }
 
-
     return (
       <div>
           <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
         <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
-          <div>Nom du Channel a creer</div>
+          <div>Nom du Channel à créer:</div>
+
           <input className="input"
             type="text"
             value={channelName}
-
             onChange={(e) => setChannelName(e.target.value)}
           />
+
+          <div className="checkBoxes">
+            <input type="checkbox" id="public" name="public"
+                onChange={(e) => {setChannelAttribute("public")}} checked={channelAttribute === "public"}/>
+            <label htmlFor="scales">Public</label>
+
+            <input type="checkbox" id="private" name="private"
+                onChange={(e) => {setChannelAttribute("private")}} checked={channelAttribute === "private"}/>
+            <label htmlFor="horns">Private</label>
+
+            <input type="checkbox" id="protected" name="protected"
+                onChange={(e) => {setChannelAttribute("protected")}} checked={channelAttribute === "protected"}/>
+            <label htmlFor="horns">Protected</label>
+        </div>
+
           <button className="gameButton" onClick={() => { setOpen(false); sendChannelName(); setChannelName("")}}>SEND</button>
         </Popup>
 
@@ -152,8 +167,8 @@ function Bodychat() {
 
 /*************************************************** */
     const [arrayChat, setArraylistChat] = useState<message[]>([]);
-    
-    useEffect(() => {    
+
+    useEffect(() => {
         socket.on("LIST_CHAT", (message: info2) => {
         // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
         //setInputValue(message);
@@ -166,14 +181,14 @@ function Bodychat() {
         });
     },[])
 
-  
+
 /********************************************************** */
 
     // useEffect(() => {
     //     let tmp = [...arrayHistory];
     //     tmp.push(newInfo);
     //     setArrayhistory(tmp);
-   
+
     // }, [newInfo]); // useEffect est appelé uniquement quand newInfo change
 
     // useEffect(() => {
@@ -188,18 +203,18 @@ function Bodychat() {
         <>
           <div className="allBodyChat">
                 <div className="headerChat">
-                
+
                     <div className="iconeChat">
                         <CreatePopupChannel/>
                         {/* <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button> */}
                         <CreatePopupInviteUser/>
 
-                        
-                    
-                        
+
+
+
                     </div>
 
-                   
+
                 </div>
 
                 <div className="centerChat">
@@ -256,10 +271,10 @@ function Channel() {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             //setChannelName(message);
-            
+
             //const filteredArray = message.filter(function(ele , pos){
             //    return message.indexOf(ele) == pos;
-            //}) 
+            //})
             console.log("<List channel>", message);
             setArrayChannelName(message);
         });
@@ -354,7 +369,7 @@ function ListChannel() {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             // setlistName(message);
-            
+
 
             // let tmp = [...arraylistName];
             // tmp.push(message);
@@ -379,7 +394,7 @@ function ListChannel() {
                 {arraylistName.map((item) => {
                     return <Menu_Membre item={item}/>
                 })}
-                
+
                 </div>
                 <div className="footerChatList">
 
@@ -395,7 +410,7 @@ function ListChannel() {
 
 function Chat() {
     //all ready
-    
+
     useEffect(() => {socket.emit("GET_CHANNEL", login); }, []);
     // remplacer par votre pseudo
     return (
@@ -447,4 +462,3 @@ function DirectMessages(props: any) {
 }
 
 export default Chat;
-
