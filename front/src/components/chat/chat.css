@@ -436,3 +436,15 @@
 .chathistory::-webkit-scrollbar {
     display: none;
 }
+
+.css-6hp17o-MuiList-root-MuiMenu-list {
+    background-color: rgb(38, 105, 192);
+    /* text-shadow: 2px 2px 4px #999; */
+    /* text-align: center; */
+}
+
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root.MuiButtonBase-root {
+    font-family: 'CrickxRegular';
+    font-weight: normal;
+    font-style: normal;
+}

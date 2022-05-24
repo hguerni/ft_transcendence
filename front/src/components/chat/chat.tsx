@@ -375,7 +375,7 @@ function Menu_Membre(props: {item: string}) {
 
   let menu_onclick;
   //recup le status
-  let status = 2;
+  let status = 1;
 
   if (status == 0 || status == 1)
   {
@@ -392,7 +392,7 @@ function Menu_Membre(props: {item: string}) {
   }
   else if (status == 2) {
       menu_onclick =( <>
-        <MenuItem onClick={() => handleClose(1)}>Profil</MenuItem> 
+        <MenuItem selected className="MenuItem" onClick={() => handleClose(1)}>Profil</MenuItem> 
         <MenuItem onClick={() => handleClose(2)}>Inviter a jouer</MenuItem> 
         <MenuItem onClick={() => handleClose(3)}>Envoyer un message</MenuItem> 
             </>)
