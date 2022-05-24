@@ -1,7 +1,7 @@
 import React, { Component, useEffect } from "react";
 import { useState } from 'react';
 import './chat.css';
-import { AppSettingsAltRounded, RestaurantRounded } from "@mui/icons-material";
+import { AppSettingsAltRounded, ConstructionOutlined, RestaurantRounded } from "@mui/icons-material";
 import ClearIcon from '@mui/icons-material/Clear';
 import loupe from "../../images/loupe.png";
 import buttonsubmit from "../../images/submitChat2.png";
@@ -19,6 +19,13 @@ import UserService from '../../services/user.service'
 
 //import { getchannel } from "../../../../shares/models"
 const login = UserService.getUsername(); // à récupérer
+
+enum status {
+    owner,
+    admin,
+    default,
+    ban
+}
 
 const socket = io("ws://localhost:3030/chat");
 socket.emit('ready', login);
@@ -81,7 +88,7 @@ function CreatePopupChannel() {
 
    function sendChannelName ()
    {
-        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login});
+        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login, status: 2, password: ""});
    }
 
     return (
@@ -324,15 +331,72 @@ function Channel() {
     );
 }
 
+function promouvoir_admin() {
+
+    //recup la target pour que ca marche
+    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    
+}
+
+function mute() {
+
+    //recup la target pour que ca marche
+  //  socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    
+}
+
+function bloquer() {
+
+    //recup la target pour que ca marche
+   // socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    
+}
+
+function bannir() {
+
+    //recup la target pour que ca marche
+    //socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    
+}
+
 function Menu_Membre(props: {item: string}) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  
+  const handleClose = (param: number) => {
     setAnchorEl(null);
+    if (param == 7)
+        promouvoir_admin();
+
   };
+
+  let menu_onclick;
+  //recup le status
+  let status = 2;
+
+  if (status == 0 || status == 1)
+  {
+      menu_onclick = (<>
+        <MenuItem onClick={() => handleClose(1)}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose(2)}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose(3)}>Envoyer un message</MenuItem>
+       
+        <MenuItem onClick={() => handleClose(4)}>Promouvoir en admin</MenuItem>
+        <MenuItem onClick={() => handleClose(5)}>Mute</MenuItem>
+        <MenuItem onClick={() => handleClose(6)}>Bloquer</MenuItem>
+        <MenuItem onClick={() => handleClose(7)}>Bannir</MenuItem>
+      </>)
+  }
+  else if (status == 2) {
+      menu_onclick =( <>
+        <MenuItem onClick={() => handleClose(1)}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose(2)}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose(3)}>Envoyer un message</MenuItem> 
+            </>)
+  }
 
   return (
     <div>
@@ -357,11 +421,18 @@ function Menu_Membre(props: {item: string}) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profil</MenuItem>
-        <MenuItem onClick={handleClose}>Inviter a jouer</MenuItem>
-        <MenuItem onClick={handleClose}>Envoyer un message</MenuItem>
-        <MenuItem onClick={handleClose}>Promouvoir en admin</MenuItem>
-        <MenuItem onClick={handleClose}>Bloquer</MenuItem>
+         
+            {/* <MenuItem onClick={handleClose}>Profil</MenuItem> 
+            <MenuItem onClick={handleClose}>Inviter a jouer</MenuItem> 
+            <MenuItem onClick={handleClose}>Envoyer un message</MenuItem> 
+            <MenuItem onClick={handleClose}>Promouvoir en admin</MenuItem>
+       
+            <MenuItem onClick={handleClose}>Mute</MenuItem>
+            <MenuItem onClick={handleClose}>Bloquer</MenuItem>
+            <MenuItem onClick={handleClose}>Bannir</MenuItem> */}
+            {menu_onclick}
+
+
       </Menu>
     </div>
   );
