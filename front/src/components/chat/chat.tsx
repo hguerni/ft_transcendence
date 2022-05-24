@@ -1,7 +1,7 @@
 import React, { Component, useEffect } from "react";
 import { useState } from 'react';
 import './chat.css';
-import { AppSettingsAltRounded, RestaurantRounded } from "@mui/icons-material";
+import { AppSettingsAltRounded, ConstructionOutlined, RestaurantRounded } from "@mui/icons-material";
 import ClearIcon from '@mui/icons-material/Clear';
 import loupe from "../../images/loupe.png";
 import buttonsubmit from "../../images/submitChat2.png";
@@ -15,16 +15,20 @@ import { v4 } from 'uuid'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import UserService from '../../services/user.service'
 
 //import { getchannel } from "../../../../shares/models"
-const login = 'psemsari'; // à récupérer
+const login = UserService.getUsername(); // à récupérer
 
-const socket = io("ws://localhost:3030/chat", {
-    query: {
-          login: login, //'Bearer h93t4293t49jt34j9rferek...'
-        }
-    }
- );
+enum status {
+    owner,
+    admin,
+    default,
+    ban
+}
+
+const socket = io("ws://localhost:3030/chat");
+socket.emit('ready', login);
 
 let global_channel = "";
 /*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
@@ -78,25 +82,52 @@ function ButtonCreateCanal(){
 
 function CreatePopupChannel() {
     const [channelName, setChannelName] = useState("");
+    const [channelAttribute, setChannelAttribute] = useState<string>("public");
+    const [channelPassword, setChannelPassword] = useState<string>("");
     const [open, setOpen] = useState(false);
 
    function sendChannelName ()
    {
-        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login});
+        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login, status: 2, password: ""});
    }
-
 
     return (
       <div>
-          <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
+          <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
         <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
-          <div>Nom du Channel a creer</div>
+          <div>Nom du Channel à créer:</div>
+
           <input className="input"
             type="text"
             value={channelName}
-
             onChange={(e) => setChannelName(e.target.value)}
           />
+
+          <div className="checkBoxes">
+            <input type="checkbox" id="public" name="public"
+                onChange={(e) => {setChannelAttribute("public")}} checked={channelAttribute === "public"}/>
+            <label htmlFor="scales">Public</label>
+
+            <input type="checkbox" id="private" name="private"
+                onChange={(e) => {setChannelAttribute("private")}} checked={channelAttribute === "private"}/>
+            <label htmlFor="horns">Private</label>
+
+            <input type="checkbox" id="protected" name="protected"
+                onChange={(e) => {setChannelAttribute("protected")}} checked={channelAttribute === "protected"}/>
+            <label htmlFor="horns">Protected</label>
+
+            <div>
+              {channelAttribute === "protected" &&
+                <input className="input"
+                  type="text"
+                  value={channelPassword}
+                  onChange={(e) => setChannelPassword(e.target.value)}
+                />
+              }
+            </div>
+          </div>
+
+
           <button className="gameButton" onClick={() => { setOpen(false); sendChannelName(); setChannelName("")}}>SEND</button>
         </Popup>
 
@@ -117,8 +148,9 @@ function CreatePopupChannel() {
 
     return (
       <div>
-          <button className="buttonInviteUsers" onClick={() => setOpen(true)}> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
+          <button className="buttonInviteUsers" onClick={() => setOpen(true)}> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
         <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+
           <div>Login de la personne a ajouter dans le channel</div>
           <input className="input"
             type="text"
@@ -154,8 +186,8 @@ function Bodychat() {
 
 /*************************************************** */
     const [arrayChat, setArraylistChat] = useState<message[]>([]);
-    
-    useEffect(() => {    
+
+    useEffect(() => {
         socket.on("LIST_CHAT", (message: info2) => {
         // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
         //setInputValue(message);
@@ -168,14 +200,14 @@ function Bodychat() {
         });
     },[])
 
-  
+
 /********************************************************** */
 
     // useEffect(() => {
     //     let tmp = [...arrayHistory];
     //     tmp.push(newInfo);
     //     setArrayhistory(tmp);
-   
+
     // }, [newInfo]); // useEffect est appelé uniquement quand newInfo change
 
     // useEffect(() => {
@@ -193,9 +225,15 @@ function Bodychat() {
 
                     <div className="iconeChat">
                         <CreatePopupChannel/>
-                        <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
+                        {/* <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button> */}
                         <CreatePopupInviteUser/>
+
+
+
+
                     </div>
+
+
                 </div>
 
                 <div className="centerChat">
@@ -252,10 +290,10 @@ function Channel() {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             //setChannelName(message);
-            
+
             //const filteredArray = message.filter(function(ele , pos){
             //    return message.indexOf(ele) == pos;
-            //}) 
+            //})
             console.log("<List channel>", message);
             setArrayChannelName(message);
         });
@@ -293,15 +331,72 @@ function Channel() {
     );
 }
 
+function promouvoir_admin() {
+
+    //recup la target pour que ca marche
+    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    
+}
+
+function mute() {
+
+    //recup la target pour que ca marche
+  //  socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    
+}
+
+function bloquer() {
+
+    //recup la target pour que ca marche
+   // socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    
+}
+
+function bannir() {
+
+    //recup la target pour que ca marche
+    //socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    
+}
+
 function Menu_Membre(props: {item: string}) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  
+  const handleClose = (param: number) => {
     setAnchorEl(null);
+    if (param == 7)
+        promouvoir_admin();
+
   };
+
+  let menu_onclick;
+  //recup le status
+  let status = 2;
+
+  if (status == 0 || status == 1)
+  {
+      menu_onclick = (<>
+        <MenuItem onClick={() => handleClose(1)}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose(2)}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose(3)}>Envoyer un message</MenuItem>
+       
+        <MenuItem onClick={() => handleClose(4)}>Promouvoir en admin</MenuItem>
+        <MenuItem onClick={() => handleClose(5)}>Mute</MenuItem>
+        <MenuItem onClick={() => handleClose(6)}>Bloquer</MenuItem>
+        <MenuItem onClick={() => handleClose(7)}>Bannir</MenuItem>
+      </>)
+  }
+  else if (status == 2) {
+      menu_onclick =( <>
+        <MenuItem onClick={() => handleClose(1)}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose(2)}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose(3)}>Envoyer un message</MenuItem> 
+            </>)
+  }
 
   return (
     <div>
@@ -326,11 +421,18 @@ function Menu_Membre(props: {item: string}) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profil</MenuItem>
-        <MenuItem onClick={handleClose}>Inviter a jouer</MenuItem>
-        <MenuItem onClick={handleClose}>Envoyer un message</MenuItem>
-        <MenuItem onClick={handleClose}>Promouvoir en admin</MenuItem>
-        <MenuItem onClick={handleClose}>Bloquer</MenuItem>
+         
+            {/* <MenuItem onClick={handleClose}>Profil</MenuItem> 
+            <MenuItem onClick={handleClose}>Inviter a jouer</MenuItem> 
+            <MenuItem onClick={handleClose}>Envoyer un message</MenuItem> 
+            <MenuItem onClick={handleClose}>Promouvoir en admin</MenuItem>
+       
+            <MenuItem onClick={handleClose}>Mute</MenuItem>
+            <MenuItem onClick={handleClose}>Bloquer</MenuItem>
+            <MenuItem onClick={handleClose}>Bannir</MenuItem> */}
+            {menu_onclick}
+
+
       </Menu>
     </div>
   );
@@ -350,7 +452,7 @@ function ListChannel() {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             // setlistName(message);
-            
+
 
             // let tmp = [...arraylistName];
             // tmp.push(message);
@@ -375,7 +477,7 @@ function ListChannel() {
                 {arraylistName.map((item) => {
                     return <Menu_Membre item={item}/>
                 })}
-                
+
                 </div>
                 <div className="footerChatList">
 
@@ -391,7 +493,7 @@ function ListChannel() {
 
 function Chat() {
     //all ready
-    
+
     useEffect(() => {socket.emit("GET_CHANNEL", login); }, []);
     // remplacer par votre pseudo
     return (
@@ -443,4 +545,3 @@ function DirectMessages(props: any) {
 }
 
 export default Chat;
-

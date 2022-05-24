@@ -13,6 +13,7 @@ import { subscribeOn } from 'rxjs';
   import { Server, Socket } from 'socket.io'
   import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
   import { ChatService } from '../services/chat.service';
+  import { chat_status } from 'src/entities/chat.entity';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
@@ -33,19 +34,7 @@ import { subscribeOn } from 'rxjs';
 		@ConnectedSocket() client: Socket
 	)
 	{
-		//console.log(client.handshake);
-		//console.log(client.conn.request);
-		let login: string = client.handshake.query.login as string;
-		login = "psemsari";
-		console.log(login);
-		let ret = {name: login, socket: client};
-		this.Connected.push(ret);
-		this.chatService.getPvmsg(ret.name)
-		.then((val) => {
-			console.log(val);
-			client.join(val);
-		})
-		client.join(login);
+		
 	}
 
 	@SubscribeMessage('ready')
@@ -54,29 +43,14 @@ import { subscribeOn } from 'rxjs';
 		@MessageBody() login: string
 	)
 	{
-		this.chatService.getPvmsg(login).then((ret) => {
-			const toemit = {
-				getmsg: ret
-			}
-			client.emit("ready", toemit);
-		}).catch((error) => {client.emit("ready", error)});
-	}
-
-
-	@SubscribeMessage('private-message')
-	handleEvent(
-		@MessageBody() {name, message}: {name: string, message: string},
-		@ConnectedSocket() client : Socket
-	): void
-	{
-		//this.chatService.getChat("pv-")
-		this.Connected.forEach(element => {
-		if (element.name == name)
-		{
-			element.socket.emit('private-message', {name, message});
-			return;
-		}
-		});
+		let ret = {name: login, socket: client};
+		this.Connected.push(ret);
+		this.chatService.getPvmsg(ret.name)
+		.then((val) => {
+			console.log(val);
+			client.join(val);
+		})
+		client.join(login);
 	}
 
 	@SubscribeMessage('addmsg')
@@ -93,19 +67,37 @@ import { subscribeOn } from 'rxjs';
 		catch (error) {console.log(error);}
 	}
 
-	@SubscribeMessage('addchat')
-	async addchat(
-		@MessageBody() chat: ChatDTO,
+	@SubscribeMessage('CHANGE_STATUS')
+	async statusChan(
+		@MessageBody() data: {channel: string, target: string, sender: string, status: number},
 		@ConnectedSocket() client: Socket
 	)
 	{
-		// try {
-		// 	const val = await this.chatService.addOne(chat);
-		// 	this.io.to(chat.)
-		// .then((val) => client.emit('addchat', val))
-		// .catch((error) => client.emit('addchat', error));
-		// }
-		// catch (e) { console.log(e);}
+		try {
+			await this.chatService.changeStatus(data);
+			const ret = await this.chatService.memberInChannel(data.channel);
+			this.io.to(data.channel).emit('LIST_NAME', 
+			{
+				channel: data.channel,
+				list: ret
+			});
+		}
+		catch (e) { console.log(e) }
+	}
+
+	@SubscribeMessage('JOIN_CHAN')
+	async joinChan(
+		@MessageBody() data: {channel: string, login: string, password: string},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		try {
+			await this.chatService.joinChan(data);
+			await this.addmember(data, client);
+		}
+		catch (e) {
+			console.log(e);
+		}
 	}
 
 	@SubscribeMessage('addmember')
@@ -137,21 +129,6 @@ import { subscribeOn } from 'rxjs';
 		@ConnectedSocket() client: Socket
 	)
 	{
-		
-		//if (name == "coucou")
-		//	client.emit('LIST_NAME', ['elias','hava', 'leo']);
-		//else
-		//	client.emit('LIST_NAME', ['rayane','pierre']);
-		
-		//if (name == "coucou")
-		//	client.emit('LIST_CHAT', [
-		//		{name: 'hava', message: 'message3'}, 
-		//		{name: 'elias', message: 'message4'},
-		//		{name: 'leo', message: 'message5'}])
-		//else
-		//	client.emit('LIST_CHAT', [
-		//		{name: 'pierre', message: 'message1'}, 
-		//		{name: 'rayane', message: 'message2'}])
 		this.chatService.memberInChannel(name)
 		.then((val) => {
 			client.emit('LIST_NAME', {
@@ -173,9 +150,6 @@ import { subscribeOn } from 'rxjs';
 	{
 		this.chatService.getPvmsg(name)
 		.then((val) => {
-			//const filteredArray = val.filter(function(ele , pos){
-            //    return val.indexOf(ele) == pos;
-            //}) 
 			client.emit('CHANNEL_CREATED', val);
 		})
 	}
@@ -183,14 +157,13 @@ import { subscribeOn } from 'rxjs';
 	@SubscribeMessage('CREATE_CHANNEL')
 	async handleCreateChannel(
 		@ConnectedSocket() client: Socket, 
-		@MessageBody() channelcreation: {channel: string, login: string})
+		@MessageBody() channelcreation: {channel: string, login: string,
+										status: number, password: string})
 	{
 		try {
-			await this.chatService.addOne({
-				name: channelcreation.channel,
-				status: 0,
-				password: ""
-			});
+			const copy = channelcreation;
+			delete copy.login;
+			await this.chatService.addOne(copy);
 			await this.chatService.addMember(channelcreation);
 			const ret = await this.chatService.getPvmsg(channelcreation.login);
 			this.io.to(channelcreation.login).emit('CHANNEL_CREATED', ret);
@@ -202,14 +175,6 @@ import { subscribeOn } from 'rxjs';
 
 		// le serveur se connect sur le channel1 et retour le message
 	}
-
-	// @SubscribeMessage('test')
-	// test(
-	// 	@ConnectedSocket() client: Socket
-	// ): void
-	// {
-	// 	this.chatService.getPvmsg("psemsari").then( (v) => console.log(v));
-	// }
 
     @SubscribeMessage('disconnect')
 	handleDisconnect(
@@ -225,22 +190,4 @@ import { subscribeOn } from 'rxjs';
 			}
 		});
 	}
-
-	  /* fonction pour le chat rayane et elias */
-
-	//   @SubscribeMessage('bonjour du client')
-	//   handleSendingInputChat(client: Socket,  message: string) {
-	// 	client.join("channel1"); // sert a connecter le client sur le channel1
-	// 	this.io.to("channel1").emit("bonjour du serveur",  message) // le serveur se connect sur le channel1 et retour le message
-		
-	//   }
-	
-	
-	// 	@SubscribeMessage('joinroom')
-	// 	handleJoinRoomChat(client: Socket) {
-	  
-	// 	  client.join("channel1");
-		
-	// 	}
-
   }
