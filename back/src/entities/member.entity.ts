@@ -26,7 +26,7 @@ import {  BaseEntity,
   @Column()
   status: number;
 
-  @Column()
+  @Column({default: false})
   @IsBoolean()
   mute: boolean;
 

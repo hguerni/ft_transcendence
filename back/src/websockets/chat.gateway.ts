@@ -67,6 +67,24 @@ import { subscribeOn } from 'rxjs';
 		catch (error) {console.log(error);}
 	}
 
+	@SubscribeMessage('MUTE')
+	async mute(
+		@MessageBody() data: {channel: string, target: string, sender: string},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		try {
+			await this.chatService.Mute(data);
+			const ret = await this.chatService.memberInChannel(data.channel);
+			this.io.to(data.channel).emit('LIST_NAME', 
+			{
+				channel: data.channel,
+				list: ret
+			});
+		}
+		catch (e) {console.log(e);}
+	}
+
 	@SubscribeMessage('CHANGE_STATUS')
 	async statusChan(
 		@MessageBody() data: {channel: string, target: string, sender: string, status: number},

@@ -9,7 +9,7 @@ import { MsgDTO } from "../models/chat.model";
 import { UserEntity } from "../entities/user.entity";
 import { getgroups } from "process";
 import { getHeapCodeStatistics } from "v8";
-import { Console } from "console";
+import { Console, error } from "console";
 
 export enum status {
     owner,
@@ -61,10 +61,23 @@ export class ChatService {
         return await this.chatRepository.save(chat);
     }
 
+    async Mute(data: {channel: string, target: string, sender: string})
+    {
+        const chat = await this.chatRepository.findOne({where:{name: data.channel}});
+        const tomute = await this.getMember(chat, data.target);
+        const send = await this.getMember(chat, data.sender);
+        if (send.status < status.admin || tomute.status > send.status)
+            throw Error("No privilege");
+        tomute.mute = true;
+        this.membersRepo.save(tomute);
+    }
+
     async addMsg(data: MsgDTO){
         const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["messages"]});
         const user = await this.userRepo.findOne({where: {login: data.login}});
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}, relations: ['chat', 'chat.messages']});
+        if (member.mute)
+            throw Error("is ban");
         const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
         chat.messages.push(message);
         await this.chatRepository.save(chat).catch((e) => console.log(e));
