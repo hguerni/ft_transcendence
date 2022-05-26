@@ -228,6 +228,7 @@
     height: 1.5rem;
     width: 15%;
     padding-left: 0.5rem;
+    margin-top: 3rem;
     margin-left: auto;
     margin-right: auto;
 }
@@ -259,6 +260,7 @@
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     padding-bottom: 1rem;
+    
 }
 
 .game {
@@ -358,7 +360,44 @@
 }
 
 
-/* style pour authentification */ 
+/* ===================== 2FA ===================== */
+
+#separation {
+    border-bottom: 1px solid rgb(118, 224, 48);
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.two-fa {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    margin-top: 5rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5rem;
+    --tw-bg-opacity: -1;
+    background-color: rgba(41, 13, 92, 0.603);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    width: 30%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+#two-fa-h1 {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tagrossemere {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+}
 
 .switch {
     position: relative;
@@ -369,13 +408,13 @@
     left: 10px;
   }
   
-  .switch input { 
+.switch input { 
     opacity: 0;
     width: 0;
     height: 0;
-  }
+}
   
-  .slider {
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -385,7 +424,7 @@
     background-color: #ccc;
     -webkit-transition: .4s;
     transition: .4s;
-  }
+}
   
   .slider:before {
     position: absolute;
@@ -415,9 +454,10 @@
   
   /* Rounded sliders */
   .slider.round {
-    border-radius: 34px;
-  }
+      border-radius: 34px;
+    }
   
   .slider.round:before {
-    border-radius: 50%;
-  }
+      border-radius: 50%;
+    
+    }

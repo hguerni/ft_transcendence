@@ -1,6 +1,7 @@
 import {SyntheticEvent, useEffect, useState} from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import axios from 'axios';
+import './2fa.css';
 
 import logo from '../../images/ICON.svg';
 
@@ -62,10 +63,10 @@ function ActivateTwoFa(){
 
     return (
         <main >
-            <form>
-                <img src={logo} alt="logo" width="72" height="57"/>
-                <h1 >activate Two Factor authentication</h1>
-                <p className="activateSubTitle">Scan this QR-code with the Google Authenticator app</p>
+            <form className="trucPrincipal">
+                <img src={logo}id="leLogo" alt="logo" width="72" height="57"/>
+                <h1 id="leTitre">activate Two Factor authentication</h1>
+                <h1 className="activateSubTitle">Scan this QR-code with the Google Authenticator app</h1>
 
                 <div><img className="qrImg" alt="QRcode" src={QRCode}/></div>
 
@@ -75,18 +76,18 @@ function ActivateTwoFa(){
                     <p/>  }
 
                 <div className="form-floating">
-                    <input required className="form-control" id="floatingInput" placeholder="entercode"
+                    <input required className="form-control" id="floatingInput" placeholder="Entrer le code"
                            onChange={e => setCode(e.target.value)}/>
-                    <label htmlFor="floatingInput">Enter authentication code</label>
+                    <label htmlFor="floatingInput"></label>
                 </div>
 
-                <p className="activateText">User policy - Be aware that you need to scan this QR-code if you</p>
-                <p className="activateText">want to use this service OR continue using this service. Previously saved</p>
-                <p className="activateText">settings in the Google Authenticator app are expired and no longer valid.</p>
+                <h1 className="activateText">User policy - Be aware that you need to scan this QR-code if you</h1>
+                <h1 className="activateText">want to use this service OR continue using this service. Previously saved</h1>
+                <h1 className="activateText">settings in the Google Authenticator app are expired and no longer valid.</h1>
 
 
-                <button onClick={activate} className="w-100 btn btn-lg btn-primary" type="button">activate</button>
-                <button onClick={disable} className="w-100 btn btn-lg btn-primary" type="button">Disable</button>
+                {/* <button onClick={activate} className="w-100 btn btn-lg btn-primary" type="button">activate</button>
+                <button onClick={disable} className="w-100 btn btn-lg btn-primary" type="button">Disable</button> */}
             </form>
         </main>
     )
