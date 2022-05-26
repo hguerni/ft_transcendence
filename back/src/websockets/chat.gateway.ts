@@ -161,10 +161,11 @@ import { subscribeOn } from 'rxjs';
 										status: number, password: string})
 	{
 		try {
-			const copy = channelcreation;
-			delete copy.login;
-			await this.chatService.addOne(copy);
-			await this.chatService.addMember(channelcreation);
+			await this.chatService.addOne({name: channelcreation.channel,
+											status: channelcreation.status,
+											password: channelcreation.password});
+			await this.chatService.addMember({channel: channelcreation.channel,
+											login: channelcreation.login});
 			const ret = await this.chatService.getPvmsg(channelcreation.login);
 			this.io.to(channelcreation.login).emit('CHANNEL_CREATED', ret);
 			this.io.to(channelcreation.login).socketsJoin(channelcreation.channel);

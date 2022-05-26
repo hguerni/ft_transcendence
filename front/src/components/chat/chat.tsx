@@ -27,6 +27,13 @@ enum status {
     ban
 }
 
+enum chat_status {
+    private,
+    public,
+    protected,
+    pv_message
+  }
+
 const socket = io("ws://localhost:3030/chat");
 socket.emit('ready', login);
 
@@ -88,7 +95,7 @@ function CreatePopupChannel() {
 
    function sendChannelName ()
    {
-        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login, status: 2, password: ""});
+        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login, status: chat_status.public, password: ""});
    }
 
     return (

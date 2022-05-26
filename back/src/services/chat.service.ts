@@ -56,6 +56,7 @@ export class ChatService {
     }
 
     async addOne(data: ChatDTO){
+        console.log(data);
         const chat = this.chatRepository.create({...data, messages: [], members: []});
         return await this.chatRepository.save(chat);
     }
