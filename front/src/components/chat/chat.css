@@ -49,8 +49,10 @@
 }
 
 .centerChat {
-
-
+    display: flex;
+    justify-content: left;
+    align-content: center;
+    flex-direction: column;
 
 
     background-color: rgb(8, 3, 75);
@@ -204,7 +206,7 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
-    position: relative;
+    /* position: relative; */
 }
 
 
@@ -357,12 +359,7 @@
 }
 
 .headerChatList {  
-     
-
-
     margin-top: 5.75rem;
-
-
     background-color: rgb(15, 15, 15);
     padding-top: 0.5rem;
     /* width: 20%; */
@@ -384,32 +381,27 @@
 }
 
 .channelName {
+    text-align: left;
     color: aliceblue;
-
     font-size: 20px;
-    
-    
 }
 
 .channelName:hover {
     color: blue;
-
 }
+
 .channelName:active {
     color: blue;
-
 }
 
 .personneDansChannel {
     color: aliceblue;
-
     font-size: 25px;
     cursor: pointer;
 }
 
 .personneDansChannel:hover {
     color: blue;
-
 }
 
 .btnpersonneDansChannel {
