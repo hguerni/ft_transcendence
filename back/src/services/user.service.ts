@@ -5,6 +5,7 @@ import { FriendEntity } from '../entities/friend.entity';
 import { getRepository, Repository } from 'typeorm';
 import { UpdateUserDTO, RegisterDTO } from '../models/user.model';
 import { GameEntity } from '../entities/game.entity';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class UserService {
@@ -102,9 +103,9 @@ export class UserService {
     this.findByFtId(clientid).then((client) =>{
       this.getById(friendid).then(async (friend) => {
         this.friendRepo.findOne({where: {friend: friend, user: client}}).then(async (friendship) => {
-          this.friendRepo.update(friendship.id, {status: "accepted"});
+          await this.friendRepo.update(friendship.id, {status: "accepted"});
           this.friendRepo.findOne({where: {friend: client, user: friend}}).then(async (friendship2) => {
-            this.friendRepo.update(friendship2.id, {status: "accepted"});
+            await this.friendRepo.update(friendship2.id, {status: "accepted"});
           });
         });
       });
@@ -138,15 +139,18 @@ export class UserService {
   }
 
   async getFriends(clientID: number) {
-    this.findByFtId(clientID).then((client) =>{
-      return this.friendRepo.find({where: {user: client, status: "accepted"}})
-    });
+    const client = await this.findByFtId(clientID);
+    let friends = await this.friendRepo.find({where: {user: client, status: "accepted"}, relations: ['friend', 'user'],});
+    let req = JSON.stringify(instanceToPlain(friends));
+    console.log(req)
+    return req
   }
 
   async getRequest(clientID: number) {
-    this.findByFtId(clientID).then((client) =>{
-      return this.friendRepo.find({where: {friend: client, status: "pending"}})
-    });
+    const client = await this.findByFtId(clientID);
+    let requests = await this.friendRepo.find({where: {user: client, status: "pending"}, relations: ['friend', 'user'],});
+    let req = JSON.stringify(instanceToPlain(requests));
+    return req
   }
 
   async setOffline(clientID: number): Promise<any> {
