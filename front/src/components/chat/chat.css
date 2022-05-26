@@ -394,8 +394,20 @@
     color: blue;
 }
 
-.personneDansChannel {
-    color: aliceblue;
+.personneDansChannelOwner {
+    color: rgb(202, 189, 67);
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.personneDansChannelAdmin {
+    color: rgb(238, 118, 38);
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.personneDansChannelOwnerDefault {
+    color: rgb(255, 255, 255);
     font-size: 25px;
     cursor: pointer;
 }

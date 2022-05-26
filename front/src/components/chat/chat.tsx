@@ -368,7 +368,7 @@ function bannir() {
     
 }
 
-function Menu_Membre(props: {item: string}) {
+function Menu_Membre(props: {item: {login: string, status: number}}) {
     
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -385,28 +385,64 @@ function Menu_Membre(props: {item: string}) {
   };
 
   let menu_onclick;
+  let h1_name_role;
+  let status_du_gars_connecte = 0;
   //recup le status
-  let status = 1;
 
-  if (status == 0 || status == 1)
+  if (status_du_gars_connecte == 0)
   {
-      menu_onclick = (<>
-        <MenuItem onClick={() => handleClose(1, props.item)}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose(2, props.item)}>Inviter a jouer</MenuItem> 
-        <MenuItem onClick={() => handleClose(3, props.item)}>Envoyer un message</MenuItem>
+    menu_onclick = (<>
+        <MenuItem onClick={() => handleClose(1, props.item.login)}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose(2, props.item.login)}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose(3, props.item.login)}>Envoyer un message</MenuItem>
        
-        <MenuItem onClick={() => handleClose(4, props.item)}>Promouvoir en admin</MenuItem>
-        <MenuItem onClick={() => handleClose(5, props.item)}>Mute</MenuItem>
-        <MenuItem onClick={() => handleClose(6, props.item)}>Bloquer</MenuItem>
-        <MenuItem onClick={() => handleClose(7, props.item)}>Bannir</MenuItem>
+        <MenuItem onClick={() => handleClose(4, props.item.login)}>Promouvoir en admin</MenuItem>
+        <MenuItem onClick={() => handleClose(5, props.item.login)}>Mute</MenuItem>
+        <MenuItem onClick={() => handleClose(6, props.item.login)}>Bloquer</MenuItem>
+        <MenuItem onClick={() => handleClose(7, props.item.login)}>Bannir</MenuItem>
+
+
       </>)
   }
-  else if (status == 2) {
-      menu_onclick =( <>
-        <MenuItem selected className="MenuItem" onClick={() => handleClose(1, props.item)}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose(2, props.item)}>Inviter a jouer</MenuItem> 
-        <MenuItem onClick={() => handleClose(3, props.item)}>Envoyer un message</MenuItem> 
+  else if (status_du_gars_connecte == 1)
+  {
+    menu_onclick = (<>
+        <MenuItem onClick={() => handleClose(1, props.item.login)}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose(2, props.item.login)}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose(3, props.item.login)}>Envoyer un message</MenuItem>
+       
+        
+        <MenuItem onClick={() => handleClose(5, props.item.login)}>Mute</MenuItem>
+        <MenuItem onClick={() => handleClose(6, props.item.login)}>Bloquer</MenuItem>
+        <MenuItem onClick={() => handleClose(7, props.item.login)}>Bannir</MenuItem>
+        </>)
+  }
+  else if (status_du_gars_connecte)
+  {
+    menu_onclick =( <>
+        <MenuItem selected className="MenuItem" onClick={() => handleClose(1, props.item.login)}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose(2, props.item.login)}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose(3, props.item.login)}>Envoyer un message</MenuItem> 
             </>)
+  }
+
+  if (props.item.status == 0)
+  {
+    h1_name_role = (<>
+        <h1 className="personneDansChannelOwner"> {props.item.login}  </h1>
+    </>)   
+  }
+  else if (props.item.status == 1)
+  {
+    h1_name_role = (<>
+        <h1 className="personneDansChannelAdmin"> {props.item.login}  </h1>
+    </>)
+  }  
+  else if (props.item.status == 2) {
+    h1_name_role = (<>
+        <h1 className="personneDansChannelDefault"> {props.item.login}  </h1>
+    </>)
+
   }
 
   return (
@@ -421,7 +457,13 @@ function Menu_Membre(props: {item: string}) {
             padding: "0.01px",
         }}
       >
-        <h1 className="personneDansChannel"> {props.item}  </h1>
+        
+        {/* <h1 className="personneDansChannelOwner"> {props.item.login}  </h1> */}
+
+        {h1_name_role}
+
+       
+        
       </Button>
       <Menu
         id="basic-menu"
@@ -487,7 +529,7 @@ function ListChannel() {
                 {/* <Menu_Membre/> */}
                 {arraylistName.map((item) => {
                     
-                    return <Menu_Membre item={item.login}/>
+                    return <Menu_Membre item={item}/>
                 })}
 
                 </div>
