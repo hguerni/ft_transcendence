@@ -38,6 +38,7 @@ const socket = io("ws://localhost:3030/chat");
 socket.emit('ready', login);
 
 let global_channel = "";
+let global_name_click = "";
 /*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
 //socket.emit("joinroom");
 
@@ -338,10 +339,11 @@ function Channel() {
     );
 }
 
-function promouvoir_admin() {
+function promouvoir_admin(cible: string) {
 
     //recup la target pour que ca marche
-    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    console.log("cible = *************************************************** = " + cible );
+    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: cible, sender: login, status: status.admin}); 
     
 }
 
@@ -367,16 +369,18 @@ function bannir() {
 }
 
 function Menu_Membre(props: {item: string}) {
+    
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   
-  const handleClose = (param: number) => {
+  const handleClose = (param: number, cible: string) => {
+
     setAnchorEl(null);
-    if (param == 7)
-        promouvoir_admin();
+    if (param == 4)
+        promouvoir_admin(cible);
 
   };
 
@@ -387,21 +391,21 @@ function Menu_Membre(props: {item: string}) {
   if (status == 0 || status == 1)
   {
       menu_onclick = (<>
-        <MenuItem onClick={() => handleClose(1)}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose(2)}>Inviter a jouer</MenuItem> 
-        <MenuItem onClick={() => handleClose(3)}>Envoyer un message</MenuItem>
+        <MenuItem onClick={() => handleClose(1, props.item)}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose(2, props.item)}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose(3, props.item)}>Envoyer un message</MenuItem>
        
-        <MenuItem onClick={() => handleClose(4)}>Promouvoir en admin</MenuItem>
-        <MenuItem onClick={() => handleClose(5)}>Mute</MenuItem>
-        <MenuItem onClick={() => handleClose(6)}>Bloquer</MenuItem>
-        <MenuItem onClick={() => handleClose(7)}>Bannir</MenuItem>
+        <MenuItem onClick={() => handleClose(4, props.item)}>Promouvoir en admin</MenuItem>
+        <MenuItem onClick={() => handleClose(5, props.item)}>Mute</MenuItem>
+        <MenuItem onClick={() => handleClose(6, props.item)}>Bloquer</MenuItem>
+        <MenuItem onClick={() => handleClose(7, props.item)}>Bannir</MenuItem>
       </>)
   }
   else if (status == 2) {
       menu_onclick =( <>
-        <MenuItem selected className="MenuItem" onClick={() => handleClose(1)}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose(2)}>Inviter a jouer</MenuItem> 
-        <MenuItem onClick={() => handleClose(3)}>Envoyer un message</MenuItem> 
+        <MenuItem selected className="MenuItem" onClick={() => handleClose(1, props.item)}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose(2, props.item)}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose(3, props.item)}>Envoyer un message</MenuItem> 
             </>)
   }
 
@@ -482,6 +486,7 @@ function ListChannel() {
                 <div className="centerChat">
                 {/* <Menu_Membre/> */}
                 {arraylistName.map((item) => {
+                    
                     return <Menu_Membre item={item}/>
                 })}
 
