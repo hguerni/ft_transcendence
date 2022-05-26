@@ -75,9 +75,9 @@ export class ChatService {
     async memberInChannel(name: string)
     {
         const chat = await this.chatRepository.findOne({select: ["id"], where: {name: name}, relations: ['members', 'members.user']});
-        const tmp: string[] = [];
+        const tmp: {login: string, status: number}[] = [];
         chat.members.forEach((element) => {
-            tmp.push(element.user.login);
+            tmp.push({login: element.user.login, status: element.status});
         })
         return tmp;
     }

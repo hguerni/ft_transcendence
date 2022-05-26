@@ -459,7 +459,7 @@ function ListChannel() {
         // })
       // réception d'un message envoyé par le serveur
     useEffect(() => {
-        socket.on("LIST_NAME", (message: {channel: string, list: {login: string, status: number}[]) => {
+        socket.on("LIST_NAME", (message: {channel: string, list: {login: string, status: number}[]}) => {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             // setlistName(message);
