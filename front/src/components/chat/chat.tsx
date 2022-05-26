@@ -451,7 +451,7 @@ function Menu_Membre(props: {item: string}) {
 
 function ListChannel() {
 
-    const [arraylistName, setArraylistName] = useState<string[]>([]);
+    const [arraylistName, setArraylistName] = useState<{login: string, status: number}[]>([]);
 
 
         // socket.on("ready", (ready_chat: object) => {
@@ -459,7 +459,7 @@ function ListChannel() {
         // })
       // réception d'un message envoyé par le serveur
     useEffect(() => {
-        socket.on("LIST_NAME", (message: {channel: string, list: string[]}) => {
+        socket.on("LIST_NAME", (message: {channel: string, list: {login: string, status: number}[]) => {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             // setlistName(message);
@@ -487,7 +487,7 @@ function ListChannel() {
                 {/* <Menu_Membre/> */}
                 {arraylistName.map((item) => {
                     
-                    return <Menu_Membre item={item}/>
+                    return <Menu_Membre item={item.login}/>
                 })}
 
                 </div>
