@@ -12,7 +12,7 @@ import { subscribeOn } from 'rxjs';
 
   import { Server, Socket } from 'socket.io'
   import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
-  import { ChatService } from '../services/chat.service';
+  import { ChatService, status } from '../services/chat.service';
   import { chat_status } from 'src/entities/chat.entity';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
@@ -93,7 +93,7 @@ import { subscribeOn } from 'rxjs';
 	{
 		try {
 			await this.chatService.joinChan(data);
-			await this.addmember(data, client);
+			await this.addmember({...data, status: status.default}, client);
 		}
 		catch (e) {
 			console.log(e);
@@ -165,7 +165,8 @@ import { subscribeOn } from 'rxjs';
 											status: channelcreation.status,
 											password: channelcreation.password});
 			await this.chatService.addMember({channel: channelcreation.channel,
-											login: channelcreation.login});
+											login: channelcreation.login,
+											status: status.owner});
 			const ret = await this.chatService.getPvmsg(channelcreation.login);
 			this.io.to(channelcreation.login).emit('CHANNEL_CREATED', ret);
 			this.io.to(channelcreation.login).socketsJoin(channelcreation.channel);

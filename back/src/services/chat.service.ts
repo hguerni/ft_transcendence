@@ -11,7 +11,7 @@ import { getgroups } from "process";
 import { getHeapCodeStatistics } from "v8";
 import { Console } from "console";
 
-enum status {
+export enum status {
     owner,
     admin,
     default,
@@ -146,7 +146,7 @@ export class ChatService {
         const same = await this.membersRepo.findOne({where: {user: user, chat: chat}});
         if (same)
             throw new NotFoundException();
-        const member = this.membersRepo.create({user: user, status: status.default, mute: false, chat: chat});
+        const member = this.membersRepo.create({user: user, status: data.status, mute: false, chat: chat});
         return await this.membersRepo.save(member);
     }
     

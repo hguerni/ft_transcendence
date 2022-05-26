@@ -28,4 +28,7 @@ export class AddMemberDTO {
 
     @IsString()
     login: string;
+
+    @IsNumber()
+    status: number;
 }
