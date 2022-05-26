@@ -106,7 +106,7 @@ import { subscribeOn } from 'rxjs';
 		@ConnectedSocket() client: Socket
 	)
 	{
-		await this.chatService.addMember(data);
+		await this.chatService.addMember({...data, status: status.default});
 		const ret = await this.chatService.memberInChannel(data.channel);
 		this.Connected.forEach(element => {
 			if (element.name == data.login)
