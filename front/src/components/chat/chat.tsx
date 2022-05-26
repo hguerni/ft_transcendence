@@ -381,7 +381,7 @@ function Menu_Membre(props: {item: {login: string, status: number}}) {
     setAnchorEl(null);
     if (param == 4)
         promouvoir_admin(cible);
-    else if (param == 1)
+    else if (param == 5)
         mute(cible);
 
   };
