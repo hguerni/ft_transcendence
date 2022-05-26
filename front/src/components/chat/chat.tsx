@@ -350,7 +350,7 @@ function promouvoir_admin(cible: string) {
 function mute(cible: string) {
 
     //recup la target pour que ca marche
-    socket.emit("MUTE",  {channel: global_channel,  target: cible, sender: login, status: status.mute}); 
+    socket.emit("MUTE",  {channel: global_channel,  target: cible, sender: login}); 
     
 }
 
