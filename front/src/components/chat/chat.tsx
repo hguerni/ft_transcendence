@@ -342,15 +342,15 @@ function Channel() {
 function promouvoir_admin(cible: string) {
 
     //recup la target pour que ca marche
-    console.log("cible = *************************************************** = " + cible );
+   
     socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: cible, sender: login, status: status.admin}); 
     
 }
 
-function mute() {
+function mute(cible: string) {
 
     //recup la target pour que ca marche
-  //  socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
+    socket.emit("MUTE",  {channel: global_channel,  target: cible, sender: login, status: status.mute}); 
     
 }
 
@@ -381,6 +381,8 @@ function Menu_Membre(props: {item: {login: string, status: number}}) {
     setAnchorEl(null);
     if (param == 4)
         promouvoir_admin(cible);
+    else if (param == 1)
+        mute(cible);
 
   };
 
