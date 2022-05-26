@@ -215,6 +215,34 @@
     justify-content: space-evenly;
 }
 
+/* ===================== SEARCH USER ===================== */
+
+.search-user {
+    display: flex;
+    align-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+    border: solid 2px rgba(255, 255, 255); 
+    border-radius: 8px;
+    background-color: rgb(69,15,191, 0.4);
+    height: 1.5rem;
+    width: 15%;
+    padding-left: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#input-bar {
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    outline: none ;
+    width: 90%;
+    background-color: transparent;
+    color: rgb(255, 255, 255);
+    font-family: 'CrickxRegular';
+    font-size: 1.25rem;
+}
 
 /* ===================== HISTORY ===================== */
 

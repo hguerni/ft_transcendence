@@ -46,11 +46,15 @@ function SearchUser () {
   }
 
   return (
-    <input
-        type="text"
-        placeholder="Search"
-        onKeyDown={handleKey}
-      />
+    <div className="search-user">
+        <input
+            id="input-bar"
+            type="text"
+            placeholder="Chercher un utilisateur"
+            onKeyDown={handleKey}
+        />
+    </div>
+    
   );
 }
 
