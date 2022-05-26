@@ -66,7 +66,7 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}});
         const tomute = await this.getMember(chat, data.target);
         const send = await this.getMember(chat, data.sender);
-        if (send.status < status.admin || tomute.status > send.status)
+        if (send.status > status.admin || tomute.status < send.status)
             throw Error("No privilege");
         tomute.mute = true;
         this.membersRepo.save(tomute);
@@ -76,6 +76,7 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["messages"]});
         const user = await this.userRepo.findOne({where: {login: data.login}});
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}, relations: ['chat', 'chat.messages']});
+        console.log(member.mute);
         if (member.mute)
             throw Error("is ban");
         const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
