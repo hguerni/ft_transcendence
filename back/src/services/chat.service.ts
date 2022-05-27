@@ -88,12 +88,12 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}});
         const membre = await this.getMember(chat, data.login);
         membre.quit_status = quit_status.quit;
-        if (membre.status == status.owner)
-        {
-            const owner = chat.members.indexOf(membre);
-            if (chat.members[owner + 1])
-                chat.members[owner + 1].status = status.owner;
-        }
+        // if (membre.status == status.owner)
+        // {
+        //     const owner = chat.members.indexOf(membre);
+        //     if (chat.members[owner + 1])
+        //         chat.members[owner + 1].status = status.owner;
+        // }
         return this.membersRepo.save(membre);
     }
 
