@@ -74,11 +74,26 @@ export class ChatService {
         this.membersRepo.save(tomute);
     }
 
+    async unMute(data: {channel: string, target: string, sender: string})
+    {
+        const chat = await this.chatRepository.findOne({where:{name: data.channel}});
+        const tomute = await this.getMember(chat, data.target);
+        const send = await this.getMember(chat, data.sender);
+        tomute.mute = false;
+        this.membersRepo.save(tomute);
+    }
+
     async Quit(data: {channel: string, login: string})
     {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}});
         const membre = await this.getMember(chat, data.login);
         membre.quit_status = quit_status.quit;
+        if (membre.status == status.owner)
+        {
+            const owner = chat.members.indexOf(membre);
+            if (chat.members[owner + 1])
+                chat.members[owner + 1].status = status.owner;
+        }
         return this.membersRepo.save(membre);
     }
 

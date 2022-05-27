@@ -67,6 +67,11 @@ import { subscribeOn } from 'rxjs';
 		catch (error) {console.log(error);}
 	}
 
+	async wait_mute(data: {channel: string, target: string, sender: string})
+	{
+
+	}
+
 	@SubscribeMessage('MUTE')
 	async mute(
 		@MessageBody() data: {channel: string, target: string, sender: string},
@@ -75,12 +80,7 @@ import { subscribeOn } from 'rxjs';
 	{
 		try {
 			await this.chatService.Mute(data);
-			const ret = await this.chatService.memberInChannel(data.channel);
-			this.io.to(data.channel).emit('LIST_NAME', 
-			{
-				channel: data.channel,
-				list: ret
-			});
+			await new Promise(() => setTimeout(() => {this.chatService.unMute(data)}, 5000));
 		}
 		catch (e) {console.log(e);}
 	}
