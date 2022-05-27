@@ -20,6 +20,8 @@ une partie de Pong.
 -8  • Grâce à l’interface de chat, l’utilisateur doit pouvoir accéder aux profils d’autres
 joueurs.
 
+-9 Le propriétaire du channel peut définir un mot de passe requis pour accéder
+au channel, le modifier, et le retirer.
 
 --------------------------------------------
 Pour Pierre : 
@@ -36,7 +38,6 @@ envoyés par les comptes qu’il aura bloqués. / vendredi fait par Pierre et el
 Grâce à l’interface de chat, l’utilisateur doit pouvoir en inviter d’autres à faire
 une partie de Pong.
 
-Le propriétaire du channel peut définir un mot de passe requis pour accéder
-au channel, le modifier, et le retirer.
+
 
 ----------------------------------------------

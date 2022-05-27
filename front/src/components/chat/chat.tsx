@@ -7,6 +7,7 @@ import loupe from "../../images/loupe.png";
 import buttonsubmit from "../../images/submitChat2.png";
 import directmessage from "../../images/directChat.png";
 import addgroup from "../../images/add-group.png";
+import engrenage from "../../images/engrenage.png";
 import Popup from 'reactjs-popup';
 import { Server } from "socket.io";
 import { io } from "socket.io-client";
@@ -86,6 +87,48 @@ function ButtonCreateCanal(){
              </div>
          </>
      );
+}
+
+function MenuSettings() {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    return (
+        <div>
+        <Button
+            id="basic-button"
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick}
+            sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+        >
+            <img
+                id="buttonSettings"
+                src={engrenage} 
+                alt="settings" />
+        </Button>
+        <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+            'aria-labelledby': 'basic-button',
+            }}
+        >
+            <MenuItem onClick={handleClose}>Modifier le mot de passe</MenuItem>
+            <MenuItem onClick={handleClose}>Retirer le mot de passe</MenuItem>
+            <MenuItem onClick={handleClose}>Quitter le channel</MenuItem>
+        </Menu>
+        </div>
+    );
 }
 
 function CreatePopupChannel() {
@@ -235,6 +278,7 @@ function Bodychat() {
                         <CreatePopupChannel/>
                         {/* <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button> */}
                         <CreatePopupInviteUser/>
+                        <MenuSettings />
 
 
 
@@ -307,32 +351,20 @@ function Channel() {
         });
     }, []);
 
-
-
-
     return (
         <>
             <div className="Allbodychannel">
                 <div className="headerChatchannel">
-
                     <h1 id="h1channel"> Channel</h1>
-
                 </div>
-
                 <div className="centerChat">
 
                     {arrayChannelName.map((item) => {
                         return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  item); global_channel = item; console.log(global_channel);}}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
-
                     })}
-
-
                 </div>
                 <div className="footerChatchannel">
-
-
                 </div>
-
             </div>
 
         </>
@@ -368,7 +400,7 @@ function bannir() {
     
 }
 
-function Menu_Membre(props: {item: {login: string, status: number}}) {
+function MenuMembre(props: {item: {login: string, status: number}}) {
     
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -397,7 +429,6 @@ function Menu_Membre(props: {item: {login: string, status: number}}) {
         <MenuItem onClick={() => handleClose(1, props.item.login)}>Profil</MenuItem> 
         <MenuItem onClick={() => handleClose(2, props.item.login)}>Inviter a jouer</MenuItem> 
         <MenuItem onClick={() => handleClose(3, props.item.login)}>Envoyer un message</MenuItem>
-       
         <MenuItem onClick={() => handleClose(4, props.item.login)}>Promouvoir en admin</MenuItem>
         <MenuItem onClick={() => handleClose(5, props.item.login)}>Mute</MenuItem>
         <MenuItem onClick={() => handleClose(6, props.item.login)}>Bloquer</MenuItem>
@@ -412,8 +443,6 @@ function Menu_Membre(props: {item: {login: string, status: number}}) {
         <MenuItem onClick={() => handleClose(1, props.item.login)}>Profil</MenuItem> 
         <MenuItem onClick={() => handleClose(2, props.item.login)}>Inviter a jouer</MenuItem> 
         <MenuItem onClick={() => handleClose(3, props.item.login)}>Envoyer un message</MenuItem>
-       
-        
         <MenuItem onClick={() => handleClose(5, props.item.login)}>Mute</MenuItem>
         <MenuItem onClick={() => handleClose(6, props.item.login)}>Bloquer</MenuItem>
         <MenuItem onClick={() => handleClose(7, props.item.login)}>Bannir</MenuItem>
@@ -455,9 +484,7 @@ function Menu_Membre(props: {item: {login: string, status: number}}) {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        style={{
-            padding: "0.01px",
-        }}
+        sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
       >
         
         {/* <h1 className="personneDansChannelOwner"> {props.item.login}  </h1> */}
@@ -531,7 +558,7 @@ function ListChannel() {
                 {/* <Menu_Membre/> */}
                 {arraylistName.map((item) => {
                     
-                    return <Menu_Membre item={item}/>
+                    return <MenuMembre item={item}/>
                 })}
 
                 </div>
