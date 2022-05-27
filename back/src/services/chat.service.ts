@@ -4,7 +4,7 @@ import { ChatEntity, chat_status } from "../entities/chat.entity";
 import { AddMemberDTO, ChatDTO } from "../models/chat.model";
 import { createQueryBuilder, EntityManager, MetadataAlreadyExistsError, Repository } from "typeorm";
 import { MsgEntity } from "../entities/msg.entity";
-import { MemberEntity } from "../entities/member.entity";
+import { MemberEntity, quit_status } from "../entities/member.entity";
 import { MsgDTO } from "../models/chat.model";
 import { UserEntity } from "../entities/user.entity";
 import { getgroups } from "process";
@@ -72,6 +72,14 @@ export class ChatService {
         this.membersRepo.save(tomute);
     }
 
+    async Quit(data: {channel: string, login: string})
+    {
+        const chat = await this.chatRepository.findOne({where:{name: data.channel}});
+        const membre = await this.getMember(chat, data.login);
+        membre.quit_status = quit_status.quit;
+        return this.membersRepo.save(membre);
+    }
+
     async addMsg(data: MsgDTO){
         const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["messages"]});
         const user = await this.userRepo.findOne({where: {login: data.login}});
@@ -91,7 +99,8 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({select: ["id"], where: {name: name}, relations: ['members', 'members.user']});
         const tmp: {login: string, status: number}[] = [];
         chat.members.forEach((element) => {
-            tmp.push({login: element.user.login, status: element.status});
+            if (element.quit_status == quit_status.none)
+                tmp.push({login: element.user.login, status: element.status});
         })
         return tmp;
     }

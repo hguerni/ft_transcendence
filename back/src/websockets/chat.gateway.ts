@@ -85,6 +85,23 @@ import { subscribeOn } from 'rxjs';
 		catch (e) {console.log(e);}
 	}
 
+	@SubscribeMessage('QUIT_CHAN')
+	async quitChan(
+		@MessageBody() data: {channel: string, login: string},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		await this.chatService.Quit(data);
+		this.io.in(data.login).socketsLeave(data.channel);
+		this.getchannelname(client, data.login);
+		const ret = await this.chatService.memberInChannel(data.channel);
+		this.io.to(data.channel).emit('LIST_NAME', 
+		{
+			channel: data.channel,
+			list: ret
+		});
+	}
+
 	@SubscribeMessage('CHANGE_STATUS')
 	async statusChan(
 		@MessageBody() data: {channel: string, target: string, sender: string, status: number},

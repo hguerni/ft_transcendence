@@ -14,6 +14,12 @@ import {  BaseEntity,
   import { UserEntity } from './user.entity';
   import { ChatEntity } from './chat.entity';
 
+  export enum quit_status {
+    none,
+    quit,
+    ban
+  }
+
   @Entity('member')
   export class MemberEntity extends BaseEntity {
   
@@ -32,4 +38,8 @@ import {  BaseEntity,
 
   @ManyToOne(() => ChatEntity)
   chat: ChatEntity;
+
+  @Column({default: quit_status.none})
+  @IsBoolean()
+  quit_status: number;
   }
