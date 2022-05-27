@@ -169,9 +169,14 @@ export class ChatService {
         if (!user)
             throw new NotFoundException();
         const same = await this.membersRepo.findOne({where: {user: user, chat: chat}});
-        if (same)
-            throw new NotFoundException();
-        const member = this.membersRepo.create({user: user, status: data.status, mute: false, chat: chat});
+        let member: MemberEntity;
+        if (same && same.quit_status > quit_status.none)
+        {
+            same.quit_status = quit_status.none;
+            member = same;
+        }
+        else
+            member = this.membersRepo.create({user: user, status: data.status, mute: false, chat: chat});
         return await this.membersRepo.save(member);
     }
     
