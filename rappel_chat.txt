@@ -29,8 +29,6 @@ Pour Pierre :
  L’utilisateur doit pouvoir en bloquer d’autres. Ainsi, il ne verra plus les messages
 envoyés par les comptes qu’il aura bloqués. / vendredi fait par Pierre et elias
 
- Pouvoir quitter un channel  / vendredi fait par Pierre et elias
-
  ---------------------------------------------
 
  Pour leo:

@@ -19,7 +19,7 @@ import Button from '@mui/material/Button';
 import UserService from '../../services/user.service'
 
 //import { getchannel } from "../../../../shares/models"
-const login = UserService.getUsername(); // à récupérer
+const login: string = UserService.getUsername(); // à récupérer
 
 enum status {
     owner,
@@ -95,9 +95,34 @@ function MenuSettings() {
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = () => {
+
+    const quit_serveur = () => {
+        socket.emit("QUIT_CHAN", {channel: global_channel, login: login});
+    }
+
+    const handleClose = (ind: number) => {
         setAnchorEl(null);
+        if (ind == 2)
+            quit_serveur();
     };
+
+    
+
+    let menuEngrenage;
+    let status_user = 0;
+    if (status_user === 0) {
+        menuEngrenage = (
+        <>
+            <MenuItem onClick={() => handleClose(0)}>Modifier le mot de passe</MenuItem>
+            <MenuItem onClick={() => handleClose(1)}>Retirer le mot de passe</MenuItem>
+            <MenuItem onClick={() => handleClose(2)}>Quitter le channel</MenuItem>
+        </>)
+    }
+    else {
+        menuEngrenage = (
+            <MenuItem onClick={() => handleClose(2)}>Quitter le channel</MenuItem>
+        )
+    }
 
     return (
         <div>
@@ -123,9 +148,7 @@ function MenuSettings() {
             'aria-labelledby': 'basic-button',
             }}
         >
-            <MenuItem onClick={handleClose}>Modifier le mot de passe</MenuItem>
-            <MenuItem onClick={handleClose}>Retirer le mot de passe</MenuItem>
-            <MenuItem onClick={handleClose}>Quitter le channel</MenuItem>
+            {menuEngrenage}
         </Menu>
         </div>
     );
