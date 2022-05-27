@@ -41,10 +41,11 @@ export class ChatService {
     async getPvmsg(login: string)
     {
         const user = await this.userRepo.findOne({where: {login: login}});
-        const channels = await this.membersRepo.find({select: ['id'], where: {user: user}, relations: ['chat']});
+        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user}, relations: ['chat']});
 
         const tmp: string[] = [];
         channels.forEach((element) => {
+            console.log(element.quit_status)
             if (element.quit_status == quit_status.none)
                 tmp.push(element.chat.name);
         })
