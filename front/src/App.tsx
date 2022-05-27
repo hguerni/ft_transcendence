@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, useLocation } from "react-router-dom";
 import Login from "./components/login.component";
 // import LoginSuccess from "./components/loginsuccess.component";
 import Profile from './components/profile/profile';
@@ -13,9 +13,10 @@ import ActivateTwoFa from "./components/2fa/activate2fa.component";
 import { GetUserData } from "./services/user.service";
 import UserService from "./services/user.service";
 import Header from "./components/header/Header";
+import GameInvitation from "./components/game/GameInvitation";
 
 function Routes() {
-  if (UserService.isUserConnected())
+  if (UserService.isUserConnected() || true)
     return (
       <BrowserRouter>
         <main>
@@ -29,6 +30,7 @@ function Routes() {
           <Route exact path={"/game"} component={Game} />
           <Route exact path={"/game/training"} component={Game} />
           <Route exact path={"/game/fighting"} component={Game} />
+          <Route path={"/game/join/:game"} component={GameInvitation} />
           <Route exact path={"/chat"} component={Chat} />
         </main>
       </BrowserRouter>

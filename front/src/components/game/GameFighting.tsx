@@ -56,7 +56,6 @@ export default function GameFighting() {
       <div className="gameArea">
         <button className="gameButtonStart" onClick={() => GameStart(socket)}>START GAME</button>
       </div>
-
     </div>
   );
 }
