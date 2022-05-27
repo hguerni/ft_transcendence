@@ -45,7 +45,8 @@ export class ChatService {
 
         const tmp: string[] = [];
         channels.forEach((element) => {
-            tmp.push(element.chat.name);
+            if (element.quit_status == quit_status.none)
+                tmp.push(element.chat.name);
         })
         return tmp;
     }
@@ -85,8 +86,8 @@ export class ChatService {
         const user = await this.userRepo.findOne({where: {login: data.login}});
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}, relations: ['chat', 'chat.messages']});
         console.log(member.mute);
-        if (member.mute)
-            throw Error("is ban");
+        if (member.mute || member.quit_status > quit_status.none)
+            throw Error("is mute, quit or ban");
         const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
         chat.messages.push(message);
         await this.chatRepository.save(chat).catch((e) => console.log(e));
