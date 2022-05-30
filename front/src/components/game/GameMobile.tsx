@@ -2,10 +2,12 @@ import { Socket } from "socket.io-client";
 import Sketch from "react-p5";
 import p5Types from "p5";
 import useWindowDimensions from "../../services/window.service";
+import "./GameMobile.css"
 
 export class PongProps {
-	width: number = 700;
-	height: number = 500;
+  windowDim = useWindowDimensions();
+	width: number = this.windowDim.width;
+	height: number = 600;
 	score_l: number = 0;
 	score_r: number = 0;
 	ball_x: number = this.width / 2;
@@ -21,7 +23,6 @@ export class PongProps {
 function Gamezone(props: {client: Socket}) {
 
 	let pong = new PongProps();
-  const windowDim = useWindowDimensions();
 
 	// use parent to render the canvas in this ref
 	// (without that p5 will render the canvas outside of your component)
@@ -46,28 +47,15 @@ function Gamezone(props: {client: Socket}) {
 		p5.textAlign('center');
 		p5.text(pong.score_l, pong.width / 4, pong.height / 3);
 		p5.text(pong.score_r, (pong.width / 4) * 3, pong.height / 3);
-
-		if (p5.keyIsDown(0))
-			props.client.emit("MOVE_PADDLE_UP");
-		else if (p5.keyIsDown(0))
-			props.client.emit("MOVE_PADDLE_DOWN");
 	};
 
 	return <Sketch setup={setup} draw={draw}/>;
 };
 
 export function GameMobile(props: {client: Socket}) {
-
-  function movePaddleUp() {
-    props.client.emit("MOVE_PADDLE_UP");
-  }
-
-  function movePaddleDown() {
-    props.client.emit("MOVE_PADDLE_DOWN");
-  }
-
   return (
-    <div>
+    <div className="GameArea">
+      <Gamezone client={props.client}/>
     </div>
   );
 }

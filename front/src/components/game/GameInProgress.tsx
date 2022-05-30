@@ -34,20 +34,20 @@ export function GameInProgress() {
   if (room != undefined) {
     return (
       <div>
-        Game <span style={{color: 'red'}}>{room?.name}</span>
+        <h4>Game <span style={{color: 'red'}}>{room?.name}</span></h4>
         <br></br>
         <br></br>
         <div className="gridStatsContainer">
-          <div className="gridStatsItem">{room.p1_name}</div>
-          <div className="gridStatsItem">VS</div>
-          <div className="gridStatsItem">{room.p2_name}</div>
-          <div className="gridStatsItem">{room.p1_score}</div>
+          <div className="gridStatsItem"><p>{room.p1_name}</p></div>
+          <div className="gridStatsItem"><p>VS</p></div>
+          <div className="gridStatsItem"><p>{room.p2_name}</p></div>
+          <div className="gridStatsItem"><p>{room.p1_score}</p></div>
           <div className="gridStatsItem"></div>
-          <div className="gridStatsItem">{room?.p2_score}</div>
+          <div className="gridStatsItem"><p>{room?.p2_score}</p></div>
         </div>
         <br></br>
         <div className="gameStatus">
-          <span>Status:</span>
+          <h5>Status:</h5>
           <br></br>
           {msg}
         </div>

@@ -15,6 +15,7 @@ export const socket: Socket = io("ws://localhost:3030/game");
 
 function Game() {
   useEffect(() => {
+    socket.removeListener("ALERT");
     socket.on("ALERT", (message: string) => {
       alert(message);
     });
@@ -24,10 +25,9 @@ function Game() {
   }, []);
 
   return (
-    <>
-        <div className='gameWrap'>
+      <div className='gameWrap'>
           <div className="gameTitle">
-            <span>PONG</span>
+            <h4>PONG</h4>
           </div>
           <GameRules/>
           <BrowserRouter>
@@ -35,7 +35,6 @@ function Game() {
               <Route exact path={"/game/fighting"} component={GameFighting} />
           </BrowserRouter>
         </div>
-    </>
   );
 }
 

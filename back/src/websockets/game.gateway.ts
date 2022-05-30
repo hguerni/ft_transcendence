@@ -162,7 +162,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
       this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
-      this.logger.log("alert!");
       return ;
     }
     this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1);

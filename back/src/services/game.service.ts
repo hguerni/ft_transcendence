@@ -109,13 +109,13 @@ export class GameService {
     if (pong.ball_x >= pong.paddle_l_x + 10 && pong.ball_x < pong.paddle_l_x + 15
       && pong.ball_y > pong.paddle_l_y && pong.ball_y < pong.paddle_l_y + 50)
     {
-      pong.ball_vx *= -1.1;
+      pong.ball_vx *= -1.2;
       pong.ball_vy = genRandomVelocity();
     }
     if (pong.ball_x <= pong.paddle_r_x && pong.ball_x > pong.paddle_r_x - 5
       && pong.ball_y > pong.paddle_r_y && pong.ball_y < pong.paddle_r_y + 50)
     {
-      pong.ball_vx *= -1.1;
+      pong.ball_vx *= -1.2;
       pong.ball_vy = genRandomVelocity();
     }
     pong.ball_x += pong.ball_vx;

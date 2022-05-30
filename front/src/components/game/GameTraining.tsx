@@ -37,8 +37,8 @@ export default function GameTraining() {
     <div>
       <div className="gameArea">
         <GameArea client={socket}/>
-        <button onMouseDown={() => {setMouseDown(true); setUpOrDown("UP")}} onMouseUp={() => setMouseDown(false)}>MOVE UP</button>
-        <button onMouseDown={() => {setMouseDown(true); setUpOrDown("DOWN")}} onMouseUp={() => setMouseDown(false)}>MOVE DOWN</button>
+        {/*<button onMouseDown={() => {setMouseDown(true); setUpOrDown("UP")}} onMouseUp={() => setMouseDown(false)}>MOVE UP</button>
+        <button onMouseDown={() => {setMouseDown(true); setUpOrDown("DOWN")}} onMouseUp={() => setMouseDown(false)}>MOVE DOWN</button>*/}
       </div>
       <div className="gameTrainingButtonsWrap">
         <button className="gameTrainingButton" style={{marginRight: '50px'}} onClick={() => GameStartTraining(socket)}>START TRAINING</button>

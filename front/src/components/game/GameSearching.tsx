@@ -17,9 +17,9 @@ export interface RoomProps {
 
 function CardButton(props: {room: RoomProps}) {
   if (props.room.canJoinGame === true)
-    return (<button className='gameButton' onClick={() => GameJoin(socket, props.room.name)}>JOIN GAME</button>);
+    return (<button className='gameButton' style={{fontSize: '0.7em'}} onClick={() => GameJoin(socket, props.room.name)}><h4>JOIN GAME</h4></button>);
   else
-    return (<button className='gameButton' onClick={() => GameWatch(socket, props.room.name)}>WATCH GAME</button>);
+    return (<button className='gameButton' style={{fontSize: '0.7em'}} onClick={() => GameWatch(socket, props.room.name)}><h4>WATCH GAME</h4></button>);
 }
 
 function GamesCards(props: {room: RoomProps}) {
@@ -27,15 +27,15 @@ function GamesCards(props: {room: RoomProps}) {
     props.room.p2_name = "?"
   return (
     <div className='gameCards'>
-      <div style={{color: 'red'}}>
-        <span>{props.room.name.substring(0, 10)}</span>
+      <div style={{color: '#3498db'}}>
+        <p style={{fontSize: '2em'}}>{props.room.name.substring(0, 10)}</p>
       </div>
       {/*<div style={{marginBottom: '10px'}}>
           <span>{props.room.p1_name}</span>
           <br></br> vs <br></br>
           <span>{props.room.p2_name}</span>
         </div>*/}
-        <div style={{margin: '10px 0px 15px 0px'}}>info</div>
+        <p style={{margin: '10px 0px 15px 0px'}}>info</p>
         <CardButton room={props.room}/>
     </div>
   );
@@ -91,7 +91,7 @@ export function GameSearching() {
 
   return (
     <div>
-        <div style={{color: 'white', textAlign: 'center', marginBottom: '10px'}}>Search game:</div>
+        <div style={{color: 'white', textAlign: 'center', marginBottom: '10px'}}><h4>Search game:</h4></div>
       <GameCards rooms={rooms}/>
       <div style={{margin: 'auto', marginTop: '10px', width: 'fit-content', textAlign: 'center'}}>
         <CreateGamePopUp/>

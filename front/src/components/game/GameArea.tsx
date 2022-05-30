@@ -2,13 +2,15 @@ import Sketch from "react-p5";
 import p5Types from "p5";
 import { Socket } from 'socket.io-client';
 import UserService from "../../services/user.service";
+import useWindowDimensions from "../../services/window.service";
 
 const UP_ARROW = 38;
 const DOWN_ARROW = 40;
 
 export class PongProps {
-	width: number = 700;
-	height: number = 500;
+	windowDim = useWindowDimensions();
+	width: number = this.windowDim.width / 2.2;
+	height: number = this.windowDim.height / 1.6;
 	score_l: number = 0;
 	score_r: number = 0;
 	ball_x: number = this.width / 2;

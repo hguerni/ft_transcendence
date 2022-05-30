@@ -18,7 +18,7 @@ export function CreateGamePopUp() {
 
   return (
     <div>
-      <button className="gameButton" onClick={() => setOpen(true)}>CREATE GAME</button>
+      <button className="gameButton" onClick={() => setOpen(true)}><h4>CREATE GAME</h4></button>
       <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
         <div>Enter a name for your game:</div>
         <input className="input"
@@ -26,7 +26,7 @@ export function CreateGamePopUp() {
           value={gameName}
           onChange={(e) => setGameName(e.target.value)}
         />
-        <button className="gameButton" onClick={() => {GameCreate(socket, gameName); setOpen(false); setGameName(v4().substring(0, 10))}}>SEND</button>
+        <button className="gameButton" onClick={() => {GameCreate(socket, gameName); setOpen(false); setGameName(v4().substring(0, 10))}}><h4>SEND</h4></button>
       </Popup>
     </div>
   );
@@ -54,7 +54,7 @@ export default function GameFighting() {
       </div>
 
       <div className="gameArea">
-        <button className="gameButtonStart" onClick={() => GameStart(socket)}>START GAME</button>
+        <button className="gameButtonStart" onClick={() => GameStart(socket)}><h4>START GAME</h4></button>
       </div>
     </div>
   );
