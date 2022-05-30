@@ -9,6 +9,7 @@ import directmessage from "../../images/directChat.png";
 import addgroup from "../../images/add-group.png";
 import engrenage from "../../images/engrenage.png";
 import join_channel from "../../images/join_channel.png";
+import cadenas from "../../images/cadenas.png";
 import Popup from 'reactjs-popup';
 import { Server } from "socket.io";
 import { io } from "socket.io-client";
@@ -243,20 +244,26 @@ function CreatePopupChannel() {
   }
 
 
-
   function CreatePopupSearchChannel() {
     const [open, setOpen] = useState(false);
     const [serverName, setServerName] = useState<{name: string, status: number}[]>([]);
     const searchChannel = () => {
         socket.emit("ALL_CHAN");
-   }
+    }
+
+    const print_status = (status: number) => {
+        if (status === chat_status.protected)
+            return (
+                <img src={cadenas} alt="cadenas" id="imgcadenas"/>
+            );
+    }
+
 
    socket.on("ALL_CHAN", (data: {name: string, status: number}[]) => {
         console.log(data);
         setServerName(data);
    })
-
-
+   
     return (
       <div>
            <img onClick={() => {setOpen(true); searchChannel();}} 
@@ -279,7 +286,9 @@ function CreatePopupChannel() {
             <div>
                 <h1 
                 className="allServers"
-                onClick={() => {console.log('maxizgeg')}}> {item.name} </h1>
+                onClick={() => {console.log('maxizgeg')}}>
+                {item.name}
+                <span>{print_status(item.status)}</span></h1>
             </div>
             );
             })}
