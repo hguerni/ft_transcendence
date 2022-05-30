@@ -8,6 +8,7 @@ import buttonsubmit from "../../images/submitChat2.png";
 import directmessage from "../../images/directChat.png";
 import addgroup from "../../images/add-group.png";
 import engrenage from "../../images/engrenage.png";
+import join_channel from "../../images/join_channel.png";
 import Popup from 'reactjs-popup';
 import { Server } from "socket.io";
 import { io } from "socket.io-client";
@@ -213,12 +214,12 @@ function CreatePopupChannel() {
   function CreatePopupInviteUser() {
     const [InvitUserName, setChannelName] = useState("");
     const [open, setOpen] = useState(false);
+    
 
    function sendChannelName ()
    {
         socket.emit("addmember",  {channel: global_channel, login: InvitUserName});
    }
-
 
     return (
       <div>
@@ -234,6 +235,55 @@ function CreatePopupChannel() {
           />
           <button className="gameButton" onClick={() => { setOpen(false); sendChannelName(); setChannelName("")}}>SEND</button>
         </Popup>
+
+      </div>
+
+    );
+  }
+
+
+
+  function CreatePopupSearchChannel() {
+    const [open, setOpen] = useState(false);
+    const [serverName, setServerName] = useState<{name: string, status: number}[]>([]);
+    const searchChannel = () => {
+        socket.emit("ALL_CHAN");
+   }
+
+   socket.on("ALL_CHAN", (data: {name: string, status: number}[]) => {
+        console.log(data);
+        setServerName(data);
+   })
+
+
+    return (
+      <div>
+           <img onClick={() => {setOpen(true); searchChannel();}} 
+            src={join_channel}
+            alt="account"
+            id="imgJoinChannel"
+            />
+
+        <Popup className="testPopup" open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+          {/* <div>Login de la personne a ajouter dans le channel</div>
+          <input className="input"
+            type="text"
+            value={InvitUserName}
+
+            onChange={(e) => setChannelName(e.target.value)}
+          /> */}
+          <div>
+          {serverName.map((item) => {
+            return (
+            <div>
+                <h1 
+                className="allServers"
+                onClick={() => {console.log('maxizgeg')}}> {item.name} </h1>
+            </div>
+            );
+            })}
+          </div>
+          </Popup>
 
       </div>
 
@@ -313,6 +363,11 @@ function Bodychat() {
 
                 <div className="centerChat">
                     {arrayChat.map((item) => {
+                        // if (item.name == "psemsari" && login == "ellarbi")
+                        //     return(
+                        //         <>
+                        //         </>
+                        //     );
                         return (
                             <div >
                                 <h1 className="inputName"> {item.name} </h1>
@@ -351,6 +406,8 @@ function Bodychat() {
 }
 
 
+
+
 function Channel() {
 
     const [channelName, setChannelName] = useState("");
@@ -374,12 +431,15 @@ function Channel() {
         });
     }, []);
 
+
     return (
         <>
             <div className="Allbodychannel">
-                <div className="headerChatchannel">
-                    <h1 id="h1channel"> Channel</h1>
-                </div>
+                <div className="divJoinChannel">
+                    <CreatePopupSearchChannel/>
+                    <div className="headerChatchannel">
+                        <h1 id="h1channel"> Channel</h1>
+                    </div>                   
                 <div className="centerChat">
 
                     {arrayChannelName.map((item) => {
@@ -389,7 +449,7 @@ function Channel() {
                 <div className="footerChatchannel">
                 </div>
             </div>
-
+            </div>
         </>
     );
 }
@@ -604,7 +664,7 @@ function Chat() {
     // remplacer par votre pseudo
     return (
         <>
-            <div className="rayaneleboloss">
+            <div className="rayaneleboloss">    
                 <Channel/>
                 {/* <ButtonCreateCanal/> */}
                 <Bodychat/>
