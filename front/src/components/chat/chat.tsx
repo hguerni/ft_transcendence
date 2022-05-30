@@ -156,13 +156,13 @@ function MenuSettings() {
 
 function CreatePopupChannel() {
     const [channelName, setChannelName] = useState("");
-    const [channelAttribute, setChannelAttribute] = useState<string>("public");
+    const [channelAttribute, setChannelAttribute] = useState<number>(chat_status.public);
     const [channelPassword, setChannelPassword] = useState<string>("");
     const [open, setOpen] = useState(false);
 
    function sendChannelName ()
    {
-        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login, status: chat_status.public, password: ""});
+        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login, status: channelAttribute, password: channelPassword});
    }
 
     return (
@@ -179,19 +179,19 @@ function CreatePopupChannel() {
 
           <div className="checkBoxes">
             <input type="checkbox" id="public" name="public"
-                onChange={(e) => {setChannelAttribute("public")}} checked={channelAttribute === "public"}/>
+                onChange={(e) => {setChannelAttribute(chat_status.public)}} checked={channelAttribute === chat_status.public}/>
             <label htmlFor="scales">Public</label>
 
             <input type="checkbox" id="private" name="private"
-                onChange={(e) => {setChannelAttribute("private")}} checked={channelAttribute === "private"}/>
+                onChange={(e) => {setChannelAttribute(chat_status.private)}} checked={channelAttribute === chat_status.private}/>
             <label htmlFor="horns">Private</label>
 
             <input type="checkbox" id="protected" name="protected"
-                onChange={(e) => {setChannelAttribute("protected")}} checked={channelAttribute === "protected"}/>
+                onChange={(e) => {setChannelAttribute(chat_status.protected)}} checked={channelAttribute === chat_status.protected}/>
             <label htmlFor="horns">Protected</label>
 
             <div>
-              {channelAttribute === "protected" &&
+              {channelAttribute === chat_status.protected &&
                 <input className="input"
                   type="text"
                   value={channelPassword}
