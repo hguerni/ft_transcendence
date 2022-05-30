@@ -164,7 +164,8 @@ function CreatePopupChannel() {
    function sendChannelName ()
    {
         socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login, status: channelAttribute, password: channelPassword});
-   }
+        setChannelPassword("");
+    }
 
     return (
       <div>
