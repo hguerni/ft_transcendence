@@ -13,7 +13,8 @@ import { subscribeOn } from 'rxjs';
   import { Server, Socket } from 'socket.io'
   import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
   import { ChatService, status } from '../services/chat.service';
-  import { chat_status } from 'src/entities/chat.entity';
+  import { ChatEntity, chat_status } from '../entities/chat.entity';
+import { randomUUID } from 'crypto';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
@@ -103,7 +104,7 @@ import { subscribeOn } from 'rxjs';
 	}
 
 	@SubscribeMessage('CHANGE_STATUS')
-	async statusChan(
+	async statusMember(
 		@MessageBody() data: {channel: string, target: string, sender: string, status: number},
 		@ConnectedSocket() client: Socket
 	)
@@ -116,6 +117,18 @@ import { subscribeOn } from 'rxjs';
 				channel: data.channel,
 				list: ret
 			});
+		}
+		catch (e) { console.log(e) }
+	}
+
+	@SubscribeMessage('CHANGE_STATUS_CHAN')
+	async statusChan(
+		@MessageBody() data: {channel: string, login: string, status: number, password: string},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		try {
+			await this.chatService.changeStatusChan(data);
 		}
 		catch (e) { console.log(e) }
 	}
@@ -188,7 +201,8 @@ import { subscribeOn } from 'rxjs';
 			client.emit('CHANNEL_CREATED', val);
 		})
 	}
-		
+
+
 	@SubscribeMessage('CREATE_CHANNEL')
 	async handleCreateChannel(
 		@ConnectedSocket() client: Socket, 
@@ -211,6 +225,27 @@ import { subscribeOn } from 'rxjs';
 		}
 
 		// le serveur se connect sur le channel1 et retour le message
+	}
+	
+	@SubscribeMessage('CREATE_MP_CHAN')
+	async handleMpChan(
+		@ConnectedSocket() client: Socket,
+		@MessageBody() mp: {login1: string, login2: string}
+	)
+	{
+		const name = 'mp' + randomUUID;
+		this.handleCreateChannel(client, {channel: name, login: mp.login1, status: chat_status.private, password: ''});
+		this.addmember({channel: name, login: mp.login2, status: status.default}, client);
+		this .chatService.defineMp(name);
+	}
+
+	@SubscribeMessage('ALL_CHAN')
+	async handleAllChan(
+		@ConnectedSocket() client: Socket
+	)
+	{
+		const channels = await this.chatService.getAccessibleChan();
+		client.emit('ALL_CHAN', channels);
 	}
 
     @SubscribeMessage('disconnect')

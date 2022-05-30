@@ -2,7 +2,7 @@ import { All, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 import { ChatEntity, chat_status } from "../entities/chat.entity";
 import { AddMemberDTO, ChatDTO } from "../models/chat.model";
-import { createQueryBuilder, EntityManager, MetadataAlreadyExistsError, Repository } from "typeorm";
+import { createQueryBuilder, EntityManager, MetadataAlreadyExistsError, Not, Repository } from "typeorm";
 import { MsgEntity } from "../entities/msg.entity";
 import { MemberEntity, quit_status } from "../entities/member.entity";
 import { MsgDTO } from "../models/chat.model";
@@ -10,6 +10,7 @@ import { UserEntity } from "../entities/user.entity";
 import { getgroups } from "process";
 import { getHeapCodeStatistics } from "v8";
 import { Console, error } from "console";
+import { LoginDTO } from "src/models/user.model";
 
 export enum status {
     owner,
@@ -59,8 +60,15 @@ export class ChatService {
 
     async addOne(data: ChatDTO){
         console.log(data);
-        const chat = this.chatRepository.create({...data, messages: [], members: []});
+        const chat = this.chatRepository.create({...data, messages: [], members: [], mp_message: false});
         return await this.chatRepository.save(chat);
+    }
+
+    async defineMp(channel: string)
+    {
+        const chat = await this.chatRepository.findOne({where:{name: channel}});
+        chat.mp_message = true;
+        this.chatRepository.save(chat);
     }
 
     async Mute(data: {channel: string, target: string, sender: string})
@@ -88,12 +96,16 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}});
         const membre = await this.getMember(chat, data.login);
         membre.quit_status = quit_status.quit;
-        // if (membre.status == status.owner)
-        // {
-        //     const owner = chat.members.indexOf(membre);
-        //     if (chat.members[owner + 1])
-        //         chat.members[owner + 1].status = status.owner;
-        // }
+        if (membre.status == status.owner)
+        {
+            try {
+                const member = await this.membersRepo.findOne({where: {chat: chat, status: Not(status.owner), quit_status: 0}, relations: ['user']});
+                member.status = status.owner;
+                this.changeStatus({channel: data.channel, target: member.user.login, sender: data.login, status: 0});
+                console.log(member.user);
+            }
+            catch (e) { console.log(e);}
+        }
         return this.membersRepo.save(membre);
     }
 
@@ -137,7 +149,7 @@ export class ChatService {
         const chat = await this.chatRepository.find({
             select: ['name', "status"],
             where: [{status: chat_status.public},
-            {status: chat_status.private}]
+            {status: chat_status.protected}]
         });
         return chat;
     }
@@ -161,7 +173,24 @@ export class ChatService {
         if (sender.status >= data.status && (data.status == status.ban && sender.status == status.default))
             throw new Error("you cant up this user");
         target.status = data.status;
+        if (sender.status == status.owner && data.status == status.owner)
+        {
+            sender.status = status.default;
+            this.membersRepo.save(sender);
+        }
         this.membersRepo.save(target);
+    }
+
+    async changeStatusChan(data: {channel: string, login: string, status: number, password: string})
+    {
+        const chat = await this.getChat(data.channel);
+        const member = await this.getMember(chat, data.login);
+        if (member.status != status.owner)
+            throw Error('not privilige');
+        chat.status = data.status;
+        if (chat.status == chat_status.protected)
+            chat.password = data.password;
+        this.chatRepository.save(chat);
     }
 
     async joinChan(data: {channel: string, login: string, password: string})

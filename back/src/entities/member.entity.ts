@@ -10,7 +10,7 @@ import {  BaseEntity,
 	Entity,
     OneToOne,
     PrimaryColumn} from 'typeorm';
-  import { IsBoolean, IsEmail, IsString } from 'class-validator';
+  import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
   import { UserEntity } from './user.entity';
   import { ChatEntity } from './chat.entity';
 
@@ -40,6 +40,6 @@ import {  BaseEntity,
   chat: ChatEntity;
 
   @Column({default: quit_status.none})
-  @IsBoolean()
+  @IsNumber()
   quit_status: number;
   }

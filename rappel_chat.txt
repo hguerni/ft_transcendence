@@ -4,9 +4,7 @@ ou protege
 2- cree direct message
 
 3- • L’utilisateur doit pouvoir en bloquer d’autres. Ainsi, il ne verra plus les messages
-envoyés par les comptes qu’il aura bloqués. / vendredi fait par Pierre
-
--4 Pouvoir quitter un channel  / vendredi fait par Pierre 
+envoyés par les comptes qu’il aura bloqués. / vendredi fait par Pierre 
 
 -5◦ Le propriétaire du channel peut définir un mot de passe requis pour accéder
 au channel, le modifier, et le retirer.
@@ -19,9 +17,6 @@ une partie de Pong.
 
 -8  • Grâce à l’interface de chat, l’utilisateur doit pouvoir accéder aux profils d’autres
 joueurs.
-
--9 Le propriétaire du channel peut définir un mot de passe requis pour accéder
-au channel, le modifier, et le retirer.
 
 --------------------------------------------
 Pour Pierre : 

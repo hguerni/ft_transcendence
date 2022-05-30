@@ -47,4 +47,7 @@ import { MsgEntity } from './msg.entity';
   @OneToMany(() => MemberEntity, (member) => member.chat)
   members: MemberEntity[];
 
+  @Column({default: false})
+  @IsBoolean()
+  mp_message: boolean;
   }
