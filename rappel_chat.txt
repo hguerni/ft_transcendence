@@ -4,7 +4,7 @@ ou protege
 2- cree direct message
 
 3- • L’utilisateur doit pouvoir en bloquer d’autres. Ainsi, il ne verra plus les messages
-envoyés par les comptes qu’il aura bloqués. / vendredi fait par Pierre 
+envoyés par les comptes qu’il aura bloqués. / vendredi fait par Pierre
 
 -5◦ Le propriétaire du channel peut définir un mot de passe requis pour accéder
 au channel, le modifier, et le retirer.
