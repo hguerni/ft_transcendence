@@ -231,8 +231,10 @@ export class ChatService {
             same.quit_status = quit_status.none;
             member = same;
         }
-        else
+        else if (!same)
             member = this.membersRepo.create({user: user, status: data.status, mute: false, chat: chat});
+        else
+            throw new Error("cnat join with same user");
         return await this.membersRepo.save(member);
     }
     
