@@ -34,7 +34,7 @@ export function GameInProgress() {
   if (room != undefined) {
     return (
       <div>
-        <h4>Game <span style={{color: 'red'}}>{room?.name}</span></h4>
+        <h4>Game <span style={{color: '#e74c3c'}}>{room?.name}</span></h4>
         <br></br>
         <br></br>
         <div className="gridStatsContainer">

@@ -28,10 +28,11 @@ p {
 button {
   font-size: 0.625vw;
   font-family: 'CrickxRegular';
+  border-radius: 0.8em;
 }
 
 button:hover {
-  opacity: 0.8;
+  background-color: #8e44ad;
 }
 
 .gameWrap {
@@ -39,7 +40,7 @@ button:hover {
   margin-left: 15%;
   margin-right: 15%;
   height: 60em;
-  border: solid 8px white;
+  border: solid 0.8em white;
   border-radius: 10em;
   position: relative;
   display: flex;
@@ -59,10 +60,10 @@ button:hover {
   position: absolute;
   background-color: #450FBF;
   color: white;
-  padding: 0px 10px 0px 10px;
-  border-radius: 8px;
+  padding: 0 1em 0 1em;
+  border-radius: 0.8em;
   width: fit-content;
-  border: solid 5px white;
+  border: solid 0.5em white;
   margin-left: auto;
   margin-right: auto;
   height: 4em;
@@ -73,12 +74,12 @@ button:hover {
 }
 
 .tabButton {
-  margin: 10px 15px 10px 15px;
-  padding: 8px;
-  border-radius: 8px;
+  margin: 1em 1.5em 1em 1.5em;
+  padding: 0.8em;
+  border-radius: 0.8em;
   border: none;
   color: white;
-  padding: 10px 32px;
+  padding: 1em 32em;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -89,36 +90,42 @@ button:hover {
   background-color: rgba(0, 0, 0, .2);
 }
 
+.tabButton:hover {
+  background-color: rgba(0, 0, 0, .2);
+}
+
 .tabButtonActive {
-  border: solid 2px white;
+  border: solid 0.2em white;
 }
 
 .gameButton {
   font-size: 0.8em;
   padding: 1.0em;
   color: white;
-  border-radius: 8px;
+  border-radius: 0.8em;
   background-color: #450FBF;
   border: solid 0.5em white;
 }
 
 .gameCards {
-  border-radius: 8px;
-  margin: 15px auto 0px auto;
-  padding: 15px 10px 15px 10px ;
+  border-radius: 0.8em;
+  margin: 1.5em auto 0 auto;
+  background-color: #450FBF;
+  padding: 1.5em 1em 1.5em 1em ;
   width: 15em;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: solid 1px white;
+  border: solid 0.1em white;
   color: white;
   text-align: center;
 }
 
 .gameCardsBox {
-  margin-top: 10px;
+  margin-top: 2em;
+  margin-bottom: 1.5em;
   height: 35em;
   overflow: auto;
-  border: solid 2px white;
-  border-radius: 8px;
+  border: solid 0.3em white;
+  border-radius: 0.8em;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .gameCardsBox::-webkit-scrollbar {
@@ -129,15 +136,15 @@ button:hover {
 }
 
 .searchGame {
-  border: solid 5px white;
+  border: solid 0.5em white;
   margin: auto;
-  top: 0px;
-  bottom: 0px;
+  top: 0;
+  bottom: 0;
   left: -10.6em;
   position: absolute;
-  border-radius: 8px;
+  border-radius: 0.8em;
   background-color: #450FBF;
-  padding: 15px 15px 15px 15px;
+  padding: 1.5em 1.5em 1.5em 1.5em;
   width: 20em;
   height: fit-content;
 }
@@ -145,7 +152,7 @@ button:hover {
 .popup-content {
   margin: auto;
   padding: 2em;
-  border-radius: 8px;
+  border-radius: 0.8em;
   background-color: #450FBF;
   color: white;
 }
@@ -155,8 +162,10 @@ button:hover {
 }
 
 .input {
-  border-radius: 5px;
+  font-size: 1vw;
+  border-radius: 0.5em;
   border: none;
+  width: 12em;
 }
 
 .gameInProgress {
@@ -167,8 +176,8 @@ button:hover {
   top: 0;
   bottom: 0;
   right: -13.4em;
-  border: solid 5px white;
-  border-radius: 8px;
+  border: solid 0.5em white;
+  border-radius: 0.8em;
   background-color: #450FBF;
   padding: 1.5em;
   width: 22em;
@@ -185,13 +194,13 @@ button:hover {
 .gameButtonStart {
   font-size: 0.625vw;
   position: absolute;
-  bottom: -3.2em;
+  bottom: -3.4em;
   color: white;
   background-color: #450FBF;
-  border: solid 5px white;
-  border-radius: 8px;
+  border: solid 0.5em white;
+  border-radius: 0.8em;
   padding: 1.5em;
-  height: 5.8em;
+  height: 6em;
 }
 
 .gameTrainingButtonsWrap {
@@ -210,7 +219,7 @@ button:hover {
   font-size: 0.625vw;
   color: white;
   background-color: #450FBF;
-  border: solid 5px white;
+  border: solid 0.5em white;
   border-radius: 0.8em;
   padding: 1.5em;
   width: 18.4em;
