@@ -20,7 +20,7 @@ import Button from '@mui/material/Button';
 import UserService from '../../services/user.service'
 
 //import { getchannel } from "../../../../shares/models"
-const login: string = UserService.getUsername(); // à récupérer
+const userId: number = UserService.getUserId(); // à récupérer
 
 enum status {
     owner,
@@ -37,7 +37,7 @@ enum chat_status {
   }
 
 const socket = io("ws://localhost:3030/chat");
-socket.emit('ready', login);
+socket.emit('ready', userId);
 
 let global_channel = "";
 let global_name_click = "";
@@ -60,6 +60,7 @@ class info {
 // }
 
 interface message {
+    id: number;
     name: string;
     message: string;
 }
@@ -98,7 +99,7 @@ function MenuSettings() {
     };
 
     const quit_serveur = () => {
-        socket.emit("QUIT_CHAN", {channel: global_channel, login: login});
+        socket.emit("QUIT_CHAN", {channel: global_channel, id: userId});
     }
 
     const handleClose = (ind: number) => {
@@ -163,7 +164,7 @@ function CreatePopupChannel() {
 
    function sendChannelName ()
    {
-        socket.emit("CREATE_CHANNEL",  {channel: channelName, login: login, status: channelAttribute, password: channelPassword});
+        socket.emit("CREATE_CHANNEL",  {channel: channelName, id: userId, status: channelAttribute, password: channelPassword});
         setChannelPassword("");
     }
 
@@ -299,7 +300,7 @@ function sendInput(message: string) {
     infoInputChat.name = "rayane";
     infoInputChat.inputValue = message;
     // envoi d'un message au serveur. Le Json.stringify sert a transformer un objet en string
-    socket.emit("addmsg",  {message: message, channel: global_channel, login: login});//changer login
+    socket.emit("addmsg",  {message: message, channel: global_channel, id: userId});//changer login
 }
 
 function Bodychat() {
@@ -455,18 +456,18 @@ function Channel() {
     );
 }
 
-function promouvoir_admin(cible: string) {
+function promouvoir_admin(cible: number) {
 
     //recup la target pour que ca marche
    
-    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: cible, sender: login, status: status.admin}); 
+    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: cible, sender: userId, status: status.admin}); 
     
 }
 
-function mute(cible: string) {
+function mute(cible: number) {
 
     //recup la target pour que ca marche
-    socket.emit("MUTE",  {channel: global_channel,  target: cible, sender: login}); 
+    socket.emit("MUTE",  {channel: global_channel,  target: cible, sender: userId}); 
     
 }
 
@@ -484,7 +485,7 @@ function bannir() {
     
 }
 
-function MenuMembre(props: {item: {login: string, status: number}}) {
+function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -492,13 +493,13 @@ function MenuMembre(props: {item: {login: string, status: number}}) {
     setAnchorEl(event.currentTarget);
   };
   
-  const handleClose = (param: number, cible: string) => {
+  const handleClose = (param: {n: number, id: number}) => {
 
     setAnchorEl(null);
-    if (param == 4)
-        promouvoir_admin(cible);
-    else if (param == 5)
-        mute(cible);
+    if (param.n == 4)
+        promouvoir_admin(param.id);
+    else if (param.n == 5)
+        mute(param.id);
 
   };
 
@@ -510,13 +511,13 @@ function MenuMembre(props: {item: {login: string, status: number}}) {
   if (status_du_gars_connecte == 0)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose(1, props.item.login)}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose(2, props.item.login)}>Inviter a jouer</MenuItem> 
-        <MenuItem onClick={() => handleClose(3, props.item.login)}>Envoyer un message</MenuItem>
-        <MenuItem onClick={() => handleClose(4, props.item.login)}>Promouvoir en admin</MenuItem>
-        <MenuItem onClick={() => handleClose(5, props.item.login)}>Mute</MenuItem>
-        <MenuItem onClick={() => handleClose(6, props.item.login)}>Bloquer</MenuItem>
-        <MenuItem onClick={() => handleClose(7, props.item.login)}>Bannir</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Promouvoir en admin</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Mute</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 6, id: props.item.id})}>Bloquer</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 7, id: props.item.id})}>Bannir</MenuItem>
 
 
       </>)
@@ -524,38 +525,38 @@ function MenuMembre(props: {item: {login: string, status: number}}) {
   else if (status_du_gars_connecte == 1)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose(1, props.item.login)}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose(2, props.item.login)}>Inviter a jouer</MenuItem> 
-        <MenuItem onClick={() => handleClose(3, props.item.login)}>Envoyer un message</MenuItem>
-        <MenuItem onClick={() => handleClose(5, props.item.login)}>Mute</MenuItem>
-        <MenuItem onClick={() => handleClose(6, props.item.login)}>Bloquer</MenuItem>
-        <MenuItem onClick={() => handleClose(7, props.item.login)}>Bannir</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Mute</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Bloquer</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 6, id: props.item.id})}>Bannir</MenuItem>
         </>)
   }
   else if (status_du_gars_connecte)
   {
     menu_onclick =( <>
-        <MenuItem selected className="MenuItem" onClick={() => handleClose(1, props.item.login)}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose(2, props.item.login)}>Inviter a jouer</MenuItem> 
-        <MenuItem onClick={() => handleClose(3, props.item.login)}>Envoyer un message</MenuItem> 
+        <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem> 
             </>)
   }
 
   if (props.item.status == 0)
   {
     h1_name_role = (<>
-        <h1 className="personneDansChannelOwner"> {props.item.login}  </h1>
+        <h1 className="personneDansChannelOwner"> {props.item.name}  </h1>
     </>)   
   }
   else if (props.item.status == 1)
   {
     h1_name_role = (<>
-        <h1 className="personneDansChannelAdmin"> {props.item.login}  </h1>
+        <h1 className="personneDansChannelAdmin"> {props.item.name}  </h1>
     </>)
   }  
   else if (props.item.status == 2) {
     h1_name_role = (<>
-        <h1 className="personneDansChannelDefault"> {props.item.login}  </h1>
+        <h1 className="personneDansChannelDefault"> {props.item.name}  </h1>
     </>)
 
   }
@@ -606,7 +607,7 @@ function MenuMembre(props: {item: {login: string, status: number}}) {
 
 function ListChannel() {
 
-    const [arraylistName, setArraylistName] = useState<{login: string, status: number}[]>([]);
+    const [arraylistName, setArraylistName] = useState<{id: number, name: string, status: number}[]>([]);
 
 
         // socket.on("ready", (ready_chat: object) => {
@@ -614,7 +615,7 @@ function ListChannel() {
         // })
       // réception d'un message envoyé par le serveur
     useEffect(() => {
-        socket.on("LIST_NAME", (message: {channel: string, list: {login: string, status: number}[]}) => {
+        socket.on("LIST_NAME", (message: {channel: string, list: {id: number, name: string, status: number}[]}) => {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             //setInputValue(message);
             // setlistName(message);
@@ -661,7 +662,7 @@ function ListChannel() {
 function Chat() {
     //all ready
 
-    useEffect(() => {socket.emit("GET_CHANNEL", login); }, []);
+    useEffect(() => {socket.emit("GET_CHANNEL", userId); }, []);
     // remplacer par votre pseudo
     return (
         <>

@@ -22,7 +22,7 @@ import { randomUUID } from 'crypto';
 
 	constructor(private chatService: ChatService) {}
 
-	Connected : {name: string | string[], socket: Socket}[] = [];
+	Connected : {id: number, socket: Socket}[] = [];
 
 	afterInit() {
 	this.io.use((socket, next) => {
@@ -41,17 +41,17 @@ import { randomUUID } from 'crypto';
 	@SubscribeMessage('ready')
 	handleReady(
 		@ConnectedSocket() client: Socket,
-		@MessageBody() login: string
+		@MessageBody() userId: number
 	)
 	{
-		let ret = {name: login, socket: client};
+		let ret = {id: userId, socket: client};
 		this.Connected.push(ret);
-		this.chatService.getPvmsg(ret.name)
+		this.chatService.getPvmsg(ret.id)
 		.then((val) => {
 			console.log(val);
 			client.join(val);
 		})
-		client.join(login);
+		client.join(userId.toString());
 	}
 
 	@SubscribeMessage('addmsg')
@@ -75,7 +75,7 @@ import { randomUUID } from 'crypto';
 
 	@SubscribeMessage('MUTE')
 	async mute(
-		@MessageBody() data: {channel: string, target: string, sender: string},
+		@MessageBody() data: {channel: string, target: number, sender: number},
 		@ConnectedSocket() client: Socket
 	)
 	{
@@ -88,13 +88,13 @@ import { randomUUID } from 'crypto';
 
 	@SubscribeMessage('QUIT_CHAN')
 	async quitChan(
-		@MessageBody() data: {channel: string, login: string},
+		@MessageBody() data: {channel: string, id: number},
 		@ConnectedSocket() client: Socket
 	)
 	{
 		await this.chatService.Quit(data);
-		this.io.in(data.login).socketsLeave(data.channel);
-		this.getchannelname(client, data.login);
+		this.io.in(data.id.toString()).socketsLeave(data.channel);
+		this.getchannelname(client, data.id);
 		const ret = await this.chatService.memberInChannel(data.channel);
 		this.io.to(data.channel).emit('LIST_NAME', 
 		{
@@ -105,7 +105,7 @@ import { randomUUID } from 'crypto';
 
 	@SubscribeMessage('CHANGE_STATUS')
 	async statusMember(
-		@MessageBody() data: {channel: string, target: string, sender: string, status: number},
+		@MessageBody() data: {channel: string, target: number, sender: number, status: number},
 		@ConnectedSocket() client: Socket
 	)
 	{
@@ -123,7 +123,7 @@ import { randomUUID } from 'crypto';
 
 	@SubscribeMessage('CHANGE_STATUS_CHAN')
 	async statusChan(
-		@MessageBody() data: {channel: string, login: string, status: number, password: string},
+		@MessageBody() data: {channel: string, id: number, status: number, password: string},
 		@ConnectedSocket() client: Socket
 	)
 	{
@@ -135,13 +135,15 @@ import { randomUUID } from 'crypto';
 
 	@SubscribeMessage('JOIN_CHAN')
 	async joinChan(
-		@MessageBody() data: {channel: string, login: string, password: string},
+		@MessageBody() data: {channel: string, id: number, password: string},
 		@ConnectedSocket() client: Socket
 	)
 	{
 		try {
 			await this.chatService.joinChan(data);
-			await this.addmember({...data, status: status.default}, client);
+			const login = await this.chatService.getLoginById(data.id);
+			const member = {channel: data.channel, login: login};
+			await this.addmember(member, client);
 		}
 		catch (e) {
 			console.log(e);
@@ -150,17 +152,18 @@ import { randomUUID } from 'crypto';
 
 	@SubscribeMessage('addmember')
 	async addmember(
-		@MessageBody() data: AddMemberDTO,
+		@MessageBody() data: {channel: string, login: string},
 		@ConnectedSocket() client: Socket
 	)
 	{
-		await this.chatService.addMember({...data, status: status.default});
+		const id = await this.chatService.getIdByLogin(data.login);
+		await this.chatService.addMember({channel: data.channel, id: id, status: status.default});
 		const ret = await this.chatService.memberInChannel(data.channel);
 		this.Connected.forEach(element => {
-			if (element.name == data.login)
+			if (element.id == id)
 			{
 				element.socket.join(data.channel);
-				this.getchannelname(element.socket, element.name);
+				this.getchannelname(element.socket, element.id);
 				return;
 			}
 		});
@@ -193,10 +196,10 @@ import { randomUUID } from 'crypto';
 	@SubscribeMessage('GET_CHANNEL')
 	getchannelname(
 		@ConnectedSocket() client: Socket,
-		@MessageBody() name: string
+		@MessageBody() id: number
 	)
 	{
-		this.chatService.getPvmsg(name)
+		this.chatService.getPvmsg(id)
 		.then((val) => {
 			client.emit('CHANNEL_CREATED', val);
 		})
@@ -206,7 +209,7 @@ import { randomUUID } from 'crypto';
 	@SubscribeMessage('CREATE_CHANNEL')
 	async handleCreateChannel(
 		@ConnectedSocket() client: Socket, 
-		@MessageBody() channelcreation: {channel: string, login: string,
+		@MessageBody() channelcreation: {channel: string, id: number,
 										status: number, password: string})
 	{
 		try {
@@ -214,11 +217,11 @@ import { randomUUID } from 'crypto';
 											status: channelcreation.status,
 											password: channelcreation.password});
 			await this.chatService.addMember({channel: channelcreation.channel,
-											login: channelcreation.login,
+											id: channelcreation.id,
 											status: status.owner});
-			const ret = await this.chatService.getPvmsg(channelcreation.login);
-			this.io.to(channelcreation.login).emit('CHANNEL_CREATED', ret);
-			this.io.to(channelcreation.login).socketsJoin(channelcreation.channel);
+			const ret = await this.chatService.getPvmsg(channelcreation.id);
+			this.io.to(channelcreation.id.toString()).emit('CHANNEL_CREATED', ret);
+			this.io.to(channelcreation.id.toString()).socketsJoin(channelcreation.channel);
 		}
 		catch (e) {
 			console.log(e);
@@ -230,12 +233,12 @@ import { randomUUID } from 'crypto';
 	@SubscribeMessage('CREATE_MP_CHAN')
 	async handleMpChan(
 		@ConnectedSocket() client: Socket,
-		@MessageBody() mp: {login1: string, login2: string}
+		@MessageBody() mp: {id: number, login: string}
 	)
 	{
 		const name = 'mp' + randomUUID;
-		this.handleCreateChannel(client, {channel: name, login: mp.login1, status: chat_status.private, password: ''});
-		this.addmember({channel: name, login: mp.login2, status: status.default}, client);
+		this.handleCreateChannel(client, {channel: name, id: mp.id, status: chat_status.private, password: ''});
+		this.addmember({channel: name, login: mp.login}, client);
 		this .chatService.defineMp(name);
 	}
 

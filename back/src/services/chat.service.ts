@@ -39,9 +39,9 @@ export class ChatService {
         return await this.chatRepository.findOne(name);
     }
 
-    async getPvmsg(login: string)
+    async getPvmsg(id: number)
     {
-        const user = await this.userRepo.findOne({where: {login: login}});
+        const user = await this.userRepo.findOne({where: {ft_id: id}});
         const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user}, relations: ['chat']});
 
         const tmp: string[] = [];
@@ -53,9 +53,9 @@ export class ChatService {
         return tmp;
     }
 
-    async getUser(name: string)
+    async getUser(id: number)
     {
-        return await this.userRepo.findOne(name);
+        return await this.userRepo.findOne({where: {ft_id: id}});
     }
 
     async addOne(data: ChatDTO){
@@ -71,7 +71,7 @@ export class ChatService {
         this.chatRepository.save(chat);
     }
 
-    async Mute(data: {channel: string, target: string, sender: string})
+    async Mute(data: {channel: string, target: number, sender: number})
     {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}});
         const tomute = await this.getMember(chat, data.target);
@@ -82,7 +82,7 @@ export class ChatService {
         this.membersRepo.save(tomute);
     }
 
-    async unMute(data: {channel: string, target: string, sender: string})
+    async unMute(data: {channel: string, target: number, sender: number})
     {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}});
         const tomute = await this.getMember(chat, data.target);
@@ -91,17 +91,17 @@ export class ChatService {
         this.membersRepo.save(tomute);
     }
 
-    async Quit(data: {channel: string, login: string})
+    async Quit(data: {channel: string, id: number})
     {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}});
-        const membre = await this.getMember(chat, data.login);
+        const membre = await this.getMember(chat, data.id);
         membre.quit_status = quit_status.quit;
         if (membre.status == status.owner)
         {
             try {
                 const member = await this.membersRepo.findOne({where: {chat: chat, status: Not(status.owner), quit_status: 0}, relations: ['user']});
                 member.status = status.owner;
-                this.changeStatus({channel: data.channel, target: member.user.login, sender: data.login, status: 0});
+                this.changeStatus({channel: data.channel, target: member.user.ft_id, sender: data.id, status: 0});
                 console.log(member.user);
             }
             catch (e) { console.log(e);}
@@ -111,7 +111,7 @@ export class ChatService {
 
     async addMsg(data: MsgDTO){
         const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["messages"]});
-        const user = await this.userRepo.findOne({where: {login: data.login}});
+        const user = await this.userRepo.findOne({where: {ft_id: data.id}});
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}, relations: ['chat', 'chat.messages']});
         console.log(member.mute);
         if (member.mute || member.quit_status > quit_status.none)
@@ -126,10 +126,10 @@ export class ChatService {
     async memberInChannel(name: string)
     {
         const chat = await this.chatRepository.findOne({select: ["id"], where: {name: name}, relations: ['members', 'members.user']});
-        const tmp: {login: string, status: number}[] = [];
+        const tmp: {id: number, name: string, status: number}[] = [];
         chat.members.forEach((element) => {
             if (element.quit_status == quit_status.none)
-                tmp.push({login: element.user.login, status: element.status});
+                tmp.push({id: element.user.ft_id, name: element.user.username, status: element.status});
         })
         return tmp;
     }
@@ -137,9 +137,9 @@ export class ChatService {
     async messageInChannel(name: string)
     {
         const chat = await this.chatRepository.findOne({select: ["id"], where: {name: name}, relations: ['messages', 'messages.member', 'messages.member.user']});
-        const tmp: {name: string, message: string}[] = [];
+        const tmp: {id: number, name: string, message: string}[] = [];
         chat.messages.forEach((element) => {
-            tmp.push({name: element.member.user.login, message: element.message});
+            tmp.push({id: element.member.user.ft_id, name: element.member.user.username, message: element.message});
         })
         return tmp;
     }
@@ -154,9 +154,9 @@ export class ChatService {
         return chat;
     }
 
-    async getMember(chat: ChatEntity, login: string)
+    async getMember(chat: ChatEntity, id: number)
     {
-        const user = await this.userRepo.findOne({where: {login: login}});
+        const user = await this.userRepo.findOne({where: {ft_id: id}});
         if (!user)
             throw new NotFoundException();
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}});
@@ -165,7 +165,7 @@ export class ChatService {
         return member;
     }
 
-    async changeStatus(data: {channel: string, target: string, sender: string, status: number})
+    async changeStatus(data: {channel: string, target: number, sender: number, status: number})
     {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
         const target = await this.getMember(chat, data.target);
@@ -181,10 +181,10 @@ export class ChatService {
         this.membersRepo.save(target);
     }
 
-    async changeStatusChan(data: {channel: string, login: string, status: number, password: string})
+    async changeStatusChan(data: {channel: string, id: number, status: number, password: string})
     {
         const chat = await this.getChat(data.channel);
-        const member = await this.getMember(chat, data.login);
+        const member = await this.getMember(chat, data.id);
         if (member.status != status.owner)
             throw Error('not privilige');
         chat.status = data.status;
@@ -193,7 +193,7 @@ export class ChatService {
         this.chatRepository.save(chat);
     }
 
-    async joinChan(data: {channel: string, login: string, password: string})
+    async joinChan(data: {channel: string, id: number, password: string})
     {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
         if (!chat)
@@ -204,12 +204,24 @@ export class ChatService {
             throw new Error("cant join private chan");
     }
 
+    async getLoginById(id: number)
+    {
+        const user = await this.userRepo.findOne({where: {ft_id: id}});
+        return user.login;
+    }
+
+    async getIdByLogin(login: string)
+    {
+        const user = await this.userRepo.findOne({where: {login: login}});
+        return user.ft_id;
+    }
+
     async addMember(data: AddMemberDTO)
     {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
         if (!chat)
             throw new NotFoundException();
-        const user = await this.userRepo.findOne({where: {login: data.login}});
+        const user = await this.userRepo.findOne({where: {ft_id: data.id}});
         if (!user)
             throw new NotFoundException();
         const same = await this.membersRepo.findOne({where: {user: user, chat: chat}});

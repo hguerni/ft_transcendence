@@ -18,16 +18,16 @@ export class MsgDTO {
     @IsString()
     channel: string;
 
-    @IsString()
-    login: string;
+    @IsNumber()
+    id: number;
 }
 
 export class AddMemberDTO {
     @IsString()
     channel: string;
 
-    @IsString()
-    login: string;
+    @IsNumber()
+    id: number;
 
     @IsNumber()
     status: number;
