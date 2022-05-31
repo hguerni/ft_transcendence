@@ -473,6 +473,14 @@ function promouvoir_admin(cible: number) {
     
 }
 
+function ban(cible: number) {
+
+    //recup la target pour que ca marche
+   
+    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: cible, sender: userId, status: status.ban}); 
+    
+}
+
 function mute(cible: number) {
 
     //recup la target pour que ca marche
@@ -509,6 +517,8 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
         promouvoir_admin(param.id);
     else if (param.n == 5)
         mute(param.id);
+    else if (param.n == 7)
+        ban(param.id)
 
   };
 

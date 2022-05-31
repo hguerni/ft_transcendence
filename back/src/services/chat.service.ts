@@ -178,6 +178,8 @@ export class ChatService {
             sender.status = status.default;
             this.membersRepo.save(sender);
         }
+        if (status.ban)
+            target.quit_status = quit_status.ban;
         this.membersRepo.save(target);
     }
 
@@ -234,7 +236,7 @@ export class ChatService {
         else if (!same)
             member = this.membersRepo.create({user: user, status: data.status, mute: false, chat: chat});
         else
-            throw new Error("cnat join with same user");
+            throw new Error("cant join with same user");
         return await this.membersRepo.save(member);
     }
     

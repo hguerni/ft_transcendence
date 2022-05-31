@@ -68,11 +68,6 @@ import { randomUUID } from 'crypto';
 		catch (error) {console.log(error);}
 	}
 
-	async wait_mute(data: {channel: string, target: string, sender: string})
-	{
-
-	}
-
 	@SubscribeMessage('MUTE')
 	async mute(
 		@MessageBody() data: {channel: string, target: number, sender: number},
@@ -111,12 +106,17 @@ import { randomUUID } from 'crypto';
 	{
 		try {
 			await this.chatService.changeStatus(data);
-			const ret = await this.chatService.memberInChannel(data.channel);
-			this.io.to(data.channel).emit('LIST_NAME', 
+			if (data.status == status.ban)
+				this.quitChan({channel: data.channel, id: data.target}, client);
+			else
 			{
-				channel: data.channel,
-				list: ret
-			});
+				const ret = await this.chatService.memberInChannel(data.channel);
+				this.io.to(data.channel).emit('LIST_NAME', 
+				{
+					channel: data.channel,
+					list: ret
+				});
+			}
 		}
 		catch (e) { console.log(e) }
 	}
