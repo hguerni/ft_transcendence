@@ -21,6 +21,10 @@
     cursor: pointer;
 }
 
+.allServers:hover {
+    background-color: rgb(184, 85, 209);
+}
+
 .testPopup-content {
     overflow: auto;
     height: 60%;

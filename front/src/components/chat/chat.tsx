@@ -212,7 +212,12 @@ function CreatePopupChannel() {
       </div>
 
     );
-  }
+}
+
+
+
+
+
 
   function CreatePopupInviteUser() {
     const [InvitUserName, setChannelName] = useState("");
@@ -244,26 +249,102 @@ function CreatePopupChannel() {
     );
   }
 
+  const print_status = (status: number) => {
+    if (status === chat_status.protected)
+        return (
+            <img src={cadenas} alt="cadenas" id="imgcadenas"/>
+        );
+}
+
+  function PopupPassword(props: {name: string, status: number}) {
+
+    const [password, setPassword] = useState("");
+    const [open, setOpen] = useState(false);
+    
+
+   function sendMember ()
+   {
+       if (props.status === chat_status.protected)
+       {
+        socket.emit("JOIN_CHAN",  {channel: props.name, id: userId, password: password})
+       }
+       else
+       {
+            socket.emit("JOIN_CHAN",  {channel: props.name, id: userId, password: ""});
+       }
+   }
+//    if (props.status === chat_status.public)
+//     return (<>
+//                     <h1 
+//                 className="allServers"
+               
+//                 onClick={() => {setOpen(true)}}>
+
+//                 {props.name}
+//                 <span>{print_status(props.status)}</span></h1>
+//     </>);
+//     else
+    return (
+      <div>
+            
+            <h1 
+                className="allServers"
+               
+                onClick={() => {setOpen(true); sendMember();}}>
+                {props.name}
+                <span>{print_status(props.status)}</span>
+                </h1>
+        <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+
+          <div>Qu'elle est le mot de passe ?</div>
+          <input className="input"
+            type="text"
+            value={password}
+
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button className="gameButton" onClick={() => { setOpen(false); sendMember(); setPassword("")}}>SEND</button>
+        </Popup>
+         
+    
+      </div>
+
+    );
+
+  }
+
 
   function CreatePopupSearchChannel() {
+    const [isclic, setisclic] = useState(false);
     const [open, setOpen] = useState(false);
     const [serverName, setServerName] = useState<{name: string, status: number}[]>([]);
     const searchChannel = () => {
         socket.emit("ALL_CHAN");
     }
 
-    const print_status = (status: number) => {
+    const input_passw = (name: string, status: number) => {
+        console.log('popuppassw');
         if (status === chat_status.protected)
             return (
-                <img src={cadenas} alt="cadenas" id="imgcadenas"/>
+                <>
+                <PopupPassword name={name} status={status}/>
+                {/* <span>{print_status(status)}</span> */}
+                </>
             );
+        else
+        {
+            return (
+                <h1> {name}</h1>
+            );
+        }
     }
-
 
    socket.on("ALL_CHAN", (data: {name: string, status: number}[]) => {
         console.log(data);
         setServerName(data);
    })
+
+
    
     return (
       <div>
@@ -274,22 +355,23 @@ function CreatePopupChannel() {
             />
 
         <Popup className="testPopup" open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
-          {/* <div>Login de la personne a ajouter dans le channel</div>
-          <input className="input"
-            type="text"
-            value={InvitUserName}
-
-            onChange={(e) => setChannelName(e.target.value)}
-          /> */}
-          <div>
+          <div className="serversList">
           {serverName.map((item) => {
             return (
             <div>
+                
                 <h1 
                 className="allServers"
-                onClick={() => {console.log('maxizgeg')}}>
-                {item.name}
-                <span>{print_status(item.status)}</span></h1>
+               
+                onClick={() => {setOpen(false)}}>
+                
+                
+                </h1>
+                {input_passw(item.name, item.status)}
+      
+                   {/* <PopupPassword name={item.name} status={item.status}/> */}
+                
+                
             </div>
             );
             })}
