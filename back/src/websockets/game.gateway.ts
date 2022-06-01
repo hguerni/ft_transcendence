@@ -185,9 +185,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage('GAME_JOIN')
-  handleJoiningRoom(client: Socket, args: string[]) {
-    let userData: UserDataGame = JSON.parse(args[0]);
-    let roomName = args[1];
+  handleJoiningRoom(client: Socket, userData: UserDataGame) {
+    //let userData: UserDataGame = JSON.parse(args[0]);
+    let roomName = userData.roomToJoin;
 
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
       this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
