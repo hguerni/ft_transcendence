@@ -1,8 +1,7 @@
 import { Logger } from '@nestjs/common';
-import { SubscribeMessage, WebSocketGateway, OnGatewayInit, WsResponse, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway, OnGatewayInit, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { Subscriber } from 'rxjs';
-import { GameService, PongProps, RoomProps } from '../services/game.service';
+import { GameService, RoomProps } from '../services/game.service';
 import { v4 } from 'uuid'
 
 export let logger: Logger = new Logger('gameTest');
@@ -68,9 +67,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('GAME_END')
   handleEndGamer(client: Socket, game: string) {
     this.logger.log(`Client ${client.id} want to end game ${game}`);
+    this.clientsToRoom.delete(client.id);
+    this.handleSendingRooms(this.getRoomsGroup);
     if (this.gameRooms.has(game)) {
       this.gameRooms.delete(game);
-      this.clientsToRoom.delete(client.id);
       this.logger.log(`Client ${client.id} is ending game ${game}`);
     }
   }
