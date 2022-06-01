@@ -27,20 +27,12 @@ export class RoomProps {
   canJoinGame: boolean = true;
   p1_name: string = "?";
   p2_name: string = "?";
+  p1_userId: number = -1;
+  p2_userId: number = -1;
   p1_readyToStart: boolean = false;
   p2_readyToStart: boolean = false;
   p1_score: number = 0;
   p2_score: number = 0;
-}
-
-export class GameStats {
-  gameName: string;
-  playerId: number;
-  adversaryId: number;
-  playerScore: number;
-  adversaryScore: number;
-  isWinner: boolean;
-  endGameTime: Date;
 }
 
 function genRandomInt(min, max) {
@@ -188,7 +180,7 @@ export class GameService {
     this.room.name = name;
   }
 
-  setPlayersIds(clientId: string)
+  setPlayersSocketIds(clientId: string)
   {
     if (this.playersIds.get("left") == "")
     {
@@ -203,11 +195,15 @@ export class GameService {
     }
   }
 
-  setPlayersNames(p_name: string) {
-    if (this.room.p1_name === "?")
+  setPlayersNamesAndIds(p_name: string, p_userId: number) {
+    if (this.room.p1_name === "?") {
       this.room.p1_name = p_name;
-    else
+      this.room.p1_userId = p_userId;
+    }
+    else {
       this.room.p2_name = p_name;
+      this.room.p2_userId = p_userId;
+    }
   }
 
   setPlayerReady(clientId: string) {
@@ -215,6 +211,7 @@ export class GameService {
       this.room.p1_readyToStart = true;
     else
       this.room.p2_readyToStart = true;
+    console.log(this.room.p1_name, this.room.p1_userId);
   }
 
   setTrainingModeOn(clientId: string) {
@@ -241,7 +238,7 @@ export class GameService {
     return this.room;
   }
 
-  getPlayerId(id: string): string {
+  getPlayerSocketId(id: string): string {
     return this.playersIds.get(id);
   }
 }

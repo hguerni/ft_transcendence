@@ -2,13 +2,9 @@ import Sketch from "react-p5";
 import p5Types from "p5";
 import { Socket } from 'socket.io-client';
 import UserService from "../../services/user.service";
-import useWindowDimensions from "../../services/window.service";
-import { socket } from "./Game";
-import { Ref } from "react";
 
 const UP_ARROW = 38;
 const DOWN_ARROW = 40;
-
 
 export class PongProps {
 	width: number = window.innerWidth / 2.2;
@@ -28,6 +24,12 @@ export class PongProps {
 	paddle_r_y: number = this.height / 10;
 }
 
+class UserDataGame {
+	username: string = UserService.getUsername();
+	userId: number = UserService.getUserId();
+	roomToJoin: string = "";
+}
+
 export function GameStartTraining(client: Socket) {
 	client.emit("START_TRAINING");
 }
@@ -41,7 +43,9 @@ export function GameReset(client: Socket) {
 }
 
 export function GameJoin(client: Socket, roomName: string) {
-	client.emit("GAME_JOIN", UserService.getUsername(), roomName);
+	let userDataGame: UserDataGame = new UserDataGame();
+	userDataGame.roomToJoin = roomName;
+	client.emit("GAME_JOIN", userDataGame);
 }
 
 export function GameWatch(client: Socket, room: string) {
@@ -57,7 +61,9 @@ export function GetCurrentRoom(client: Socket) {
 }
 
 export function GameCreate(client: Socket, roomName: string, customMode: string) {
-	client.emit("GAME_CREATE", UserService.getUsername(), roomName, customMode);
+	let userDataGame: UserDataGame = new UserDataGame();
+	userDataGame.roomToJoin = roomName;
+	client.emit("GAME_CREATE", JSON.stringify(userDataGame), customMode);
 }
 
 export function GameLeave(client: Socket) {

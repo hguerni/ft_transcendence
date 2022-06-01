@@ -7,6 +7,12 @@ import { v4 } from 'uuid'
 
 export let logger: Logger = new Logger('gameTest');
 
+interface UserDataGame {
+	username: string;
+	userId: number;
+	roomToJoin: string;
+}
+
 @WebSocketGateway({cors: {origin: "*"}, namespace: 'game'})
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
@@ -108,8 +114,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const room = this.clientsToRoom.get(client.id);
     let p1_name = this.gameRooms.get(room).getRoomProps().p1_name;
     let p2_name = this.gameRooms.get(room).getRoomProps().p2_name;
-    let p1_id = this.gameRooms.get(room).getPlayerId('left');
-    let p2_id = this.gameRooms.get(room).getPlayerId('right');
+    let p1_id = this.gameRooms.get(room).getPlayerSocketId('left');
+    let p2_id = this.gameRooms.get(room).getPlayerSocketId('right');
 
     this.gameRooms.get(room).setPlayerReady(client.id);
     if (this.gameRooms.get(room).getRoomProps().p1_readyToStart === true &&
@@ -118,7 +124,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.logger.log("GAME_STARTED");
     if (this.gameRooms.get(room).getRoomProps().p1_readyToStart && this.gameRooms.get(room).getRoomProps().p2_readyToStart)
       this.wsServer.to(this.clientsToRoom.get(client.id)).emit("PLAYER_IS_READY", "");
-    else if (this.gameRooms.get(room).getPlayerId('left') === client.id)
+    else if (this.gameRooms.get(room).getPlayerSocketId('left') === client.id)
     {
       this.wsServer.to(p2_id).emit("SEND_GAME_STATUS", `${p1_name} is ready to start!`);
       this.wsServer.to(p1_id).emit("SEND_GAME_STATUS", `Waiting for ${p2_name} to start...`);
@@ -135,7 +141,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     if (!(this.clientsToRoom.has(client.id))) {
       const gameRoom = new GameService();
       const gameRoomName = gameRoom.getRoomProps().name;
-      gameRoom.setPlayersIds(client.id);
+      gameRoom.setPlayersSocketIds(client.id);
       gameRoom.setTrainingModeOn(client.id);
       this.gameRooms.set(gameRoom.getRoomProps().name, gameRoom);
       client.join(gameRoomName);
@@ -157,9 +163,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('GAME_CREATE')
   handleCreatingRoom(client: Socket, args: string[]) {
-    let p_name = args[0];
-    let roomName = args[1];
-    let customMode = args[2];
+    let userData: UserDataGame = JSON.parse(args[0]);
+    let roomName = userData.roomToJoin;
+    let customMode = args[1];
 
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
       this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
@@ -169,8 +175,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const gameRoom = new GameService();
     gameRoom.setRoomName(roomName);
     this.clientsToRoom.set(client.id, roomName);
-    gameRoom.setPlayersIds(client.id);
-    gameRoom.setPlayersNames(p_name);
+    gameRoom.setPlayersSocketIds(client.id);
+    gameRoom.setPlayersNamesAndIds(userData.username, userData.userId);
     this.gameRooms.set(roomName, gameRoom);
     client.join(roomName);
     this.handleSendingRooms(this.getRoomsGroup);
@@ -180,7 +186,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('GAME_JOIN')
   handleJoiningRoom(client: Socket, args: string[]) {
-    let p_name = args[0];
+    let userData: UserDataGame = JSON.parse(args[0]);
     let roomName = args[1];
 
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
@@ -189,8 +195,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1)
     this.clientsToRoom.set(client.id, roomName);
-    this.gameRooms.get(roomName).setPlayersIds(client.id);
-    this.gameRooms.get(roomName).setPlayersNames(p_name);
+    this.gameRooms.get(roomName).setPlayersSocketIds(client.id);
+    this.gameRooms.get(roomName).setPlayersNamesAndIds(userData.username, userData.userId);
     client.join(roomName);
     this.handleSendingRooms(this.getRoomsGroup);
     this.handleSendingCurrentRoom(client.id);
