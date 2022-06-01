@@ -46,7 +46,6 @@ export class ChatService {
 
         const tmp: string[] = [];
         channels.forEach((element) => {
-            console.log(element.quit_status)
             if (element.quit_status == quit_status.none)
                 tmp.push(element.chat.name);
         })

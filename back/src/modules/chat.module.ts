@@ -7,9 +7,11 @@ import { MsgEntity } from "../entities/msg.entity";
 import { UserEntity } from "../entities/user.entity";
 import { ChatService } from "../services/chat.service";
 import { ChatGateway } from "../websockets/chat.gateway";
+import { UserModule } from "./user.module";
 
 @Module({
     imports: [
+      UserModule,
       TypeOrmModule.forFeature([ChatEntity, MsgEntity, MemberEntity, UserEntity]),
     ],
     controllers: [ChatController],

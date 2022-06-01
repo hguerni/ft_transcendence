@@ -605,18 +605,14 @@ function mute(cible: number) {
     
 }
 
-function bloquer() {
+function block(cible: number) {
 
-    //recup la target pour que ca marche
-   // socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
-    
+    socket.emit("BLOCK", {target: cible, sender: userId});
 }
 
-function bannir() {
+function unblock(cible: number) {
 
-    //recup la target pour que ca marche
-    //socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: "elarbi", sender: login, status: status.admin}); 
-    
+    socket.emit("UNBLOCK", {target: cible, sender: userId});
 }
 
 function MenuMembre(props: {item: {id: number, name: string, status: number}}) {

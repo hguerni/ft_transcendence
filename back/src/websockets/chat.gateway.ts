@@ -14,13 +14,14 @@ import { subscribeOn } from 'rxjs';
   import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
   import { ChatService, status } from '../services/chat.service';
   import { ChatEntity, chat_status } from '../entities/chat.entity';
+  import { UserService } from '../services/user.service';
 import { randomUUID } from 'crypto';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
 	@WebSocketServer() io: Server;
 
-	constructor(private chatService: ChatService) {}
+	constructor(private chatService: ChatService, private userService: UserService) {}
 
 	Connected : {id: number, socket: Socket}[] = [];
 
@@ -77,6 +78,30 @@ import { randomUUID } from 'crypto';
 		try {
 			await this.chatService.Mute(data);
 			await new Promise(() => setTimeout(() => {this.chatService.unMute(data)}, 5000));
+		}
+		catch (e) {console.log(e);}
+	}
+
+	@SubscribeMessage('BLOCK')
+	async block(
+		@MessageBody() data: {target: number, sender: number},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		try {
+			await this.userService.block(data.sender, data.target);
+		}
+		catch (e) {console.log(e);}
+	}
+
+	@SubscribeMessage('UNBLOCK')
+	async unblock(
+		@MessageBody() data: {target: number, sender: number},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		try {
+			await this.userService.removeFriend(data.sender, data.target);
 		}
 		catch (e) {console.log(e);}
 	}
@@ -214,7 +239,7 @@ import { randomUUID } from 'crypto';
 										status: number, password: string})
 	{
 		try {
-			if (channelcreation.channel == "")
+			if (channelcreation.channel[0] == " " || channelcreation.channel == "")
 				throw new Error('cant create null channel');
 			await this.chatService.addOne({name: channelcreation.channel,
 											status: channelcreation.status,
