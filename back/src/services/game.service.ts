@@ -52,6 +52,9 @@ function collision() {
 
 @Injectable()
 export class GameService {
+  constructor(
+    private userService: UserService,
+) {}
   private room: RoomProps = new RoomProps();
 
   private nb_players: number = 0;
@@ -91,6 +94,8 @@ export class GameService {
       if (game.room.p1_score >= 2 || game.room.p2_score >= 2)
       {
         clearInterval(game.intervalId_0);
+        this.userService.saveGame(game.room.p1_userId, game.room);
+        this.userService.saveGame(game.room.p2_userId, game.room);
         wsServer.to(game.room.name).emit('GAME_END', game.room.name);
       }
     }

@@ -64,19 +64,35 @@ export class UserService {
 
   async saveGame(clientid: number, data: any) {
     this.findByFtId(clientid).then(async(client) =>{
+      let game = new GameEntity;
+      game.adversary = await this.userRepo.findOne(data.p2_userId);
+      game.gameName = data.name;
+      if (data.p1_score > data.p2_score) 
+        game.winner = true;
+      else
+        game.winner = false;
+      game.userscore = data.p1_score;
+      game.adversaryscore = data.p2_score;
+      game.user = client;
+      await this.gameRepo.save(game);
+    });
+  } 
+
+  async saveGameadversary(clientid: number, data: any) {
+    this.findByFtId(clientid).then(async(client) =>{
         let game = new GameEntity;
-        game.adversary = await this.userRepo.findOne(data.player_two);
-        game.gameName = data.gameName;
-        if (game.adversary.id === data.player_two) 
+        game.adversary = await this.userRepo.findOne(data.p1_userId);
+        game.gameName = data.name;
+        if (data.p1_score >= data.p2_score) 
           game.winner = false;
         else
-          game.winner = true
-        game.userscore = data.player_one_score;
-        game.adversaryscore = data.player_two_score;
+          game.winner = true;
+        game.userscore = data.p2_score;
+        game.adversaryscore = data.p1_score;
         game.user = client;
         await this.gameRepo.save(game);
     });
-  } 
+  }
 
   async addFriend(clientid: number, friendid: number) {
     this.findByFtId(clientid).then((client) =>{
