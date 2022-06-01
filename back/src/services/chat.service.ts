@@ -36,7 +36,7 @@ export class ChatService {
 
     async getChat(name: string)
     {
-        return await this.chatRepository.findOne(name);
+        return await this.chatRepository.findOne({where: {name: name}});
     }
 
     async getPvmsg(id: number)
@@ -185,11 +185,13 @@ export class ChatService {
 
     async changeStatusChan(data: {channel: string, id: number, status: number, password: string})
     {
+        console.log(data);
         const chat = await this.getChat(data.channel);
         const member = await this.getMember(chat, data.id);
         if (member.status != status.owner)
             throw Error('not privilige');
         chat.status = data.status;
+        console.log(chat);
         if (chat.status == chat_status.protected)
             chat.password = data.password;
         this.chatRepository.save(chat);

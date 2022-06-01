@@ -144,6 +144,7 @@ import { randomUUID } from 'crypto';
 			const login = await this.chatService.getLoginById(data.id);
 			const member = {channel: data.channel, login: login};
 			await this.addmember(member, client);
+			this.getchannelname(client, data.id);
 		}
 		catch (e) {
 			console.log(e);
@@ -213,6 +214,8 @@ import { randomUUID } from 'crypto';
 										status: number, password: string})
 	{
 		try {
+			if (channelcreation.channel == "")
+				throw new Error('cant create null channel');
 			await this.chatService.addOne({name: channelcreation.channel,
 											status: channelcreation.status,
 											password: channelcreation.password});
