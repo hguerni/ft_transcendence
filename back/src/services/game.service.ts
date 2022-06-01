@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import { logger } from '../websockets/game.gateway';
-import { v4 } from 'uuid'
+import { v4 } from 'uuid';
+import {UserService} from "./user.service";
 
 export class PongProps {
 	width: number = 700;
