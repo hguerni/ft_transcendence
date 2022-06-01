@@ -23,11 +23,19 @@ function CardButton(props: {room: RoomProps}) {
 }
 
 function GamesCards(props: {room: RoomProps}) {
+  if (props.room.p2_name === "")
+    props.room.p2_name = "?"
   return (
     <div className='gameCards'>
-      <div style={{marginBottom: '20px'}}>
-        {props.room.name.substring(0, 10)}
+      <div style={{color: 'red'}}>
+        <span>{props.room.name.substring(0, 10)}</span>
       </div>
+      {/*<div style={{marginBottom: '10px'}}>
+          <span>{props.room.p1_name}</span>
+          <br></br> vs <br></br>
+          <span>{props.room.p2_name}</span>
+        </div>*/}
+        <div style={{margin: '10px 0px 15px 0px'}}>info</div>
         <CardButton room={props.room}/>
     </div>
   );
@@ -42,50 +50,52 @@ function isGameWaitingPlayer(rooms: RoomProps[]) {
   return false;
 }
 
-function AutoMatching(rooms: RoomProps[]) {
-  for (const room of rooms) {
+/*
+function AutoMatching(props: {rooms: RoomProps[]}) {
+
+  for (const room of props.rooms) {
     if (room.canJoinGame === true) {
-      GameJoin(socket, room.name);
-      return true;
+      return <button className='gameButton' onClick={() => GameJoin(socket, room.name)}>CREATE GAME</button>
     }
   }
-  return false;
+  return <button className='gameButton' onClick={() => GameJoin(socket, room.name)}>CREATE GAME</button>;
+}*/
+
+function GameCards(props: {rooms: RoomProps[]}) {
+  const [name, setName] = useState<string>("");
+
+  return (
+    <div>
+      <div style={{marginLeft: 'auto', marginRight: 'auto', width: 'fit-content'}}>
+          <input className="input" type="text" value={name} onChange={(e) => setName(e.target.value)}/>
+      </div>
+      <div className="gameCardsBox">
+        {props.rooms.map(item => {
+          if (item.name.includes(name))
+            return <GamesCards key={item.name} room={item}/>
+        })}
+      </div>
+    </div>
+  );
 }
 
 export function GameSearching() {
   const [rooms, setRooms] = useState<RoomProps[]>([]);
-  const [name, setName] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     socket.on("SEND_ROOMS_INFOS", (rooms: string) => {
       setRooms(JSON.parse(rooms));
     });
-    //setInterval(GetRooms, 1000, socket);
     GetRooms(socket);
-  }, [])
+  }, []);
 
   return (
     <div>
-      <div>
         <div style={{color: 'white', textAlign: 'center', marginBottom: '10px'}}>Search game:</div>
-        <div style={{marginLeft: 'auto', marginRight: 'auto', width: 'fit-content'}}>
-          <input className="input" type="text" value={name} onChange={(e) => setName(e.target.value)}/>
-        </div>
-      </div>
-
-      <div className="gameCardsBox">
-        {rooms.map(item => {
-          if (item.name.includes(name))
-            return <GamesCards key={item.name} room={item}/>
-        })}
-      </div>
-      <div style={{marginTop: '10px', margin: 'auto', width: 'fit-content', textAlign: 'center'}}>
-        <button className='gameButton' onClick={() => AutoMatching(rooms)}>AUTO MATCHING</button>
+      <GameCards rooms={rooms}/>
+      <div style={{margin: 'auto', marginTop: '10px', width: 'fit-content', textAlign: 'center'}}>
         <CreateGamePopUp/>
       </div>
-      {}
-      <div style={{color: 'white', textAlign: 'center'}}>{message}</div>
     </div>
   );
 }

@@ -2,30 +2,30 @@ import { isNumber, IsNumber, IsString } from "class-validator";
 
 export class ChatDTO {
     @IsString()
-    name: string;
+    channel: string;
 
     @IsNumber()
     status: number;
 
     @IsString()
-    password: string
+    password: string;
 }
 
 export class MsgDTO {
     @IsString()
     message: string;
 
-    @IsNumber()
-    chatId: number;
+    @IsString()
+    channel: string;
 
-    @IsNumber()
-    userId: number;
+    @IsString()
+    login: string;
 }
 
 export class AddMemberDTO {
-    @IsNumber()
-    userId: string;
+    @IsString()
+    channel: string;
 
-    @IsNumber()
-    chatId: number;
+    @IsString()
+    login: string;
 }

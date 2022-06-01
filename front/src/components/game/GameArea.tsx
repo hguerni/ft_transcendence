@@ -1,22 +1,23 @@
 import Sketch from "react-p5";
 import p5Types from "p5";
 import { Socket } from 'socket.io-client';
+import UserService from "../../services/user.service";
 
 const UP_ARROW = 38;
 const DOWN_ARROW = 40;
 
 export class PongProps {
-	width: number = 600;
-	height: number = 400;
+	width: number = 700;
+	height: number = 500;
 	score_l: number = 0;
 	score_r: number = 0;
-	ball_x: number = 600 / 2;
-	ball_y: number = 400 / 2;
+	ball_x: number = this.width / 2;
+	ball_y: number = this.height / 2;
 	ball_vx: number = 2;
 	ball_vy: number = 2;
 	paddle_l_x: number = 15;
 	paddle_l_y: number = 50;
-	paddle_r_x: number = 575;
+	paddle_r_x: number = this.width - 25;
 	paddle_r_y: number = 50;
 }
 
@@ -32,8 +33,8 @@ export function GameReset(client: Socket) {
 	client.emit("GAME_RESET");
 }
 
-export function GameJoin(client: Socket, room: string) {
-	client.emit("GAME_JOIN", room);
+export function GameJoin(client: Socket, roomName: string) {
+	client.emit("GAME_JOIN", UserService.getUsername(), roomName);
 }
 
 export function GameWatch(client: Socket, room: string) {
@@ -48,8 +49,8 @@ export function GetCurrentRoom(client: Socket) {
 	client.emit("GET_CURRENT_ROOM");
 }
 
-export function GameCreate(client: Socket, room: string) {
-	client.emit("GAME_CREATE", room);
+export function GameCreate(client: Socket, roomName: string) {
+	client.emit("GAME_CREATE", UserService.getUsername(), roomName);
 }
 
 export function GameLeave(client: Socket) {

@@ -4,26 +4,26 @@ import { logger } from '../websockets/game.gateway';
 import { v4 } from 'uuid'
 
 export class PongProps {
-  width: number = 600;
-  height: number = 400;
-  score_l: number = 0;
-  score_r: number = 0;
-  ball_x: number = 600 / 2;
-  ball_y: number = 400 / 2;
-  ball_vx: number = 2;
-  ball_vy: number = 2;
-  paddle_l_x: number = 15;
-  paddle_l_y: number = 50;
-  paddle_r_x: number = 575;
-  paddle_r_y: number = 50;
+	width: number = 700;
+	height: number = 500;
+	score_l: number = 0;
+	score_r: number = 0;
+	ball_x: number = this.width / 2;
+	ball_y: number = this.height / 2;
+	ball_vx: number = 2;
+	ball_vy: number = 2;
+	paddle_l_x: number = 15;
+	paddle_l_y: number = 50;
+	paddle_r_x: number = this.width - 25;
+	paddle_r_y: number = 50;
 }
 
 export class RoomProps {
   name: string = v4().substring(0, 10);
   trainingMode: boolean = false;
   canJoinGame: boolean = true;
-  p1_name: string = "p1_name";
-  p2_name: string = "p2_name";
+  p1_name: string = "";
+  p2_name: string = "";
   p1_readyToStart: boolean = false;
   p2_readyToStart: boolean = false;
   p1_score: number = 0;
@@ -197,6 +197,13 @@ export class GameService {
       this.nb_players++;
       this.room.canJoinGame = false;
     }
+  }
+
+  setPlayersNames(p_name: string) {
+    if (this.room.p1_name === "")
+      this.room.p1_name = p_name;
+    else
+      this.room.p2_name = p_name;
   }
 
   setPlayerReady(clientId: string) {

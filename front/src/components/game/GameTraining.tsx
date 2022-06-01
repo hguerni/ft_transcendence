@@ -5,16 +5,18 @@ const socket: Socket = io("ws://54.245.74.93:3030/game");
 
 
 export default function GameTraining() {
+  socket.on("GAME_END", (game: string) => {
+    socket.emit("GAME_END", game);
+  });
+
   return (
     <div>
       <div className="gameArea">
         <GameArea client={socket}/>
       </div>
-      <div className="gameArea">
-        <button className="gameButton" onClick={() => GameStartTraining(socket)}>START TRAINING</button>
-        <button className="gameButton" onClick={() => GameReset(socket)}>RESET GAME</button>
-      </div>
-      <div className="gameArea">
+      <div className="gameTrainingButtonsWrap">
+        <button className="gameTrainingButton" style={{marginRight: '50px'}} onClick={() => GameStartTraining(socket)}>START TRAINING</button>
+        <button className="gameTrainingButton" onClick={() => GameReset(socket)}>RESET GAME</button>
       </div>
     </div>
   );

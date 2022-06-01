@@ -10,7 +10,7 @@ import {  BaseEntity,
 	Entity,
   OneToOne,
   JoinColumn} from 'typeorm';
-  import { IsBoolean, IsEmail, IsString } from 'class-validator';
+  import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
   import { MemberEntity } from './member.entity';
 import { MsgEntity } from './msg.entity';
 
@@ -29,11 +29,12 @@ import { MsgEntity } from './msg.entity';
   @CreateDateColumn()
   created: Date;
 
-  @Column()
+  @Column({unique: true})
   @IsString()
   name: string;
 
   @Column()
+  @IsNumber()
   status: number;
 
   @Column()

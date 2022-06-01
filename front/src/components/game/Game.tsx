@@ -1,29 +1,35 @@
 import './Game.css';
-import GameTabs from './GameTabs';
 import { Socket, io } from 'socket.io-client';
 import { useEffect } from 'react';
-import { GetUserData } from '../../services/user.service';
+import { Route, BrowserRouter } from 'react-router-dom';
+import GameTraining from './GameTraining';
+import GameFighting from './GameFighting';
+import GameRules from './GameRules';
 
 export const socket: Socket = io("ws://54.245.74.93:3030/game");
 
 function Game() {
-  GetUserData();
+
   useEffect(() => {
     socket.on("ALERT", (message: string) => {
       alert(message);
     });
     socket.on("GAME_END", (game: string) => {
-      socket.emit('GAME_END', game);
+      socket.emit("GAME_END", game);
     });
   }, []);
 
   return (
-    <>
-      <div>
-        <h1 id="test"></h1>
+      <div className='gameWrap'>
+        <div className="gameTitle">
+          <span>PONG</span>
+        </div>
+        <GameRules/>
+        <BrowserRouter>
+            <Route exact path={"/game/training"} component={GameTraining} />
+            <Route exact path={"/game/fighting"} component={GameFighting} />
+        </BrowserRouter>
       </div>
-      <GameTabs/>
-    </>
   );
 }
 
