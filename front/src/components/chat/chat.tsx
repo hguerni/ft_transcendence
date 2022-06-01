@@ -92,6 +92,41 @@ function ButtonCreateCanal(){
      );
 }
 
+function ModifierPopupMdp() {
+    const [newPassword, setNewPassword] = useState("");
+    const [open, setOpen] = useState(false);
+    // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    //     setAnchorEl(event.currentTarget);
+    // };
+    const modifier_mdp = (password: string) => {
+
+       
+        socket.emit("CHANGE_STATUS_CHAN", {channel: global_channel, id: userId, status: chat_status.public, password: password});
+    }
+    
+
+    return (
+      <div>
+          <MenuItem onClick={() => setOpen(true)}>Modifier le mot de passe</MenuItem>
+        <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+
+          <div>Quel est le nouveau mot de pass ?</div>
+          <input className="input"
+            type="text"
+            value={newPassword}
+
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+          <button className="gameButton" onClick={() => {setOpen(false); modifier_mdp(newPassword); setNewPassword("")}}>SEND</button>
+        </Popup>
+
+      </div>
+
+    );
+  }
+
+
 function MenuSettings() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -104,18 +139,31 @@ function MenuSettings() {
     }
 
     const retirer_mdp = () => {
+
+       
         socket.emit("CHANGE_STATUS_CHAN", {channel: global_channel, id: userId, status: chat_status.public, password: ""});
     }
 
 
+
+
     const handleClose = (ind: number) => {
+         
         setAnchorEl(null);
         if (ind == 2)
+        {
+         
             quit_serveur();
+        }
+            
         else if (ind == 1)
+        {
+            
             retirer_mdp();
- 
+        }
 
+            
+ 
     };
 
     
@@ -125,7 +173,9 @@ function MenuSettings() {
     if (status_user === 0) {
         menuEngrenage = (
         <>
-            <MenuItem onClick={() => handleClose(0)}>Modifier le mot de passe</MenuItem>
+            
+            <ModifierPopupMdp/>
+            {/* <MenuItem onClick={() => handleClose(0)}>Modifier le mot de passe</MenuItem> */}
             <MenuItem onClick={() => handleClose(1)}>Retirer le mot de passe</MenuItem>
             <MenuItem onClick={() => handleClose(2)}>Quitter le channel</MenuItem>
         </>)
@@ -151,7 +201,9 @@ function MenuSettings() {
                 src={engrenage} 
                 alt="settings" />
         </Button>
+        
         <Menu
+            
             id="basic-menu"
             anchorEl={anchorEl}
             open={open}
@@ -160,8 +212,10 @@ function MenuSettings() {
             'aria-labelledby': 'basic-button',
             }}
         >
+            
             {menuEngrenage}
         </Menu>
+     
         </div>
     );
 }

@@ -426,3 +426,8 @@
 #buttonSettings {
     padding-bottom: -0.5rem;
 }
+
+.css-10nakn3-MuiModal-root-MuiPopover-root-MuiMenu-root {
+    z-index: 0 !important;
+
+}
