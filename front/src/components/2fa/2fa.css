@@ -1,0 +1,73 @@
+.trucPrincipal {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    margin-top: 5rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5rem;
+    --tw-bg-opacity: -1;
+    background-color: rgba(28, 9, 63, 0.603);
+    border-radius: 1.0rem;
+    padding-top: 0.5rem;
+    width: 50%;
+}
+
+#leLogo {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#leTitre {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.activateSubTitle {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.25rem;
+}
+
+.qrImg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+}
+
+.form-floating {
+    display: flex;
+    align-content: center;
+    flex-direction: row;
+    justify-content: space-between;
+    border: solid 2px rgba(255, 255, 255); 
+    border-radius: 8px;
+    background-color: rgb(69,15,191, 0.4);
+    height: 1.5rem;
+    width: 20%;
+    padding-left: 1rem;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+}
+
+#floatingInput {
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    outline: none ;
+    width: 90%;
+    background-color: transparent;
+    color: rgb(255, 255, 255);
+    font-family: 'CrickxRegular';
+    font-size: 1.25rem
+}
+
+.activateText {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.25rem;
+}

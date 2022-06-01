@@ -10,9 +10,15 @@ import {  BaseEntity,
 	Entity,
     OneToOne,
     PrimaryColumn} from 'typeorm';
-  import { IsBoolean, IsEmail, IsString } from 'class-validator';
+  import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
   import { UserEntity } from './user.entity';
   import { ChatEntity } from './chat.entity';
+
+  export enum quit_status {
+    none,
+    quit,
+    ban
+  }
 
   @Entity('member')
   export class MemberEntity extends BaseEntity {
@@ -26,10 +32,14 @@ import {  BaseEntity,
   @Column()
   status: number;
 
-  @Column()
+  @Column({default: false})
   @IsBoolean()
   mute: boolean;
 
   @ManyToOne(() => ChatEntity)
   chat: ChatEntity;
+
+  @Column({default: quit_status.none})
+  @IsNumber()
+  quit_status: number;
   }

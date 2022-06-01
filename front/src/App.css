@@ -25,9 +25,9 @@ h1 {
     font-family: 'CrickxRegular';
     font-weight: normal;
     font-style: normal;
-    text-shadow: 2px 2px 4px #999;
+    /* text-shadow: 2px 2px 4px #999; */
     /* text-align: center; */
-    color: rgb(40, 40, 40);
+    color: rgb(202, 196, 196);
     display: block;
     font-size: 2em;
 }

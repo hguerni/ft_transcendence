@@ -146,6 +146,12 @@ export class UserService {
     return req
   }
 
+  async getBlocking(clientID: number) {
+    this.findByFtId(clientID).then((client) =>{
+      return this.friendRepo.find({where: {user: client, status: "blocking"}})
+    });
+  }
+
   async getRequest(clientID: number) {
     const client = await this.findByFtId(clientID);
     let requests = await this.friendRepo.find({where: {user: client, status: "pending"}, relations: ['friend', 'user'],});
