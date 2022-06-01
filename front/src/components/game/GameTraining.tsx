@@ -41,8 +41,8 @@ export default function GameTraining() {
         <button onMouseDown={() => {setMouseDown(true); setUpOrDown("DOWN")}} onMouseUp={() => setMouseDown(false)}>MOVE DOWN</button>*/}
       </div>
       <div className="gameTrainingButtonsWrap">
-        <button className="gameTrainingButton" style={{marginRight: '50px'}} onClick={() => GameStartTraining(socket)}>START TRAINING</button>
-        <button className="gameTrainingButton" onClick={() => GameReset(socket)}>RESET GAME</button>
+        <button className="gameTrainingButton" style={{marginRight: '50px'}} onClick={() => GameStartTraining(socket)}><h5>START TRAINING</h5></button>
+        <button className="gameTrainingButton" onClick={() => GameReset(socket)}><h5>RESET GAME</h5></button>
       </div>
     </div>
   );

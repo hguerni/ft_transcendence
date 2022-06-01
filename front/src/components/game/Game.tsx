@@ -1,14 +1,10 @@
 import './Game.css';
 import { Socket, io } from 'socket.io-client';
 import { useEffect } from 'react';
-import { Route, BrowserRouter, useLocation, Redirect } from 'react-router-dom';
+import { Route, BrowserRouter } from 'react-router-dom';
 import GameTraining from './GameTraining';
 import GameFighting from './GameFighting';
 import GameRules from './GameRules';
-import GameInvitation from './GameInvitation';
-import { GameJoin } from './GameArea';
-import { BrowserView, MobileView, isBrowser, isMobile } from 'react-device-detect'
-import { GameMobile } from './GameMobile';
 
 
 export const socket: Socket = io("ws://localhost:3030/game");

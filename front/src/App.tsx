@@ -13,7 +13,7 @@ import ActivateTwoFa from "./components/2fa/activate2fa.component";
 import { GetUserData } from "./services/user.service";
 import UserService from "./services/user.service";
 import Header from "./components/header/Header";
-import GameInvitation from "./components/game/GameInvitation";
+import GameInvite from "./components/game/GameInvite";
 
 function Routes() {
   if (UserService.isUserConnected() || true)
@@ -30,7 +30,7 @@ function Routes() {
           <Route exact path={"/game"} component={Game} />
           <Route exact path={"/game/training"} component={Game} />
           <Route exact path={"/game/fighting"} component={Game} />
-          <Route path={"/game/join/:game"} component={GameInvitation} />
+          <Route path={"/game/join/:game"} component={GameInvite} />
           <Route exact path={"/chat"} component={Chat} />
         </main>
       </BrowserRouter>

@@ -35,6 +35,10 @@ button:hover {
   background-color: #8e44ad;
 }
 
+canvas {
+  border-radius: 1.2em;
+}
+
 .gameWrap {
   margin-top: 45px;
   margin-left: 15%;
@@ -155,6 +159,8 @@ button:hover {
   border-radius: 0.8em;
   background-color: #450FBF;
   color: white;
+  border: solid 0.3em white;
+  font-size: 0.625vw;
 }
 
 .popup-overlay {

@@ -4,26 +4,29 @@ import { logger } from '../websockets/game.gateway';
 import { v4 } from 'uuid'
 
 export class PongProps {
-	width: number = 700;
-	height: number = 500;
+	width: number = 10000 / 2.2;
+	height: number = 10000 / 3.2;
 	score_l: number = 0;
 	score_r: number = 0;
 	ball_x: number = this.width / 2;
 	ball_y: number = this.height / 2;
 	ball_vx: number = 2;
 	ball_vy: number = 2;
-	paddle_l_x: number = 15;
-	paddle_l_y: number = 50;
-	paddle_r_x: number = this.width - 25;
-	paddle_r_y: number = 50;
+  speepFactor: number = 5;
+	paddle_width: number = this.width / 60;
+	paddle_height: number = this.height / 8.5;
+	paddle_l_x: number = this.width / 30;
+	paddle_l_y: number = this.height / 10;
+	paddle_r_x: number = this.width - this.width / 30 - this.paddle_width;
+	paddle_r_y: number = this.height / 10;
 }
 
 export class RoomProps {
   name: string = v4().substring(0, 10);
   trainingMode: boolean = false;
   canJoinGame: boolean = true;
-  p1_name: string = "";
-  p2_name: string = "";
+  p1_name: string = "?";
+  p2_name: string = "?";
   p1_readyToStart: boolean = false;
   p2_readyToStart: boolean = false;
   p1_score: number = 0;
@@ -106,23 +109,24 @@ export class GameService {
 
     if (pong.ball_y > pong.height || pong.ball_y < 0)
       pong.ball_vy *= -1;
-    if (pong.ball_x >= pong.paddle_l_x + 10 && pong.ball_x < pong.paddle_l_x + 15
-      && pong.ball_y > pong.paddle_l_y && pong.ball_y < pong.paddle_l_y + 50)
+    if (pong.ball_x >= pong.paddle_l_x + pong.paddle_width && pong.ball_x < pong.paddle_l_x + pong.paddle_width * 1.5
+      && pong.ball_y > pong.paddle_l_y && pong.ball_y < pong.paddle_l_y + pong.paddle_height)
     {
       pong.ball_vx *= -1.2;
       pong.ball_vy = genRandomVelocity();
     }
-    if (pong.ball_x <= pong.paddle_r_x && pong.ball_x > pong.paddle_r_x - 5
-      && pong.ball_y > pong.paddle_r_y && pong.ball_y < pong.paddle_r_y + 50)
+    if (pong.ball_x <= pong.paddle_r_x && pong.ball_x > pong.paddle_r_x - pong.paddle_width * 0.5
+      && pong.ball_y > pong.paddle_r_y && pong.ball_y < pong.paddle_r_y + pong.paddle_height)
     {
       pong.ball_vx *= -1.2;
       pong.ball_vy = genRandomVelocity();
     }
-    pong.ball_x += pong.ball_vx;
-    pong.ball_y += pong.ball_vy;
+    pong.ball_x += pong.ball_vx * pong.speepFactor;
+    pong.ball_y += pong.ball_vy * pong.speepFactor;
     //pong.paddle_l_y = pong.ball_y - 25;
-    if (game.room.trainingMode && pong.ball_y - 25 < pong.height - 55 && pong.ball_y - 25 > 5)
-      pong.paddle_r_y = pong.ball_y - 25;
+    if (game.room.trainingMode && pong.ball_y - pong.paddle_height / 2 < pong.height - pong.paddle_height + 5
+      && pong.ball_y - pong.paddle_height / 2 > 5)
+    pong.paddle_r_y = pong.ball_y - pong.paddle_height / 2;
     wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(pong));
   }
 
@@ -157,12 +161,12 @@ export class GameService {
     if (this.playersIds.get("left") === clientId)
     {
       if (this.pong.paddle_l_y > 5)
-        this.pong.paddle_l_y -= 4;
+        this.pong.paddle_l_y -= 8 * this.pong.speepFactor;
     }
     else if (this.playersIds.get("right") === clientId)
     {
       if (this.pong.paddle_r_y > 5)
-        this.pong.paddle_r_y -= 4;
+        this.pong.paddle_r_y -= 8 * this.pong.speepFactor;
     }
   }
 
@@ -170,13 +174,13 @@ export class GameService {
   {
     if (this.playersIds.get("left") === clientId)
     {
-      if (this.pong.paddle_l_y < this.pong.height - 55)
-        this.pong.paddle_l_y += 4;
+      if (this.pong.paddle_l_y < this.pong.height - (this.pong.paddle_height + 5))
+        this.pong.paddle_l_y += 8 * this.pong.speepFactor;
     }
     else if (this.playersIds.get("right") === clientId)
     {
-      if (this.pong.paddle_r_y < this.pong.height - 55)
-        this.pong.paddle_r_y += 4;
+      if (this.pong.paddle_r_y < this.pong.height - (this.pong.paddle_height + 5))
+        this.pong.paddle_r_y += 8 * this.pong.speepFactor;
     }
   }
 
@@ -200,7 +204,7 @@ export class GameService {
   }
 
   setPlayersNames(p_name: string) {
-    if (this.room.p1_name === "")
+    if (this.room.p1_name === "?")
       this.room.p1_name = p_name;
     else
       this.room.p2_name = p_name;
@@ -219,6 +223,10 @@ export class GameService {
     this.playersIds.set("right", "Bob");
     this.room.p2_name = "Bob";
     this.room.p2_readyToStart = true;
+  }
+
+  setPongProps(newPongProps: PongProps) {
+    this.pong = newPongProps;
   }
 
   getPongProps(): PongProps {

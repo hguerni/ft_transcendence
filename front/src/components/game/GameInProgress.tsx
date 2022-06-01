@@ -49,7 +49,7 @@ export function GameInProgress() {
         <div className="gameStatus">
           <h5>Status:</h5>
           <br></br>
-          {msg}
+          {<p>{msg}</p>}
         </div>
         {// percentage of game played (one player with 10 point is the end)
         }
@@ -57,6 +57,8 @@ export function GameInProgress() {
     );
   }
   return (
-    <div>Waiting for game infos</div>
+    <div>
+      <h4>Waiting for game infos...</h4>
+    </div>
   );
 }

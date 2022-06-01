@@ -15,18 +15,42 @@ function linkClientToUser(client: Socket, userID: number) {
 export function CreateGamePopUp() {
   const [gameName, setGameName] = useState<string>(v4().substring(0, 10));
   const [open, setOpen] = useState(false);
+  const [customMode, setCustomMode] = useState<string>("");
 
   return (
     <div>
       <button className="gameButton" onClick={() => setOpen(true)}><h4>CREATE GAME</h4></button>
       <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
-        <div>Enter a name for your game:</div>
-        <input className="input"
-          type="text"
-          value={gameName}
-          onChange={(e) => setGameName(e.target.value)}
-        />
-        <button className="gameButton" onClick={() => {GameCreate(socket, gameName); setOpen(false); setGameName(v4().substring(0, 10))}}><h4>SEND</h4></button>
+        <h5>Enter a name for your game:</h5>
+
+        <div style={{margin: '2.5em auto 0 auto', width: 'fit-content'}}>
+          <input className="input"
+            type="text"
+            value={gameName}
+            onChange={(e) => setGameName(e.target.value)}
+          />
+        </div>
+
+        <div className="checkBoxes">
+          <input type="checkbox" id="customModeSpeed" name="customModeSpeed"
+            onChange={(e) => {setCustomMode("customModeSpeed")}}/>
+          <label><p>2x speed</p></label>
+
+          <input type="checkbox" id="customModeColor" name="customModeColor"
+            onChange={(e) => {setCustomMode("customModeColor")}}/>
+          <label><p>color mode</p></label>
+
+          <input type="checkbox" id="customModeOther" name="customModeOther"
+            onChange={(e) => {setCustomMode("customModeOther")}}/>
+          <label><p>other</p></label>
+        </div>
+
+        <br></br>
+
+        <div style={{margin: 'auto', width: 'fit-content'}}>
+          <button className="gameButton"
+          onClick={() => {GameCreate(socket, gameName, customMode); setOpen(false); setGameName(v4().substring(0, 10))}}><h4>SEND</h4></button>
+        </div>
       </Popup>
     </div>
   );
