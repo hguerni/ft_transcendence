@@ -637,6 +637,10 @@ function mute(cible: number) {
     
 }
 
+function check_profil(cible: number) {
+    
+}
+
 function block(cible: number) {
 
     socket.emit("BLOCK", {target: cible, sender: userId});
@@ -663,7 +667,9 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     else if (param.n == 5)
         mute(param.id);
     else if (param.n == 7)
-        ban(param.id)
+        ban(param.id);
+    else if (param.n == 1)
+        check_profil(param.id);
 
   };
 
