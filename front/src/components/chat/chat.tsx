@@ -103,7 +103,7 @@ function ModifierPopupMdp() {
     const modifier_mdp = (password: string) => {
 
        
-        socket.emit("CHANGE_STATUS_CHAN", {channel: global_channel, id: userId, status: chat_status.public, password: password});
+        socket.emit("CHANGE_STATUS_CHAN", {channel: global_channel, id: userId, status: chat_status.protected, password: password});
     }
     
 

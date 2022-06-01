@@ -143,6 +143,12 @@ export class UserService {
     });
   }
 
+  async getBlocking(clientID: number) {
+    this.findByFtId(clientID).then((client) =>{
+      return this.friendRepo.find({where: {user: client, status: "blocking"}})
+    });
+  }
+
   async getRequest(clientID: number) {
     this.findByFtId(clientID).then((client) =>{
       return this.friendRepo.find({where: {friend: client, status: "pending"}})
