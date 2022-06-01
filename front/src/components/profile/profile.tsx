@@ -3,7 +3,7 @@ import camera from '../../images/camera-solid.svg';
 import level_up from '../../images/level_up.svg';
 import rank from '../../images/rank.svg';
 import React, {ReactEventHandler, useEffect, useState} from "react";
-import {Redirect} from "react-router-dom"
+import {Redirect, Link} from "react-router-dom"
 import axios from "axios";
 // import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 // import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -228,12 +228,16 @@ function Amis() {
 
                        element.friend.online === 1 ? (
                         <li key={element}>
-                            <h1 id='texteh1'> <img src={rond_vert} alt="account" id="rondstatus" /> {element.friend.username} </h1>
+                            <h1 id='texteh1'> 
+                            <img src={rond_vert} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.id} }}> {element.friend.username} 
+                            </Link></h1>
                         </li>
                         )
                         :(
-                            <li key={element}>
-                            <h1 id='texteh1'> <img src={nitendo} alt="account" id="rondstatus" /> {element.friend.username} </h1>
+                        <li key={element}>
+                                                        <h1 id='texteh1'> 
+                            <img src={nitendo} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.id} }}> {element.friend.username} 
+                            </Link></h1>
                         </li>
                         )
 
