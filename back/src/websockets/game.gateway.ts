@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, OnGatewayInit, WsResponse, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { Subscriber } from 'rxjs';
-import { GameService, RoomProps } from '../services/game.service';
+import { GameService, PongProps, RoomProps } from '../services/game.service';
 import { v4 } from 'uuid'
 
 export let logger: Logger = new Logger('gameTest');
@@ -159,10 +159,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   handleCreatingRoom(client: Socket, args: string[]) {
     let p_name = args[0];
     let roomName = args[1];
+    let customMode = args[2];
 
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
       this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
-      this.logger.log("alert!");
       return ;
     }
     this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1);
@@ -229,5 +229,13 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.clientsToRoom.delete(client.id);
     client.leave(room);
     this.logger.log(`Client ${client.id} has leaved the room ${room}`);
+  }
+
+  @SubscribeMessage('GAME_SET_PONG_PROPS')
+  handleResizingRoom(client: Socket, newPongProps: string) {
+    const roomName = this.clientsToRoom.get(client.id);
+
+    this.gameRooms.get(roomName).setPongProps(JSON.parse(newPongProps));
+    this.logger.log('GAME_SET_PONG_PROPS');
   }
 }

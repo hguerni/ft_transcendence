@@ -37,20 +37,23 @@
   text-align: center;
   text-decoration: none;
   background-color: transparent;
-  border-radius: 0px;
+  border: solid 2px transparent;
+  border-radius: 8px 8px 8px 8px;
   align-self: center;
   font-family: 'CrickxRegular';
 }
 
 .headerTabButton:hover {
   //border-bottom: solid 2px rgba(255, 255, 255, .5);
+  border: solid 2px white;
+  background-color: transparent;
 }
 
 .headerTabButtonActive {
   //border-bottom: solid 2px white;
   //background-color: rgba(255, 255, 255, 0.3);
   border: solid 2px white;
-  border-radius: 8px 8px 8px 8px;
+  background-color: transparent;
   //border-bottom: 0px
 }
 

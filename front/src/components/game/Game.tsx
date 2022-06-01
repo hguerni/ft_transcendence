@@ -6,11 +6,12 @@ import GameTraining from './GameTraining';
 import GameFighting from './GameFighting';
 import GameRules from './GameRules';
 
+
 export const socket: Socket = io("ws://localhost:3030/game");
 
 function Game() {
-
   useEffect(() => {
+    socket.removeListener("ALERT");
     socket.on("ALERT", (message: string) => {
       alert(message);
     });
@@ -21,15 +22,15 @@ function Game() {
 
   return (
       <div className='gameWrap'>
-        <div className="gameTitle">
-          <span>PONG</span>
+          <div className="gameTitle">
+            <h4>PONG</h4>
+          </div>
+          <GameRules/>
+          <BrowserRouter>
+              <Route exact path={"/game/training"} component={GameTraining} />
+              <Route exact path={"/game/fighting"} component={GameFighting} />
+          </BrowserRouter>
         </div>
-        <GameRules/>
-        <BrowserRouter>
-            <Route exact path={"/game/training"} component={GameTraining} />
-            <Route exact path={"/game/fighting"} component={GameFighting} />
-        </BrowserRouter>
-      </div>
   );
 }
 
