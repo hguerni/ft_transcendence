@@ -10,6 +10,22 @@
 
 /* ===================== Css Rayane ===================== */
 
+#input-mdp {
+    display: block;
+    margin-left: auto;
+    border: none;
+    outline: none;
+    width: 25%;
+    background-color: transparent;
+    color: rgb(255, 255, 255);
+    font-family: 'CrickxRegular';
+    font-size: 1.25rem;
+}
+
+#leCadenas {
+    height: 80%;
+}
+
 #imgcadenas {
     margin-left: 1rem;
 }
@@ -19,6 +35,8 @@
     font-size: 1.75rem;
     padding: 0.5rem;
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
 }
 
 .allServers:hover {

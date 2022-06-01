@@ -19,6 +19,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import UserService from '../../services/user.service'
+import { Input } from "@mui/material";
 
 //import { getchannel } from "../../../../shares/models"
 const userId: number = UserService.getUserId(); // à récupérer
@@ -324,9 +325,6 @@ function CreatePopupChannel() {
     const [password, setPassword] = useState("");
     const [open, setOpen] = useState(false);
     
-
-    
-
    function sendMember ()
    {
        console.log("lbgrjirgjigrjirgjirgji");
@@ -367,14 +365,48 @@ function CreatePopupChannel() {
 
   }
 
+  function InputPassword(props: {name: string, status: number, setOpen: (open: boolean) => void}) {
+      const [password, setPassword] = useState("");
+      const handleKey = async (e: React.KeyboardEvent<HTMLInputElement>, name: string, password: string) => {
+        if (e.key === "Enter"){
+          console.log('enter' + password);
+          console.log('nom du channel = ' + name);
+          socket.emit("JOIN_CHAN",  {channel: name, id: userId, password: password});
+          setPassword("");
+          setOpen(false);
+        }
+      };
+
+      return (
+        <input
+        id="input-mdp"
+        type="text"
+        placeholder="Mot de passe"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        onKeyDown={(e) => handleKey(e, props.name, password)}
+    />
+      );
+  }
+
 
   function CreatePopupSearchChannel() {
     const [isclic, setisclic] = useState(false);
     const [open, setOpen] = useState(false);
-    const [serverName, setServerName] = useState<{name: string, status: number}[]>([]);
+    const [password, setPassword] = useState("");
+    const [serverName, setServerName] = useState<{name: string, status: number,}[]>([]);
     const searchChannel = () => {
         socket.emit("ALL_CHAN");
     }
+
+    // const handleKey = async (e: React.KeyboardEvent<HTMLInputElement>, name: string, password: string) => {
+    //     if (e.key === "Enter"){
+    //       console.log('enter' + password);
+    //       setOpen(false);
+    //       console.log('nom du channel = ' + name);
+    //       socket.emit("JOIN_CHAN",  {channel: name, id: userId, password: password});
+    //     }
+    //   };
 
    socket.on("ALL_CHAN", (data: {name: string, status: number}[]) => {
         setServerName(data);
@@ -391,23 +423,23 @@ function CreatePopupChannel() {
         <Popup className="testPopup" open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
           {/* <div className="serversList"> */}
           {serverName.map((item) => {
+            // const [password, setPassword] = useState("");
             return (
-            
                     item.status === chat_status.public ? (
-
-
-                    <ul>
                         <h1  className="allServers" onClick={() => {setOpen(false); socket.emit("JOIN_CHAN",  {channel: item.name, id: userId, password: ""})}}> {item.name} </h1>
-
-                    </ul>
-                       
                     )
                     : (
-                        
-                        <PopupPassword name={item.name} status={item.status}/>
+                            <>
+                                <h1 
+                                className="allServers"
+                                onClick={() => {setOpen(true)}}>
+                                {item.name}
+                                <span id="leCadenas">{print_status(item.status)}</span>
+                                <InputPassword name={item.name} status={item.status} setOpen={setOpen}/>
+                                </h1>
+                            </>
                     )
                 )
-           
             })}
           {/* </div> */}
           </Popup>
@@ -845,3 +877,7 @@ function DirectMessages(props: any) {
 }
 
 export default Chat;
+function setOpen(arg0: boolean) {
+    throw new Error("Function not implemented.");
+}
+
