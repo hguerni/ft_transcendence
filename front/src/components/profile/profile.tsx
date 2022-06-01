@@ -2,8 +2,8 @@ import './profile.css';
 import camera from '../../images/camera-solid.svg';
 import level_up from '../../images/level_up.svg';
 import rank from '../../images/rank.svg';
-import React, {useEffect, useState} from "react";
-import {Redirect, useHistory} from "react-router-dom"
+import React, {ReactEventHandler, useEffect, useState} from "react";
+import {Redirect, Link, useHistory} from "react-router-dom"
 import axios from "axios";
 // import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 // import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -146,7 +146,7 @@ function Profile() {
               console.log(data);
               if (mounted) setUser(data);
               if (mounted) setAvatar(data.avatar);
-              if (mounted) setToggle(data.twofa)
+              if (mounted) setToggle(data.twofa);
           }
           catch(err){if(mounted) setUnauthorized(true);}
       }
@@ -216,14 +216,43 @@ function Profile() {
 
 function Amis() {
 
-    const data : {nom: string, online: number}[] = [
-        {nom: "rayane", online: 1},
-        {nom: "elias", online: 0},
-        {nom: "pierre", online: 0},
-        {nom: "ava", online: 0},
-        {nom: "leo", online: 2}
-    ];
-    let online = 0;
+    const [friends, setGetFriends] = useState([]);
+    const [requests, setGetRequests] = useState([]);
+
+    useEffect(() => {
+        let mounted = true;
+        const getFriends = async () => {
+            try {
+                const friends = (await axios.get('friends')).data;
+                console.log(friends);
+                if (mounted) setGetFriends(friends);
+            }
+            catch(err){}
+        }
+        getFriends();
+        return () => {mounted = false;}
+    }, []);
+
+    useEffect(() => {
+        let mounted = true;
+        const getRequests = async () => {
+            try {
+                const frrequests = (await axios.get('friendrequests')).data;
+                console.log(frrequests);
+                if (mounted) setGetRequests(frrequests);
+            }
+            catch(err){}
+        }
+        getRequests();
+        return () => {mounted = false;}
+    }, []);
+
+    const handleClick = (e : React.MouseEvent<HTMLElement>) => {
+        const appMode = e.currentTarget.getAttribute('data-arg1');
+        console.log(appMode);
+        axios.get('acceptfriend/' + appMode?.toString());
+      };
+
     return (
         <>
 
@@ -234,22 +263,27 @@ function Amis() {
                {/* faire  une boucle ici qui check dabbord si les ami son en ligne */}
 
                <h1 id='info-online'>Online</h1>
-               {data.map((element, i) => {
+               <ul>
+               {friends.length ? friends.map((element : any) => {
                 console.log(element);
 
            // Affichage
                 return (
-                    element.online !== 0 ? (
+                    element.friend.online !== 0 ? (
 
-                        element.online === 1 ? (
-                        <ul>
-                            <h1 id='texteh1'> <img src={rond_vert} alt="account" id="rondstatus" /> {element.nom} </h1>
-                        </ul>
+                       element.friend.online === 1 ? (
+                        <li key={element}>
+                            <h1 id='texteh1'> 
+                            <img src={rond_vert} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.id} }}> {element.friend.username} 
+                            </Link></h1>
+                        </li>
                         )
                         :(
-                            <ul>
-                            <h1 id='texteh1'> <img src={nitendo} alt="account" id="rondstatus" /> {element.nom} </h1>
-                        </ul>
+                        <li key={element}>
+                                                        <h1 id='texteh1'> 
+                            <img src={nitendo} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.id} }}> {element.friend.username} 
+                            </Link></h1>
+                        </li>
                         )
 
                     )
@@ -258,19 +292,21 @@ function Amis() {
                     )
                 )
 
-                    })}
+                    }): 0}
+                    </ul>
                           <h1 id='info-offline'>Offline</h1>
-               {data.map((element, i) => {
+                          <ul>
+               {friends.length ? friends.map((element: any) => {
                 console.log(element);
 
            // Affichage
                 return (
-                    element.online === 0 ? (
+                   element.friend.online === 0 ? (
 
 
-                        <ul>
-                            <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.nom}</h1>
-                        </ul>
+                        <li key={element}>
+                            <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.friend.username}</h1>
+                        </li>
 
                     )
                     : (
@@ -278,7 +314,24 @@ function Amis() {
                     )
                 )
 
-                    })}
+                    }) : 0 }
+                    </ul>
+                        <h1 id='info-online'>Pending</h1>
+                        <ul>
+                        {requests.length ? requests.map((element: any) => {
+                console.log(element);
+
+           // Affichage
+                return (
+                        <li key={element}>
+                            <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.friend.username}</h1>
+                            <button className="btncrayon" onClick={handleClick} data-arg1={element.friend.id}><img src={crayon} alt="account" id="crayon"/></button>
+                        </li>
+
+                )
+
+                    }) : 0}
+                </ul>
             </div>
         </>
     );

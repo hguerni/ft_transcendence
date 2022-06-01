@@ -17,6 +17,7 @@ import {  BaseEntity,
   @PrimaryGeneratedColumn()
   id: number;
   
+  @Column()
   @IsString()
   status: string;
   
@@ -24,9 +25,11 @@ import {  BaseEntity,
   @JoinTable()
   user: UserEntity;
 
+  @ManyToOne(()=> UserEntity, user => user.donotuse)
+  @JoinTable()
   friend: UserEntity;
 
-  @OneToOne(() => FriendEntity)
+  @OneToOne(() => FriendEntity, {nullable : true})
   @JoinTable()
   friendship: FriendEntity;
 }

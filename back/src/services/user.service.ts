@@ -5,6 +5,7 @@ import { FriendEntity } from '../entities/friend.entity';
 import { getRepository, Repository } from 'typeorm';
 import { UpdateUserDTO, RegisterDTO } from '../models/user.model';
 import { GameEntity } from '../entities/game.entity';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class UserService {
@@ -80,6 +81,10 @@ export class UserService {
   async addFriend(clientid: number, friendid: number) {
     this.findByFtId(clientid).then((client) =>{
       this.getById(friendid).then(async (friend) => {
+        let previousfriend = await this.friendRepo.findOne({where: {friend: client, user: friend}});
+        console.log("LOL" + previousfriend);
+        if (previousfriend)
+          return ;
         let friendship1 = new FriendEntity;
         let friendship2 = new FriendEntity;
         friendship1.status = "requesting";
@@ -88,11 +93,8 @@ export class UserService {
         friendship2.status = "pending";
         friendship2.friend = client;
         friendship2.user = friend;
-        await this.friendRepo.save(friendship1)
-        this.friendRepo.findOne({where: {friend: friend, user: client}}).then(async (friendship) => {
-          friendship2.friendship = friendship;
-          await this.friendRepo.save(friendship2);
-        });
+        await this.friendRepo.save(friendship2);
+        await this.friendRepo.save(friendship1);
       });
     });
   }
@@ -101,8 +103,10 @@ export class UserService {
     this.findByFtId(clientid).then((client) =>{
       this.getById(friendid).then(async (friend) => {
         this.friendRepo.findOne({where: {friend: friend, user: client}}).then(async (friendship) => {
-          this.friendRepo.update(friendship.id, {status: "accepted"});
-          this.friendRepo.update(friendship.friendship.id, {status: "accepted"});
+          await this.friendRepo.update(friendship.id, {status: "accepted"});
+          this.friendRepo.findOne({where: {friend: client, user: friend}}).then(async (friendship2) => {
+            await this.friendRepo.update(friendship2.id, {status: "accepted"});
+          });
         });
       });
     });
@@ -128,19 +132,18 @@ export class UserService {
         friendship2.status = "blocked";
         friendship2.friend = client;
         friendship2.user = friend;
-        await this.friendRepo.save(friendship1)
-        this.friendRepo.findOne({where: {friend: friend, user: client}}).then(async (friendship) => {
-          friendship2.friendship = friendship;
-          await this.friendRepo.save(friendship2);
-        });
+        await this.friendRepo.save(friendship1);
+        await this.friendRepo.save(friendship2);
       });
     });
   }
 
   async getFriends(clientID: number) {
-    this.findByFtId(clientID).then((client) =>{
-      return this.friendRepo.find({where: {user: client, status: "accepted"}})
-    });
+    const client = await this.findByFtId(clientID);
+    let friends = await this.friendRepo.find({where: {user: client, status: "accepted"}, relations: ['friend', 'user'],});
+    let req = JSON.stringify(instanceToPlain(friends));
+    console.log(req)
+    return req
   }
 
   async getBlocking(clientID: number) {
@@ -150,9 +153,10 @@ export class UserService {
   }
 
   async getRequest(clientID: number) {
-    this.findByFtId(clientID).then((client) =>{
-      return this.friendRepo.find({where: {friend: client, status: "pending"}})
-    });
+    const client = await this.findByFtId(clientID);
+    let requests = await this.friendRepo.find({where: {user: client, status: "pending"}, relations: ['friend', 'user'],});
+    let req = JSON.stringify(instanceToPlain(requests));
+    return req
   }
 
   async setOffline(clientID: number): Promise<any> {

@@ -55,6 +55,10 @@ function Profiles(props : any) {
       return () => {mounted = false;}
   }, []);
 
+  const handleClick = () => {
+    axios.get('addfriend/' + props.location.state.id);
+  };
+
 
   if (unauthorized)
       return <Redirect to={'/'}/>;
@@ -71,7 +75,7 @@ function Profiles(props : any) {
                 <img src={avatar} alt="account" id="acc-img"/>
 
                 <div className="login">
-                    <h1>{user.username} <button className="btncrayon" > <img src={add_friend} alt="account" id="crayon"/></button> </h1>
+                    <h1>{user.username} <button className="btncrayon" onClick={handleClick}> <img src={add_friend} alt="account" id="crayon"/></button> </h1>
                 </div>
                 <div className="rank">
                     <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1>
@@ -86,7 +90,6 @@ function Profiles(props : any) {
 
         <Stats />
         <History user={user}/>
-        <Amis />
 
     </>
   );

@@ -9,7 +9,7 @@ import {  BaseEntity,
   ManyToMany,
   OneToMany,
   Entity} from 'typeorm';
-import { isBoolean, IsBoolean, IsEmail, IsString } from 'class-validator';
+import { isBoolean, IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
 import File from './file.entity';
 import { FriendEntity } from './friend.entity';
 import { MemberEntity } from './member.entity';
@@ -49,6 +49,9 @@ username: string;
 @OneToMany(() => FriendEntity, friend => friend.user)
 friends: FriendEntity[];
 
+@OneToMany(() => FriendEntity, friend => friend.friend)
+donotuse: FriendEntity[];
+
 @OneToMany(() => GameEntity, games => games.user)
 games: GameEntity[];
 
@@ -56,7 +59,8 @@ games: GameEntity[];
 @IsBoolean()
 isBan: boolean;
 
-
+@Column({ nullable: true })
+@IsNumber()
 online: number;
 
 @Column()

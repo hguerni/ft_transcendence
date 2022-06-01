@@ -24,6 +24,8 @@ export class AuthController {
 
         if(!clientData)
             return response.redirect('http://localhost:3000/')
+        else
+            await this.userService.setOnline(clientData.id);
         if(clientData.twofa)
             return response.redirect('http://localhost:3000/2fa')
         return response.redirect('http://localhost:3000/profile')
@@ -93,6 +95,12 @@ export class AuthController {
         return await this.userService.addFriend(clientID, id)
     }
 
+    @Get("acceptfriend/:id")
+    async acceptFriend(@Param('id', new ParseIntPipe()) id, @Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        return await this.userService.acceptFriend(clientID, id)
+    }
+
     @Get("removefriend/:id")
     async removeFriend(@Param('id', new ParseIntPipe()) id, @Req() request: Request) {
         const clientID = await this.authService.clientID(request);
@@ -153,11 +161,19 @@ export class AuthController {
         return await this.userService.getFriends(clientID);
     }
 
+    @Get("friendrequests")
+    async getRequests(@Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        let requests = await this.userService.getRequest(clientID)
+        return requests
+    }
+
     @Get('logout')
     async logout(@Req() request: Request, @Res({passthrough: true}) response: Response) {
         response.clearCookie('clientID');
-        //const clientID = await this.authService.clientID(request);
-        //await this.userService.setOffline(clientID);
+        const clientID = await this.authService.clientID(request);
+        const clientData = await this.userService.findByFtId(clientID);
+        await this.userService.setOffline(clientData.id);
 
         return {message: 'Success'}
 
