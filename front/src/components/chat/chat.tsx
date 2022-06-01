@@ -103,10 +103,19 @@ function MenuSettings() {
         socket.emit("QUIT_CHAN", {channel: global_channel, id: userId});
     }
 
+    const retirer_mdp = () => {
+        socket.emit("CHANGE_STATUS_CHAN", {channel: global_channel, id: userId, status: chat_status.public, password: ""});
+    }
+
+
     const handleClose = (ind: number) => {
         setAnchorEl(null);
         if (ind == 2)
             quit_serveur();
+        else if (ind == 1)
+            retirer_mdp();
+ 
+
     };
 
     
@@ -314,7 +323,6 @@ function CreatePopupChannel() {
     }
 
    socket.on("ALL_CHAN", (data: {name: string, status: number}[]) => {
-        console.log(data);
         setServerName(data);
    })
 
@@ -342,7 +350,7 @@ function CreatePopupChannel() {
                     )
                     : (
                         
-                        <PopupPassword name={item.name} status={item.status}/> 
+                        <PopupPassword name={item.name} status={item.status}/>
                     )
                 )
            
