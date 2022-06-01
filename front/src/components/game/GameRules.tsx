@@ -14,8 +14,8 @@ export default function GameRules () {
 
   return (
     <div>
-      <button onClick={() => history.push('/game/training')} className="gameTrainingButton">1 player</button>
-      <button onClick={() => history.push('/game/fighting')} className="gameTrainingButton">2 players</button>
+      <button onClick={() => history.push('/game/training')} className="gameTrainingButton"><h4>1 player</h4></button>
+      <button onClick={() => history.push('/game/fighting')} className="gameTrainingButton"><h4>2 players</h4></button>
     </div>
   );
 }
