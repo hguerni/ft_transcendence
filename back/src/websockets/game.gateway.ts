@@ -17,6 +17,7 @@ function getRandomKey(collection: Set<any> | Map<any, any>) {
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
+
 @WebSocketGateway({cors: {origin: "*"}, namespace: 'game'})
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
@@ -38,7 +39,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
@@ -97,6 +97,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       this.clientsToRoom.set(client.id, this.clientsToRoom.get(this.usersToClients.get(userID).at(-1)));
     }
     this.handleSendingCurrentRoom(client.id);
+
+    const room = this.clientsToRoom.get(client.id);
+    if (room != undefined) {
+      client.join(room);
+      this.gameRooms.get(room).gameUpdate(this.wsServer);
+    }
+
+    this.logger.log(`Client connected: ${client.id}`);
     this.logger.log(`Client ${client.id} is link to user ${userID}`);
   }
 
@@ -184,6 +192,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     gameRoom.setPlayersNamesAndIds(userData.username, userData.userId);
     this.gameRooms.set(roomName, gameRoom);
     client.join(roomName);
+    gameRoom.setCustomMode(this.wsServer, customMode);
     this.handleSendingRooms(this.getRoomsGroup);
     this.handleSendingCurrentRoom(client.id);
     this.logger.log(`GAME ${roomName} CREATED by ${client.id}`);

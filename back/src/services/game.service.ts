@@ -3,6 +3,7 @@ import { Server } from 'socket.io';
 import { v4 } from 'uuid';
 
 export class PongProps {
+  gameIsStarted: boolean = false;
 	width: number = 10000 / 2.2;
 	height: number = 10000 / 3.2;
 	score_l: number = 0;
@@ -18,6 +19,7 @@ export class PongProps {
 	paddle_l_y: number = this.height / 10;
 	paddle_r_x: number = this.width - this.width / 30 - this.paddle_width;
 	paddle_r_y: number = this.height / 10;
+	customMode: string = "";
 }
 
 export class RoomProps {
@@ -131,6 +133,7 @@ export class GameService {
 
     this.launchBall(this);
     wsServer.to(this.room.name).emit('SEND_GAME_STATUS', "Let's play!");
+    this.pong.gameIsStarted = true;
     this.pong.ball_y = this.pong.height / 2;
     wsServer.to(this.room.name).emit('GAME_UPDATE', JSON.stringify(this.pong));
     if (this.intervalId_0 == null)
@@ -225,8 +228,24 @@ export class GameService {
     this.room.p2_readyToStart = true;
   }
 
+  setCustomMode(wsServer: Server, customMode: string) {
+    this.pong.customMode = customMode;
+    if (customMode === "speedx2")
+      this.pong.speepFactor *= 2;
+    else if (customMode === "customModeColor")
+      true;
+    else if (customMode === "other")
+      true;
+    wsServer.to(this.room.name).emit('GAME_UPDATE', JSON.stringify(this.pong));
+  }
+
   setPongProps(newPongProps: PongProps) {
     this.pong = newPongProps;
+  }
+
+  gameUpdate (wsServer: Server) {
+    wsServer.to(this.room.name).emit('GAME_UPDATE', JSON.stringify(this.pong));
+    console.log(` test: ${this.room.name}`);
   }
 
   getPongProps(): PongProps {
