@@ -15,7 +15,7 @@ import { subscribeOn } from 'rxjs';
   import { ChatService, status } from '../services/chat.service';
   import { ChatEntity, chat_status } from '../entities/chat.entity';
   import { UserService } from '../services/user.service';
-import { randomUUID } from 'crypto';
+import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, randomUUID } from 'crypto';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
@@ -236,7 +236,7 @@ import { randomUUID } from 'crypto';
 		})
 		this.chatService.getMpmsg(id)
 		.then((val) => {
-			client.emit('MP_CREATE', val);
+			client.emit('MP_CREATED', val);
 		})
 	}
 
@@ -270,13 +270,34 @@ import { randomUUID } from 'crypto';
 	@SubscribeMessage('CREATE_MP_CHAN')
 	async handleMpChan(
 		@ConnectedSocket() client: Socket,
-		@MessageBody() mp: {id: number, login: string}
+		@MessageBody() mp: {target: number, sender: number}
 	)
 	{
-		const name = 'mp' + randomUUID;
-		this.handleCreateChannel(client, {channel: name, id: mp.id, status: chat_status.private, password: ''});
-		this.addmember({channel: name, login: mp.login}, client);
-		this .chatService.defineMp(name);
+		const name = randomBytes(4).toString('hex');
+		await this.chatService.addOne({name: name,
+			status: chat_status.private,
+			password: ""});
+		await this.chatService.addMember({channel: name, id: mp.sender, status: status.default});
+		const ret = await this.chatService.getMpmsg(mp.sender);
+		this.io.to(mp.sender.toString()).emit('MP_CREATED', ret);
+		this.io.to(mp.sender.toString()).socketsJoin(name);
+		
+		await this.chatService.addMember({channel: name, id: mp.target, status: status.default});
+		const ret2 = await this.chatService.memberInChannel(name);
+		this.Connected.forEach(element => {
+			if (element.id == mp.target)
+			{
+				element.socket.join(name);
+				this.getchannelname(element.socket, element.id);
+				return;
+			}
+		});
+		this.io.to(name).emit('LIST_NAME', 
+		{
+			channel: name,
+			list: ret2
+		});
+		this.chatService.defineMp(name);
 	}
 
 	@SubscribeMessage('ALL_CHAN')

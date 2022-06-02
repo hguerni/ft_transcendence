@@ -611,6 +611,20 @@ function Channel() {
                     </div>                   
                 <div className="centerChat">
 
+                    <div className="testDM">
+                    {arrayMpName.map((item) => {
+                        return  <button className="buttonInviteUsers"
+                                        onClick={() => {
+                                            socket.emit("JUST_NAME_CHANNEL",
+                                            {name: item.name, id: userId});
+                                            global_channel = item.name;
+                                            console.log(global_channel);}}>
+                                            {display_channel('@', item.username)}
+                                </button>
+                    })}
+                    </div>
+
+                    <div id="separation2"></div>
                     <div className="lesChannels">{arrayChannelName.map((item) => {
                         return  <button className="buttonInviteUsers"
                                         onClick={() => {
@@ -621,20 +635,7 @@ function Channel() {
                                             {display_channel('#', item)}
                                 </button>
                     })}
-                    </div>
-                    <div id="separation2">
-                    </div>
-                    <div className="testDM">
-                    {arrayChannelName.map((item) => {
-                        return  <button className="buttonInviteUsers"
-                                        onClick={() => {
-                                            socket.emit("JUST_NAME_CHANNEL",
-                                            {name: item, id: userId});
-                                            global_channel = item;
-                                            console.log(global_channel);}}>
-                                            {display_channel('@', item)}
-                                </button>
-                    })}
+                    
                     </div>
                 </div>
                 <div className="footerChatchannel">
@@ -682,6 +683,11 @@ function unblock(cible: number) {
     socket.emit("UNBLOCK", {target: cible, sender: userId});
 }
 
+function sendmp(cible: number)
+{
+    socket.emit("CREATE_MP_CHAN", {target: cible, sender: userId});
+}
+
 function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -695,6 +701,8 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     setAnchorEl(null);
     if (param.n == 4)
         promouvoir_admin(param.id);
+    else if (param.n == 3)
+        sendmp(param.id);
     else if (param.n == 5)
         mute(param.id);
     else if (param.n == 7)

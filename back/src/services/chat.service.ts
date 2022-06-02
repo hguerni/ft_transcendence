@@ -42,19 +42,19 @@ export class ChatService {
     async getPvmsg(id: number)
     {
         const user = await this.userRepo.findOne({where: {ft_id: id}});
-        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user, mp_message: false}, relations: ['chat']});
+        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user}, relations: ['chat']});
 
         const tmp: string[] = [];
         channels.forEach((element) => {
-            if (element.quit_status == quit_status.none)
+            if (element.quit_status == quit_status.none && element.chat.mp_message == false)
                 tmp.push(element.chat.name);
         })
         return tmp;
     }
 
-    async getMpuser(user: UserEntity, users: MemberEntity[])
+    getMpuser(user: UserEntity, users: MemberEntity[])
     {
-        if (users[0].user == user)
+        if (users[0].user != user)
             return (users[0].user.username);
         return (users[1].user.username);
     }
@@ -62,11 +62,11 @@ export class ChatService {
     async getMpmsg(id: number)
     {
         const user = await this.userRepo.findOne({where: {ft_id: id}});
-        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user, mp_message: true}, relations: ['chat', 'user']});
+        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user}, relations: ['chat', 'user', 'chat.members', 'chat.members.user']});
 
         const tmp: {name: string, username: string}[] = [];
         channels.forEach((element) => {
-            if (element.quit_status == quit_status.none)
+            if (element.quit_status == quit_status.none && element.chat.mp_message == true)
                 tmp.push({name: element.chat.name, username: this.getMpuser(user, element.chat.members)});
         })
         return tmp;
@@ -132,7 +132,6 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["messages"]});
         const user = await this.userRepo.findOne({where: {ft_id: data.id}});
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}, relations: ['chat', 'chat.messages']});
-        console.log(member.mute);
         if (member.mute || member.quit_status > quit_status.none)
             throw Error("is mute, quit or ban");
         const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
