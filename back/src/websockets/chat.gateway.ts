@@ -202,21 +202,26 @@ import { randomUUID } from 'crypto';
 
 	@SubscribeMessage('JUST_NAME_CHANNEL')
 	getchannelinfo(
-		@MessageBody() name: string,
+		@MessageBody() data: {name: string, id: number},
 		@ConnectedSocket() client: Socket
 	)
 	{
-		this.chatService.memberInChannel(name)
+		this.chatService.memberInChannel(data.name)
 		.then((val) => {
+			val.forEach((element) => {
+				if (element.id == data.id)
+					client.emit('STATUS', element.status);
+			})
 			client.emit('LIST_NAME', {
-				channel: name,
+				channel: data.name,
 				list: val
 			})
 		})
-		this.chatService.messageInChannel(name)
+		this.chatService.messageInChannel(data.name)
 		.then((val) => {
-			client.emit('LIST_CHAT', {channel: name, list: val});
+			client.emit('LIST_CHAT', {channel: data.name, list: val});
 		})
+		
 	}
 
 	@SubscribeMessage('GET_CHANNEL')
@@ -272,10 +277,11 @@ import { randomUUID } from 'crypto';
 
 	@SubscribeMessage('ALL_CHAN')
 	async handleAllChan(
+		@MessageBody() id: number,
 		@ConnectedSocket() client: Socket
 	)
 	{
-		const channels = await this.chatService.getAccessibleChan();
+		const channels = await this.chatService.getAccessibleChan(id);
 		client.emit('ALL_CHAN', channels);
 	}
 

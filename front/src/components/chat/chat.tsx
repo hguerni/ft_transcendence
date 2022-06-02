@@ -42,7 +42,12 @@ const socket = io("ws://localhost:3030/chat");
 socket.emit('ready', userId);
 
 let global_channel = "";
+let global_status = status.ban;
 let global_name_click = "";
+
+socket.on('STATUS', (status: number) => {
+    global_status = status;
+});
 /*creation d'un evenement juste pour que avant de discuter les deux on rejoin le canal*/
 //socket.emit("joinroom");
 
@@ -171,7 +176,7 @@ function MenuSettings() {
 
     let menuEngrenage;
     let status_user = 0;
-    if (status_user === 0) {
+    if (global_status === 0) {
         menuEngrenage = (
         <>
             
@@ -396,7 +401,7 @@ function CreatePopupChannel() {
     const [password, setPassword] = useState("");
     const [serverName, setServerName] = useState<{name: string, status: number,}[]>([]);
     const searchChannel = () => {
-        socket.emit("ALL_CHAN");
+        socket.emit("ALL_CHAN", userId);
     }
 
     // const handleKey = async (e: React.KeyboardEvent<HTMLInputElement>, name: string, password: string) => {
@@ -603,7 +608,7 @@ function Channel() {
                 <div className="centerChat">
 
                     {arrayChannelName.map((item) => {
-                        return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  item); global_channel = item; console.log(global_channel);}}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
+                        return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  {name: item, id: userId}); global_channel = item; console.log(global_channel);}}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
                     })}
                 </div>
                 <div className="footerChatchannel">
@@ -678,7 +683,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   let status_du_gars_connecte = 0;
   //recup le status
 
-  if (status_du_gars_connecte == 0)
+  if (global_status == 0)
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
@@ -692,7 +697,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
 
       </>)
   }
-  else if (status_du_gars_connecte == 1)
+  else if (global_status == 1)
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
@@ -703,7 +708,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
         <MenuItem onClick={() => handleClose({n: 6, id: props.item.id})}>Bannir</MenuItem>
         </>)
   }
-  else if (status_du_gars_connecte)
+  else if (global_status)
   {
     menu_onclick =( <>
         <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
