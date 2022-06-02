@@ -241,7 +241,7 @@ function CreatePopupChannel() {
     return (
       <div>
           <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
-        <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+          <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
           <div>Nom du Channel à créer:</div>
 
           <input className="input"
@@ -399,7 +399,7 @@ function CreatePopupChannel() {
     const [isclic, setisclic] = useState(false);
     const [open, setOpen] = useState(false);
     const [password, setPassword] = useState("");
-    const [serverName, setServerName] = useState<{name: string, status: number,}[]>([]);
+    const [serverName, setServerName] = useState<{name: string, status: number}[]>([]);
     const searchChannel = () => {
         socket.emit("ALL_CHAN", userId);
     }
@@ -577,24 +577,28 @@ function Channel() {
 
     const [channelName, setChannelName] = useState("");
     const [arrayChannelName, setArrayChannelName] = useState<string[]>([]);
+    const [arrayMpName, setArrayMpName] = useState<{name: string, username: string}[]>([]);
 
     useEffect(() => {
-        // socket.on("ready", (ready_chat: object) => {
-
-        // })
-      // réception d'un message envoyé par le serveur
         socket.on("CHANNEL_CREATED", (message: string[]) => {
-            // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
-            //setInputValue(message);
-            //setChannelName(message);
-
-            //const filteredArray = message.filter(function(ele , pos){
-            //    return message.indexOf(ele) == pos;
-            //})
             console.log("<List channel>", message);
             setArrayChannelName(message);
         });
     }, []);
+
+    useEffect(() => {
+        socket.on("MP_CREATED", (data: {name: string, username: string}[]) => {
+            setArrayMpName(data);
+        })
+    })
+
+    const display_channel = (char: string, item: string) => {
+        return (
+            <h1 className="channelName">
+                <span className="dieseChannel">{char} </span>{item.substring(0, 10)}
+            </h1>
+        );
+    }
 
 
     return (
@@ -607,9 +611,31 @@ function Channel() {
                     </div>                   
                 <div className="centerChat">
 
-                    {arrayChannelName.map((item) => {
-                        return  <button className="buttonInviteUsers" onClick={() => {socket.emit("JUST_NAME_CHANNEL",  {name: item, id: userId}); global_channel = item; console.log(global_channel);}}> <h1 className="channelName"> <span className="dieseChannel"> # </span> {item.substring(0, 10)}  </h1> </button>
+                    <div className="lesChannels">{arrayChannelName.map((item) => {
+                        return  <button className="buttonInviteUsers"
+                                        onClick={() => {
+                                            socket.emit("JUST_NAME_CHANNEL",
+                                            {name: item, id: userId});
+                                            global_channel = item;
+                                            console.log(global_channel);}}>
+                                            {display_channel('#', item)}
+                                </button>
                     })}
+                    </div>
+                    <div id="separation2">
+                    </div>
+                    <div className="testDM">
+                    {arrayChannelName.map((item) => {
+                        return  <button className="buttonInviteUsers"
+                                        onClick={() => {
+                                            socket.emit("JUST_NAME_CHANNEL",
+                                            {name: item, id: userId});
+                                            global_channel = item;
+                                            console.log(global_channel);}}>
+                                            {display_channel('@', item)}
+                                </button>
+                    })}
+                    </div>
                 </div>
                 <div className="footerChatchannel">
                 </div>
