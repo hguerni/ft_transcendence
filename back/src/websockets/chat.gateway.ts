@@ -234,6 +234,10 @@ import { randomUUID } from 'crypto';
 		.then((val) => {
 			client.emit('CHANNEL_CREATED', val);
 		})
+		this.chatService.getMpmsg(id)
+		.then((val) => {
+			client.emit('MP_CREATE', val);
+		})
 	}
 
 

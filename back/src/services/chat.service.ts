@@ -42,12 +42,32 @@ export class ChatService {
     async getPvmsg(id: number)
     {
         const user = await this.userRepo.findOne({where: {ft_id: id}});
-        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user}, relations: ['chat']});
+        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user, mp_message: false}, relations: ['chat']});
 
         const tmp: string[] = [];
         channels.forEach((element) => {
             if (element.quit_status == quit_status.none)
                 tmp.push(element.chat.name);
+        })
+        return tmp;
+    }
+
+    async getMpuser(user: UserEntity, users: MemberEntity[])
+    {
+        if (users[0].user == user)
+            return (users[0].user.username);
+        return (users[1].user.username);
+    }
+
+    async getMpmsg(id: number)
+    {
+        const user = await this.userRepo.findOne({where: {ft_id: id}});
+        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user, mp_message: true}, relations: ['chat', 'user']});
+
+        const tmp: {name: string, username: string}[] = [];
+        channels.forEach((element) => {
+            if (element.quit_status == quit_status.none)
+                tmp.push({name: element.chat.name, username: this.getMpuser(user, element.chat.members)});
         })
         return tmp;
     }
@@ -145,37 +165,12 @@ export class ChatService {
 
     async getAccessibleChan(id: number)
     {
-        // const user = await this.userRepo.findOne({where: {ft_id: id}});
-        // const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user}, relations: ['chat']});
-
-        // const tmp: string[] = [];
-        // channels.forEach((element) => {
-        //     if (element.quit_status == quit_status.none)
-        //         tmp.push(element.chat.name);
-        // })
-        // return tmp;
-
-        // const user = await this.userRepo.findOne({where: {ft_id: id}});
-        // const member = await this.membersRepo.find({select: ['id'], relations: ['chat']});
-
-        // const chat: {name: string, status: number}[] = [];
-        // member.forEach((element) => {
-        //     if ((element.chat.status == chat_status.public || element.chat.status == chat_status.protected)
-        //     && element.user == user && element.quit_status == quit_status.quit)
-        //         chat.push({name: element.chat.name, status: element.chat.status});
-        // })
+        const user = await this.getUser(id);
         const chat = await this.chatRepository.find({
             select: ['name', "status"],
             where: [{status: chat_status.public},
             {status: chat_status.protected}]
         });
-        // const ret: ChatEntity[] = [];
-        // chat.forEach((element) => {
-        //     this.getMember(element, id).then((membre) => {
-        //         if (!membre || membre.quit_status == quit_status.quit)
-        //             ret.push(element);
-        //     })
-        // });
         return chat;
     }
 
@@ -203,7 +198,7 @@ export class ChatService {
             sender.status = status.default;
             this.membersRepo.save(sender);
         }
-        if (status.ban)
+        if (data.status == status.ban)
             target.quit_status = quit_status.ban;
         this.membersRepo.save(target);
     }
@@ -258,6 +253,7 @@ export class ChatService {
         if (same && same.quit_status > quit_status.none)
         {
             same.quit_status = quit_status.none;
+            same.status = status.default;//if ban
             member = same;
         }
         else if (!same)
