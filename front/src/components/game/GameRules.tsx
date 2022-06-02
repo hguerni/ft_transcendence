@@ -13,7 +13,7 @@ export default function GameRules () {
     return (<></>);
 
   return (
-    <div>
+    <div style={{padding: '2em'}}>
       <h4 style={{fontSize: '4em', textAlign: 'center', marginBottom: '1em'}}>Welcome to PONG!</h4>
       <br></br>
       <p style={{fontSize: '2em', textAlign: 'center', marginBottom: '1.5em'}}>
