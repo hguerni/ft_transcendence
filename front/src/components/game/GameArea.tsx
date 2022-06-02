@@ -3,8 +3,8 @@ import p5Types from "p5";
 import { Socket } from 'socket.io-client';
 import UserService from "../../services/user.service";
 
-const UP_ARROW = 38;
-const DOWN_ARROW = 40;
+const UP = 90;
+const DOWN = 83;
 
 export class PongProps {
 	width: number = window.innerWidth / 2.2;
@@ -74,6 +74,12 @@ export function GameSetPongProps(client: Socket, newPongProps: PongProps) {
 	client.emit("GAME_SET_PONG_PROPS", JSON.stringify(newPongProps));
 }
 
+export function GameAutoMaching(client: Socket) {
+	let userDataGame: UserDataGame = new UserDataGame();
+	client.emit("GAME_AUTO_MATCHING", JSON.stringify(userDataGame));
+}
+
+
 export default function Gamezone(props: {client: Socket}) {
 	let pong = new PongProps();
 
@@ -112,9 +118,9 @@ export default function Gamezone(props: {client: Socket}) {
 		p5.text(pong.score_l, pong.width / 4, pong.height / 3);
 		p5.text(pong.score_r, (pong.width / 4) * 3, pong.height / 3);
 
-		if (p5.keyIsDown(UP_ARROW))
+		if (p5.keyIsDown(UP))
 			props.client.emit("MOVE_PADDLE_UP");
-		else if (p5.keyIsDown(DOWN_ARROW))
+		else if (p5.keyIsDown(DOWN))
 			props.client.emit("MOVE_PADDLE_DOWN");
 	};
 
