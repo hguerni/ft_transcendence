@@ -37,7 +37,6 @@ export default function GameRules () {
         <button onClick={() => history.push('/game/training')} style={{marginRight: '5em'}} className="gameTrainingButton"><h4>1 player</h4></button>
         <button onClick={() => history.push('/game/fighting')} className="gameTrainingButton"><h4>2 players</h4></button>
       </div>
-
     </div>
   );
 }

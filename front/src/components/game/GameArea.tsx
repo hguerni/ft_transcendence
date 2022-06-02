@@ -8,9 +8,6 @@ import baguette from "../../images/baguette.png";
 import cheese from "../../images/cheese.png";
 import randomcolor from "randomcolor";
 
-import p5 from "p5";
-
-
 const UP = 90;
 const DOWN = 83;
 
@@ -97,8 +94,8 @@ export default function Gamezone(props: {client: Socket}) {
 	let baguette_png: p5Types.Image;
 	let cheese_png: p5Types.Image;
 
-
 	const preload = (p5: p5Types) => {
+
 		gnome_gif = p5.loadImage(dancing_gnome);
 		cat_gif = p5.loadImage(cat);
 		baguette_png = p5.loadImage(baguette);
