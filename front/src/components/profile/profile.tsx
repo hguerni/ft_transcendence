@@ -123,7 +123,7 @@ function Profile() {
         await axios.put('updateAvatar', {avatar: data.url});
         setAvatar(data.url);
     }
-    catch (err) {setAvatar('http://localhost:3030/uploads/avatar.png')}
+    catch (err) {setAvatar('http://54.245.74.93:3030/uploads/avatar.png')}
 
     }
 

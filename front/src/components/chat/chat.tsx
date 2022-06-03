@@ -38,7 +38,7 @@ enum chat_status {
     pv_message
   }
 
-const socket = io("ws://localhost:3030/chat");
+const socket = io("ws://54.245.74.93:3030/chat");
 socket.emit('ready', userId);
 
 let global_channel = "";
@@ -151,13 +151,13 @@ function MenuSettings() {
     const handleClose = (ind: number) => {
          
         setAnchorEl(null);
-        if (ind == 2)
+        if (ind === 2)
         {
          
             quit_serveur();
         }
             
-        else if (ind == 1)
+        else if (ind === 1)
         {
             
             retirer_mdp();
@@ -479,7 +479,7 @@ function Bodychat() {
         // let tmp = [...arraylistName];
         // tmp.push(message);
         console.log("<List chat>", global_channel, message.channel)
-        if (global_channel == message.channel)
+        if (global_channel === message.channel)
             setArraylistChat(message.list);
         });
     },[])
@@ -523,7 +523,7 @@ function Bodychat() {
 
                 <div className="centerChat">
                     {arrayChat.map((item) => {
-                        // if (item.name == "psemsari" && login == "ellarbi")
+                        // if (item.name === "psemsari" && login === "ellarbi")
                         //     return(
                         //         <>
                         //         </>
@@ -584,7 +584,7 @@ function Channel() {
             //setChannelName(message);
 
             //const filteredArray = message.filter(function(ele , pos){
-            //    return message.indexOf(ele) == pos;
+            //    return message.indexOf(ele) === pos;
             //})
             console.log("<List channel>", message);
             setArrayChannelName(message);
@@ -662,13 +662,13 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   const handleClose = (param: {n: number, id: number}) => {
 
     setAnchorEl(null);
-    if (param.n == 4)
+    if (param.n === 4)
         promouvoir_admin(param.id);
-    else if (param.n == 5)
+    else if (param.n === 5)
         mute(param.id);
-    else if (param.n == 7)
+    else if (param.n === 7)
         ban(param.id);
-    else if (param.n == 1)
+    else if (param.n === 1)
         check_profil(param.id);
 
   };
@@ -678,7 +678,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   let status_du_gars_connecte = 0;
   //recup le status
 
-  if (status_du_gars_connecte == 0)
+  if (status_du_gars_connecte === 0)
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
@@ -692,7 +692,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
 
       </>)
   }
-  else if (status_du_gars_connecte == 1)
+  else if (status_du_gars_connecte === 1)
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
@@ -712,19 +712,19 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
             </>)
   }
 
-  if (props.item.status == 0)
+  if (props.item.status === 0)
   {
     h1_name_role = (<>
         <h1 className="personneDansChannelOwner"> {props.item.name}  </h1>
     </>)   
   }
-  else if (props.item.status == 1)
+  else if (props.item.status === 1)
   {
     h1_name_role = (<>
         <h1 className="personneDansChannelAdmin"> {props.item.name}  </h1>
     </>)
   }  
-  else if (props.item.status == 2) {
+  else if (props.item.status === 2) {
     h1_name_role = (<>
         <h1 className="personneDansChannelDefault"> {props.item.name}  </h1>
     </>)
@@ -794,7 +794,7 @@ function ListChannel() {
             // let tmp = [...arraylistName];
             // tmp.push(message);
             console.log("<List name>", global_channel, message.channel);
-            if (message.channel == global_channel)
+            if (message.channel === global_channel)
                 setArraylistName(message.list);
         });
       }, []);

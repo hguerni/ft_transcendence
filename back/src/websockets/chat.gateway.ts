@@ -131,7 +131,7 @@ import { randomUUID } from 'crypto';
 	{
 		try {
 			await this.chatService.changeStatus(data);
-			if (data.status == status.ban)
+			if (data.status === status.ban)
 				this.quitChan({channel: data.channel, id: data.target}, client);
 			else
 			{
@@ -186,7 +186,7 @@ import { randomUUID } from 'crypto';
 		await this.chatService.addMember({channel: data.channel, id: id, status: status.default});
 		const ret = await this.chatService.memberInChannel(data.channel);
 		this.Connected.forEach(element => {
-			if (element.id == id)
+			if (element.id === id)
 			{
 				element.socket.join(data.channel);
 				this.getchannelname(element.socket, element.id);
@@ -239,7 +239,7 @@ import { randomUUID } from 'crypto';
 										status: number, password: string})
 	{
 		try {
-			if (channelcreation.channel[0] == " " || channelcreation.channel == "")
+			if (channelcreation.channel[0] === " " || channelcreation.channel === "")
 				throw new Error('cant create null channel');
 			await this.chatService.addOne({name: channelcreation.channel,
 											status: channelcreation.status,
@@ -285,7 +285,7 @@ import { randomUUID } from 'crypto';
 	): void
 	{
 		this.Connected.forEach(element => {
-			if (element.socket == client)
+			if (element.socket === client)
 			{
 				let index = this.Connected.indexOf(element);
 				this.Connected.splice(index);

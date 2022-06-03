@@ -46,7 +46,7 @@ export class ChatService {
 
         const tmp: string[] = [];
         channels.forEach((element) => {
-            if (element.quit_status == quit_status.none)
+            if (element.quit_status === quit_status.none)
                 tmp.push(element.chat.name);
         })
         return tmp;
@@ -95,7 +95,7 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}});
         const membre = await this.getMember(chat, data.id);
         membre.quit_status = quit_status.quit;
-        if (membre.status == status.owner)
+        if (membre.status === status.owner)
         {
             try {
                 const member = await this.membersRepo.findOne({where: {chat: chat, status: Not(status.owner), quit_status: 0}, relations: ['user']});
@@ -127,7 +127,7 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({select: ["id"], where: {name: name}, relations: ['members', 'members.user']});
         const tmp: {id: number, name: string, status: number}[] = [];
         chat.members.forEach((element) => {
-            if (element.quit_status == quit_status.none)
+            if (element.quit_status === quit_status.none)
                 tmp.push({id: element.user.ft_id, name: element.user.username, status: element.status});
         })
         return tmp;
@@ -169,10 +169,10 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
         const target = await this.getMember(chat, data.target);
         const sender = await this.getMember(chat, data.sender);
-        if (sender.status >= data.status && (data.status == status.ban && sender.status == status.default))
+        if (sender.status >= data.status && (data.status === status.ban && sender.status === status.default))
             throw new Error("you cant up this user");
         target.status = data.status;
-        if (sender.status == status.owner && data.status == status.owner)
+        if (sender.status === status.owner && data.status === status.owner)
         {
             sender.status = status.default;
             this.membersRepo.save(sender);
@@ -191,7 +191,7 @@ export class ChatService {
             throw Error('not privilige');
         chat.status = data.status;
         console.log(chat);
-        if (chat.status == chat_status.protected)
+        if (chat.status === chat_status.protected)
             chat.password = data.password;
         this.chatRepository.save(chat);
     }
@@ -201,9 +201,9 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
         if (!chat)
             throw new NotFoundException();
-        if (chat.status == chat_status.protected && data.password != chat.password)
+        if (chat.status === chat_status.protected && data.password != chat.password)
             throw new Error("not good password");
-        if (chat.status == chat_status.private)
+        if (chat.status === chat_status.private)
             throw new Error("cant join private chan");
     }
 
