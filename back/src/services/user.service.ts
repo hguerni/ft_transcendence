@@ -74,6 +74,7 @@ export class UserService {
       game.userscore = data.p1_score;
       game.adversaryscore = data.p2_score;
       game.user = client;
+      console.log(game);
       await this.gameRepo.save(game);
     });
   } 
@@ -90,6 +91,7 @@ export class UserService {
         game.userscore = data.p2_score;
         game.adversaryscore = data.p1_score;
         game.user = client;
+        console.log(game);
         await this.gameRepo.save(game);
     });
   }

@@ -52,9 +52,8 @@ function collision() {
 
 @Injectable()
 export class GameService {
-  constructor(
-    private userService: UserService,
-) {}
+
+  private userService: UserService
   private room: RoomProps = new RoomProps();
 
   private nb_players: number = 0;
