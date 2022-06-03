@@ -53,6 +53,7 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 			client.join(val);
 		})
 		client.join(userId.toString());
+		console.log(userId.toString());
 	}
 
 	@SubscribeMessage('addmsg')
@@ -64,6 +65,7 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 		try {
 			await this.chatService.addMsg(msg);
 			const val = await this.chatService.messageInChannel(msg.channel);
+			console.log(msg.channel, val);
 			this.io.to(msg.channel).emit('LIST_CHAT', {channel: msg.channel, list: val});
 		}
 		catch (error) {console.log(error);}
@@ -221,7 +223,6 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 		.then((val) => {
 			client.emit('LIST_CHAT', {channel: data.name, list: val});
 		})
-		
 	}
 
 	@SubscribeMessage('GET_CHANNEL')
@@ -277,17 +278,20 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 		await this.chatService.addOne({name: name,
 			status: chat_status.private,
 			password: ""});
+		this.chatService.defineMp(name);
 		await this.chatService.addMember({channel: name, id: mp.sender, status: status.default});
+		await this.chatService.addMember({channel: name, id: mp.target, status: status.default});
+		
 		const ret = await this.chatService.getMpmsg(mp.sender);
 		this.io.to(mp.sender.toString()).emit('MP_CREATED', ret);
 		this.io.to(mp.sender.toString()).socketsJoin(name);
 		
-		await this.chatService.addMember({channel: name, id: mp.target, status: status.default});
 		const ret2 = await this.chatService.memberInChannel(name);
+		this.io.to(mp.target.toString()).socketsJoin(name);
 		this.Connected.forEach(element => {
 			if (element.id == mp.target)
 			{
-				element.socket.join(name);
+				//element.socket.join(name);
 				this.getchannelname(element.socket, element.id);
 				return;
 			}
@@ -297,7 +301,6 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 			channel: name,
 			list: ret2
 		});
-		this.chatService.defineMp(name);
 	}
 
 	@SubscribeMessage('ALL_CHAN')

@@ -54,7 +54,7 @@ export class ChatService {
 
     getMpuser(user: UserEntity, users: MemberEntity[])
     {
-        if (users[0].user != user)
+        if (users[0].user.login != user.login)
             return (users[0].user.username);
         return (users[1].user.username);
     }

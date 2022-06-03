@@ -584,13 +584,12 @@ function Channel() {
             console.log("<List channel>", message);
             setArrayChannelName(message);
         });
-    }, []);
-
-    useEffect(() => {
+        
         socket.on("MP_CREATED", (data: {name: string, username: string}[]) => {
+            console.log("<List mp>", data);
             setArrayMpName(data);
-        })
-    })
+        });
+    }, []);
 
     const display_channel = (char: string, item: string) => {
         return (
@@ -625,7 +624,8 @@ function Channel() {
                     </div>
 
                     <div id="separation2"></div>
-                    <div className="lesChannels">{arrayChannelName.map((item) => {
+                    <div className="lesChannels">
+                    {arrayChannelName.map((item) => {
                         return  <button className="buttonInviteUsers"
                                         onClick={() => {
                                             socket.emit("JUST_NAME_CHANNEL",
