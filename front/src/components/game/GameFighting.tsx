@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import GameArea, { GameStart, GameCreate } from './GameArea';
+import GameArea, { GameStart, GameCreate, GameAutoMaching } from './GameArea';
 import Popup from 'reactjs-popup';
 import { v4 } from 'uuid'
 import { GameSearching } from "./GameSearching";
@@ -77,11 +77,10 @@ export default function GameFighting() {
           <GameArea client={socket}/>
       </div>
 
-      <div className="gameArea">
-        <button className="gameButtonStart" onClick={() => GameStart(socket)}><h4>START GAME</h4></button>
+      <div className="gameTrainingButtonsWrap">
+        <button className="gameTrainingButton" style={{marginRight: '50px'}} onClick={() => GameStart(socket)}><h5>START GAME</h5></button>
+        <button className="gameTrainingButton" onClick={() => GameAutoMaching(socket)}><h5>AUTO MATCHING</h5></button>
       </div>
     </div>
   );
 }
-
-//<button className="gameButton" onClick={() => GameCreate(socket)}>CREATE GAME</button>

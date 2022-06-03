@@ -2,7 +2,7 @@ import { isNumber, IsNumber, IsString } from "class-validator";
 
 export class ChatDTO {
     @IsString()
-    channel: string;
+    name: string;
 
     @IsNumber()
     status: number;
@@ -18,14 +18,17 @@ export class MsgDTO {
     @IsString()
     channel: string;
 
-    @IsString()
-    login: string;
+    @IsNumber()
+    id: number;
 }
 
 export class AddMemberDTO {
     @IsString()
     channel: string;
 
-    @IsString()
-    login: string;
+    @IsNumber()
+    id: number;
+
+    @IsNumber()
+    status: number;
 }

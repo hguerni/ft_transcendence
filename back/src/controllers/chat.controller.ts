@@ -22,8 +22,8 @@ export class ChatController {
     return await this.chatService.getAll();
   }
 
-  @Get()
-  async getpvchannels(){
-    return await this.chatService.getPvmsg("psemsari");
-  }
+  // @Get()
+  // async getpvchannels(){
+  //   return await this.chatService.getPvmsg("psemsari");
+  // }
 }

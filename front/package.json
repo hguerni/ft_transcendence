@@ -26,6 +26,7 @@
 		"i": "^0.3.7",
 		"jsx-runtime": "^1.2.0",
 		"npm": "^8.8.0",
+		"randomcolor": "^0.6.2",
 		"react": "^17.0.2",
 		"react-device-detect": "^2.2.2",
 		"react-dom": "^17.0.2",
@@ -67,6 +68,7 @@
 		]
 	},
 	"devDependencies": {
+		"@types/randomcolor": "^0.5.6",
 		"@types/styled-components": "^5.1.25",
 		"@types/uuid": "^8.3.4"
 	},

@@ -16,7 +16,7 @@ const Avatar = (props: {uploaded: (url: string) => void}) => {
             await axios.put('updateAvatar', data.url);
             props.uploaded(data.url);
         }
-        catch (err) {props.uploaded('http://54.245.74.93:3030/uploads/avatar.png')}
+        catch (err) {props.uploaded('http://localhost:3030/uploads/avatar.png')}
 
     }
 

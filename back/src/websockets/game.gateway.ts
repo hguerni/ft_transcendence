@@ -1,8 +1,7 @@
 import { Logger } from '@nestjs/common';
-import { SubscribeMessage, WebSocketGateway, OnGatewayInit, WsResponse, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway, OnGatewayInit, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { Subscriber } from 'rxjs';
-import { GameService, PongProps, RoomProps } from '../services/game.service';
+import { GameService, RoomProps } from '../services/game.service';
 import { v4 } from 'uuid'
 
 export let logger: Logger = new Logger('gameTest');
@@ -12,6 +11,12 @@ interface UserDataGame {
 	userId: number;
 	roomToJoin: string;
 }
+
+function getRandomKey(collection: Set<any> | Map<any, any>) {
+  let keys = Array.from(collection.keys());
+  return keys[Math.floor(Math.random() * keys.length)];
+}
+
 
 @WebSocketGateway({cors: {origin: "*"}, namespace: 'game'})
 export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -34,7 +39,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
@@ -68,9 +72,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('GAME_END')
   handleEndGamer(client: Socket, game: string) {
     this.logger.log(`Client ${client.id} want to end game ${game}`);
+    this.clientsToRoom.delete(client.id);
+    this.handleSendingRooms(this.getRoomsGroup);
     if (this.gameRooms.has(game)) {
       this.gameRooms.delete(game);
-      this.clientsToRoom.delete(client.id);
       this.logger.log(`Client ${client.id} is ending game ${game}`);
     }
   }
@@ -92,6 +97,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       this.clientsToRoom.set(client.id, this.clientsToRoom.get(this.usersToClients.get(userID).at(-1)));
     }
     this.handleSendingCurrentRoom(client.id);
+
+    const room = this.clientsToRoom.get(client.id);
+    if (room != undefined) {
+      client.join(room);
+      this.gameRooms.get(room).gameUpdate(this.wsServer);
+    }
+
+    this.logger.log(`Client connected: ${client.id}`);
     this.logger.log(`Client ${client.id} is link to user ${userID}`);
   }
 
@@ -179,15 +192,16 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     gameRoom.setPlayersNamesAndIds(userData.username, userData.userId);
     this.gameRooms.set(roomName, gameRoom);
     client.join(roomName);
+    gameRoom.setCustomMode(this.wsServer, customMode);
     this.handleSendingRooms(this.getRoomsGroup);
     this.handleSendingCurrentRoom(client.id);
     this.logger.log(`GAME ${roomName} CREATED by ${client.id}`);
   }
 
   @SubscribeMessage('GAME_JOIN')
-  handleJoiningRoom(client: Socket, args: string[]) {
-    let userData: UserDataGame = JSON.parse(args[0]);
-    let roomName = args[1];
+  handleJoiningRoom(client: Socket, userData: UserDataGame) {
+    //let userData: UserDataGame = JSON.parse(args[0]);
+    let roomName = userData.roomToJoin;
 
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
       this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
@@ -237,11 +251,18 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.logger.log(`Client ${client.id} has leaved the room ${room}`);
   }
 
-  @SubscribeMessage('GAME_SET_PONG_PROPS')
-  handleResizingRoom(client: Socket, newPongProps: string) {
-    const roomName = this.clientsToRoom.get(client.id);
+  @SubscribeMessage('GAME_AUTO_MATCHING')
+  handleGameAutoMatching(client: Socket, userDataGame: string) {
+    let userData: UserDataGame =JSON.parse(userDataGame);
 
-    this.gameRooms.get(roomName).setPongProps(JSON.parse(newPongProps));
-    this.logger.log('GAME_SET_PONG_PROPS');
+    if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
+      this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
+      return ;
+    }
+    if (this.gameRooms.size > 0) {
+      userData.roomToJoin = getRandomKey(this.gameRooms);
+      this.handleJoiningRoom(client, userData);
+    }
+    this.logger.log('GAME_AUTO_MATCHING');
   }
 }

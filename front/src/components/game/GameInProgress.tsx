@@ -6,9 +6,6 @@ export function GameInProgress() {
   const [room, setRoom] = useState<RoomProps>();
   const [msg, setMsg] = useState<string>("");
 
-  let p1_status: string = "⏳";
-  let p2_status: string = "⏳";
-
   useEffect(() => {
     socket.on("SEND_CURRENT_ROOM_INFOS", (room: string) => {
       setRoom(JSON.parse(room));
@@ -17,17 +14,6 @@ export function GameInProgress() {
       setMsg(message);
     });
   }, [])
-
-  if (room && room.p1_score >= 2)
-    setMsg(`${room.p1_name} has won this game!`);
-
-  if (room && room.p2_score >= 2)
-    setMsg(`${room.p2_name} has won this game!`);
-
-  if (room && room.p1_readyToStart)
-    p1_status = "✔️";
-  if (room && room.p2_readyToStart)
-    p2_status = "✔️";
 
   if (room?.p2_name === "")
     room.p2_name = "?";

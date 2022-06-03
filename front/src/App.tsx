@@ -48,7 +48,6 @@ function Routes() {
 
 function App() {
   GetUserData();
-  console.log("heyheyhey");
   return (
     <Routes/>
   );

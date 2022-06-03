@@ -23,12 +23,12 @@ export class AuthController {
         const clientData = await this.userService.findByFtId(client['id']);
 
         if(!clientData)
-            return response.redirect('http://54.245.74.93:3000/')
+            return response.redirect('http://localhost:3000/')
         else
             await this.userService.setOnline(clientData.id);
         if(clientData.twofa)
-            return response.redirect('http://54.245.74.93:3000/2fa')
-        return response.redirect('http://54.245.74.93:3000/profile')
+            return response.redirect('http://localhost:3000/2fa')
+        return response.redirect('http://localhost:3000/profile')
     }
 
     @Post('register')

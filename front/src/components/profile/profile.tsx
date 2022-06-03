@@ -46,11 +46,15 @@ function SearchUser () {
   }
 
   return (
-    <input
-        type="text"
-        placeholder="Search"
-        onKeyDown={handleKey}
-      />
+    <div className="search-user">
+        <input
+            id="input-bar"
+            type="text"
+            placeholder="Chercher un utilisateur"
+            onKeyDown={handleKey}
+        />
+    </div>
+    
   );
 }
 
@@ -119,7 +123,7 @@ function Profile() {
         await axios.put('updateAvatar', {avatar: data.url});
         setAvatar(data.url);
     }
-    catch (err) {setAvatar('http://54.245.74.93:3030/uploads/avatar.png')}
+    catch (err) {setAvatar('http://localhost:3030/uploads/avatar.png')}
 
     }
 
@@ -159,13 +163,7 @@ function Profile() {
 
   return (
     <>
-        <h1>authen 2FA
-
-            <label className="switch">
-            <input type="checkbox" checked={twofa} onChange={handleChange} />
-                <span className="slider round"></span>
-            </label>
-            </h1>
+        
         <SearchUser/>
         <div className="bigOne">
 
@@ -201,6 +199,16 @@ function Profile() {
         <Stats />
         <History user={user}/>
         <Amis />
+        <div id="separation"></div>
+        <div className="two-fa">
+            <h1 id="two-fa-h1">Two-factor authentication</h1>
+            <div className="tagrossemere">
+                <label className="switch">
+                    <input type="checkbox" checked={twofa} onChange={handleChange} />
+                    <span className="slider round"></span>
+                </label>
+            </div>
+        </div>
 
     </>
   );

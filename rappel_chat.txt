@@ -1,0 +1,34 @@
+
+2- cree direct message
+
+3- • L’utilisateur doit pouvoir en bloquer d’autres. Ainsi, il ne verra plus les messages
+envoyés par les comptes qu’il aura bloqués. / vendredi fait par Pierre
+
+-5◦ Le propriétaire du channel peut définir un mot de passe requis pour accéder
+au channel, le modifier, et le retirer.
+
+-6 ◦ Les administrateurs du channel peuvent bannir ou mute d’autres utilisateurs
+pendant une durée déterminée.
+
+-7• Grâce à l’interface de chat, l’utilisateur doit pouvoir en inviter d’autres à faire
+une partie de Pong.
+
+-8  • Grâce à l’interface de chat, l’utilisateur doit pouvoir accéder aux profils d’autres
+joueurs.
+
+--------------------------------------------
+Pour Pierre : 
+
+ L’utilisateur doit pouvoir en bloquer d’autres. Ainsi, il ne verra plus les messages
+envoyés par les comptes qu’il aura bloqués. / vendredi fait par Pierre et elias
+
+ ---------------------------------------------
+
+ Pour leo:
+
+Grâce à l’interface de chat, l’utilisateur doit pouvoir en inviter d’autres à faire
+une partie de Pong.
+
+
+
+----------------------------------------------
