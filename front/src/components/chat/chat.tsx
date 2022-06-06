@@ -115,8 +115,8 @@ function ModifierPopupMdp() {
     return (
       <div>
           <MenuItem onClick={() => setOpen(true)}>Modifier le mot de passe</MenuItem>
-        <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
-
+        <Popup contentStyle={{fontSize:'20px'}} open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+            
           <div>Quel est le nouveau mot de pass ?</div>
           <input className="input"
             type="text"
@@ -241,7 +241,8 @@ function CreatePopupChannel() {
     return (
       <div>
           <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
-          <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+        
+          <Popup contentStyle={{fontSize:'20px'}} open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
           <div>Nom du Channel à créer:</div>
 
           <input className="input"
@@ -277,6 +278,7 @@ function CreatePopupChannel() {
 
           <button className="gameButton" onClick={() => { setOpen(false); sendChannelName(); setChannelName("")}}>SEND</button>
         </Popup>
+        
 
       </div>
 
@@ -301,7 +303,7 @@ function CreatePopupChannel() {
     return (
       <div>
           <button className="buttonInviteUsers" onClick={() => setOpen(true)}> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
-        <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+        <Popup contentStyle={{fontSize:'20px'}} open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
 
           <div>Login de la personne a ajouter dans le channel</div>
           <input className="input"
@@ -351,7 +353,7 @@ function CreatePopupChannel() {
                 {props.name}
                 <span>{print_status(props.status)}</span>
                 </h1>
-        <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+        <Popup contentStyle={{fontSize:'20px'}} open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
 
           <div>Qu'elle est le mot de passe ?</div>
           <input className="input"
@@ -425,7 +427,7 @@ function CreatePopupChannel() {
             id="imgJoinChannel"
             />
 
-        <Popup className="testPopup" open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+        <Popup contentStyle={{fontSize:'20px'}} open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
           {/* <div className="serversList"> */}
           {serverName.map((item) => {
             // const [password, setPassword] = useState("");
