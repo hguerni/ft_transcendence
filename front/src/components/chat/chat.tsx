@@ -39,6 +39,12 @@ enum chat_status {
   }
 
 const socket = io("ws://localhost:3030/chat");
+let global_blocked: number[] = [];
+
+
+socket.on('BLOCKED', (data: number[]) => {
+    global_blocked = data;
+});
 socket.emit('ready', userId);
 
 let global_channel = "";
@@ -535,13 +541,16 @@ function Bodychat() {
                         //         <>
                         //         </>
                         //     );
-                        return (
-                            <div >
-                                <h1 className="inputName"> {item.name} </h1>
-                                <h1 className="chathistory"> {item.message} </h1>
-                                <h1> </h1>
-                            </div>
-                        );
+                        if (!global_blocked.includes(item.id))
+                        {
+                            return (
+                                <div >
+                                    <h1 className="inputName"> {item.name} </h1>
+                                    <h1 className="chathistory"> {item.message} </h1>
+                                    <h1> </h1>
+                                </div>
+                            );
+                        }
                     })}
 
                     {/* {arrayHistory.map((item) => {
@@ -697,6 +706,13 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const BlockOrUnblock = (id: number) => {
+    if (global_blocked.includes(id))
+        return <MenuItem onClick={() => handleClose({n: 8, id: id})}>Debloquer</MenuItem>;
+    else
+        return <MenuItem onClick={() => handleClose({n: 6, id: id})}>Bloquer</MenuItem>;
+  }
   
   const handleClose = (param: {n: number, id: number}) => {
 
@@ -709,6 +725,10 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
         mute(param.id);
     else if (param.n == 7)
         ban(param.id);
+    else if (param.n == 6)
+        block(param.id);
+    else if (param.n == 8)
+        unblock(param.id);
     else if (param.n == 1)
         check_profil(param.id);
 
@@ -727,7 +747,8 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Promouvoir en admin</MenuItem>
         <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Mute</MenuItem>
-        <MenuItem onClick={() => handleClose({n: 6, id: props.item.id})}>Bloquer</MenuItem>
+        {BlockOrUnblock(props.item.id)}
+        {/* <MenuItem onClick={() => handleClose({n: 6, id: props.item.id})}>Bloquer</MenuItem> */}
         <MenuItem onClick={() => handleClose({n: 7, id: props.item.id})}>Bannir</MenuItem>
 
 
@@ -740,8 +761,8 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
         <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Mute</MenuItem>
-        <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Bloquer</MenuItem>
-        <MenuItem onClick={() => handleClose({n: 6, id: props.item.id})}>Bannir</MenuItem>
+        {BlockOrUnblock(props.item.id)}
+        <MenuItem onClick={() => handleClose({n: 7, id: props.item.id})}>Bannir</MenuItem>
         </>)
   }
   else if (global_status)
@@ -749,7 +770,8 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     menu_onclick =( <>
         <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
         <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
-        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
+        {BlockOrUnblock(props.item.id)}
             </>)
   }
 

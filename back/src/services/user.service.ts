@@ -146,10 +146,23 @@ export class UserService {
     return req
   }
 
+  async getBlocked(clientID: number) {
+    const client = await this.findByFtId(clientID);
+    let friends = await this.friendRepo.find({where: {user: client, status: "blocked"}, relations: ['friend', 'user'],});
+    let req = JSON.stringify(instanceToPlain(friends));
+    console.log(req)
+    return req
+  }
+
   async getBlocking(clientID: number) {
-    this.findByFtId(clientID).then((client) =>{
-      return this.friendRepo.find({where: {user: client, status: "blocking"}})
+    const block = await this.findByFtId(clientID).then((client) =>{
+      return this.friendRepo.find({select:['id'], where: {user: client, status: "blocking"}, relations: ['friend', 'user']})
     });
+    const tmp: number[] = [];
+    block.forEach((element) => {
+      tmp.push(element.friend.ft_id);
+    })
+    return tmp;
   }
 
   async getRequest(clientID: number) {

@@ -239,6 +239,12 @@ export class ChatService {
         return user.ft_id;
     }
 
+    async getIdByftid(ft_id: number)
+    {
+        const user = await this.userRepo.findOne({select: ['id'], where: {ft_id: ft_id}});
+        return user.id;
+    }
+
     async addMember(data: AddMemberDTO)
     {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});

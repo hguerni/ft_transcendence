@@ -40,7 +40,7 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 	}
 
 	@SubscribeMessage('ready')
-	handleReady(
+	async handleReady(
 		@ConnectedSocket() client: Socket,
 		@MessageBody() userId: number
 	)
@@ -54,6 +54,7 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 		})
 		client.join(userId.toString());
 		console.log(userId.toString());
+		client.emit('BLOCKED', await this.userService.getBlocking(userId));
 	}
 
 	@SubscribeMessage('addmsg')
@@ -91,6 +92,7 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 	)
 	{
 		try {
+			data.target = await this.chatService.getIdByftid(data.target);
 			await this.userService.block(data.sender, data.target);
 		}
 		catch (e) {console.log(e);}
@@ -103,6 +105,7 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 	)
 	{
 		try {
+			data.target = await this.chatService.getIdByftid(data.target);
 			await this.userService.removeFriend(data.sender, data.target);
 		}
 		catch (e) {console.log(e);}
