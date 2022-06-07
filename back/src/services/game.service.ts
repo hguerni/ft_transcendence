@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Socket, Server } from 'socket.io';
-import { logger } from '../websockets/game.gateway';
+import { Server } from 'socket.io';
 import { v4 } from 'uuid';
-import {UserService} from "./user.service";
 
 export class PongProps {
+  gameIsStarted: boolean = false;
 	width: number = 10000 / 2.2;
 	height: number = 10000 / 3.2;
 	score_l: number = 0;
@@ -20,6 +19,7 @@ export class PongProps {
 	paddle_l_y: number = this.height / 10;
 	paddle_r_x: number = this.width - this.width / 30 - this.paddle_width;
 	paddle_r_y: number = this.height / 10;
+	customMode: string = "";
 }
 
 export class RoomProps {
@@ -91,6 +91,10 @@ export class GameService {
       if (game.room.p1_score >= 2 || game.room.p2_score >= 2)
       {
         clearInterval(game.intervalId_0);
+        if (game.room.p1_score > game.room.p2_score)
+          wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p1_name} has won the game!`);
+        else
+          wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p2_name} has won the game!`);
         wsServer.to(game.room.name).emit('GAME_END', game.room.name);
       }
     }
@@ -128,6 +132,8 @@ export class GameService {
     this.room.name = room;
 
     this.launchBall(this);
+    wsServer.to(this.room.name).emit('SEND_GAME_STATUS', "Let's play!");
+    this.pong.gameIsStarted = true;
     this.pong.ball_y = this.pong.height / 2;
     wsServer.to(this.room.name).emit('GAME_UPDATE', JSON.stringify(this.pong));
     if (this.intervalId_0 == null)
@@ -212,7 +218,6 @@ export class GameService {
       this.room.p1_readyToStart = true;
     else
       this.room.p2_readyToStart = true;
-    console.log(this.room.p1_name, this.room.p1_userId);
   }
 
   setTrainingModeOn(clientId: string) {
@@ -223,16 +228,28 @@ export class GameService {
     this.room.p2_readyToStart = true;
   }
 
+  setCustomMode(wsServer: Server, customMode: string) {
+    this.pong.customMode = customMode;
+    if (customMode === "speedx2")
+      this.pong.speepFactor *= 2;
+    else if (customMode === "customModeColor")
+      true;
+    else if (customMode === "other")
+      true;
+    wsServer.to(this.room.name).emit('GAME_UPDATE', JSON.stringify(this.pong));
+  }
+
   setPongProps(newPongProps: PongProps) {
     this.pong = newPongProps;
   }
 
-  getPongProps(): PongProps {
-    return this.pong;
+  gameUpdate (wsServer: Server) {
+    wsServer.to(this.room.name).emit('GAME_UPDATE', JSON.stringify(this.pong));
+    console.log(` test: ${this.room.name}`);
   }
 
-  getNbPlayers(): number {
-    return this.nb_players;
+  getPongProps(): PongProps {
+    return this.pong;
   }
 
   getRoomProps(): RoomProps {

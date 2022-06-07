@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { GameJoin, GameWatch, GetRooms } from './GameArea';
+import { GameJoin, GameQuit, GameWatch, GetRooms } from './GameArea';
 import { socket } from "./Game";
 import { CreateGamePopUp } from "./GameFighting";
+import UserService from "../../services/user.service";
 
 export interface RoomProps {
   name: string;
@@ -9,6 +10,8 @@ export interface RoomProps {
   canJoinGame: boolean;
   p1_name: string;
   p2_name: string;
+  p1_userId: number;
+  p2_userId: number;
   p1_readyToStart: boolean;
   p2_readyToStart: boolean;
   p1_score: number;
@@ -16,11 +19,13 @@ export interface RoomProps {
 }
 
 function CardButton(props: {room: RoomProps}) {
-  if (props.room.canJoinGame === true)
+  if (props.room.p1_userId === UserService.getUserId() || props.room.p2_userId === UserService.getUserId())
+    return (<button className='gameButton' style={{fontSize: '0.7em'}} onClick={() => GameQuit(socket, props.room.name)}><h4>QUIT GAME</h4></button>);
+  else if (props.room.canJoinGame === true)
     return (<button className='gameButton' style={{fontSize: '0.7em'}} onClick={() => GameJoin(socket, props.room.name)}><h4>JOIN GAME</h4></button>);
   else
     return (<button className='gameButton' style={{fontSize: '0.7em'}} onClick={() => GameWatch(socket, props.room.name)}><h4>WATCH GAME</h4></button>);
-}
+  }
 
 function GamesCards(props: {room: RoomProps}) {
   if (props.room.p2_name === "")
