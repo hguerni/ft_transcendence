@@ -118,10 +118,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('GAME_START')
   handleGameStarting(client: Socket) {
     const room = this.clientsToRoom.get(client.id);
-    let p1_name = this.gameRooms.get(room).getRoomProps().p1_name;
-    let p2_name = this.gameRooms.get(room).getRoomProps().p2_name;
-    let p1_id = this.gameRooms.get(room).getPlayerSocketId('left');
-    let p2_id = this.gameRooms.get(room).getPlayerSocketId('right');
+    const p1_name = this.gameRooms.get(room).getRoomProps().p1_name;
+    const p2_name = this.gameRooms.get(room).getRoomProps().p2_name;
+    const p1_id = this.gameRooms.get(room).getPlayerSocketId('left');
+    const p2_id = this.gameRooms.get(room).getPlayerSocketId('right');
 
     this.gameRooms.get(room).setPlayerReady(client.id);
     if (this.gameRooms.get(room).getRoomProps().p1_readyToStart === true &&
@@ -255,12 +255,26 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   handleQuitingRoom(client: Socket, args: string[]) {
     const roomName: string = args[0];
     const userId: number = parseInt(args[1]);
+    const p1_name = this.gameRooms.get(roomName).getRoomProps().p1_name;
+    const p2_name = this.gameRooms.get(roomName).getRoomProps().p2_name;
+    const p1_id = this.gameRooms.get(roomName).getPlayerSocketId('left');
+    const p2_id = this.gameRooms.get(roomName).getPlayerSocketId('right');
 
     this.clientsToRoom.delete(client.id);
     this.usersToClients.delete(userId);
-    this.gameRooms.delete(roomName);
+    if (this.gameRooms.get(roomName).getRoomProps().p1_userId === userId)
+    {
+      this.gameRooms.delete(roomName);
+      this.handleSendingCurrentRoom(client.id);
+      this.wsServer.to(p2_id).emit("SEND_GAME_STATUS", `${p1_name} is quiting the game :/`);
+    }
+    else if (this.gameRooms.get(roomName).getRoomProps().p2_userId === userId)
+    {
+      this.gameRooms.delete(roomName);
+      this.handleSendingCurrentRoom(client.id);
+      this.wsServer.to(p1_id).emit("SEND_GAME_STATUS", `${p2_name} has left the game :/`);
+    }
     this.handleSendingRooms(this.getRoomsGroup);
-    this.handleSendingCurrentRoom(client.id);
     this.logger.log('GAME_QUIT');
   }
 }
