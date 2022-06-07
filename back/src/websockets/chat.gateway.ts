@@ -277,7 +277,8 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 		@MessageBody() mp: {target: number, sender: number}
 	)
 	{
-		//this.chatService.mpexist(mp);
+		if (this.chatService.mpexist(mp))
+			throw new Error("deja créé");
 		const name = randomBytes(4).toString('hex');
 		await this.chatService.addOne({name: name,
 			status: chat_status.private,
@@ -295,7 +296,6 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 		this.Connected.forEach(element => {
 			if (element.id == mp.target)
 			{
-				//element.socket.join(name);
 				this.getchannelname(element.socket, element.id);
 				return;
 			}

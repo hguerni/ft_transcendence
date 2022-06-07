@@ -58,9 +58,17 @@ export class ChatService {
         if (!user1)
             throw new Error("user not exist");
         const user2 = await this.getUser(data.sender);
-        const chat = await this.chatRepository.find({where: {mp_message: true}, relations:['members']})
-        console.log(chat[0].members[0]);
-
+        const chat = await this.chatRepository.find({where: {mp_message: true}, relations:['members', 'members.user']});
+        let test: ChatEntity;
+        chat.forEach(element => {
+            if ((element.members[0].user.ft_id == user1.ft_id && element.members[1].user.ft_id == user2.ft_id)
+            || (element.members[0].user.ft_id == user2.ft_id && element.members[1].user.ft_id == user1.ft_id))
+            {
+                test = element;
+                return ;
+            }
+        });
+        return test;
     }
 
     getMpuser(user: UserEntity, users: MemberEntity[])

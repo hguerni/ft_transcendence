@@ -738,8 +738,13 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   let h1_name_role;
   let status_du_gars_connecte = 0;
   //recup le status
-
-  if (global_status == 0)
+  if (props.item.id == userId)
+  {
+    menu_onclick = (<>
+        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
+      </>)
+  }
+  else if (global_status == 0)
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
