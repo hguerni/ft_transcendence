@@ -41,13 +41,17 @@ export class AuthController {
     async activate2fa(@Req() request: Request) {
         const clientID = await this.authService.clientID(request);
         const OtpAuthUrl = await this.authService.twoFactorAuthSecret(clientID);
+        console.log(OtpAuthUrl);
         return this.authService.createQRcode(OtpAuthUrl);
     }
 
     @Post('2fa/verify')
     async verify2fa (@Req() request: Request, @Body() data) {
+        console.log("wesh");
+        console.log(data);
         const clientID = await this.authService.clientID(request);
-        const validated = await this.authService.twoFactorAuthVerify(data.code, clientID);
+        console.log(data);
+        const validated = await this.authService.twoFactorAuthVerify("555555", clientID);
         console.log(validated);
         console.log("LOL");
 

@@ -38,9 +38,7 @@ function ActivateTwoFa(){
         return () => {mounted = false;}
     }, []);
 
-    const activate = async (e: SyntheticEvent) => {
-        e.preventDefault();
-
+    const activate = async () => {
         try {
             await axios.post('2fa/verify', { code: code,} );
             setRedirect(true);
@@ -54,6 +52,12 @@ function ActivateTwoFa(){
         await axios.post('2fa/disable', {});
         setRedirect(true);
     }
+
+    const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter"){
+            return activate();
+        }
+      };
 
     if (unauthorized)
         return <Redirect to={'/'} />;
@@ -77,7 +81,7 @@ function ActivateTwoFa(){
 
                 <div className="form-floating">
                     <input required className="form-control" id="floatingInput" placeholder="Entrer le code"
-                           onChange={e => setCode(e.target.value)}/>
+                           onChange={e => setCode(e.target.value)} onKeyPress={e => handleKey(e)}/>
                     <label htmlFor="floatingInput"></label>
                 </div>
 
