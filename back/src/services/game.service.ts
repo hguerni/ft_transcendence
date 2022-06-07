@@ -252,10 +252,6 @@ export class GameService {
     return this.pong;
   }
 
-  getNbPlayers(): number {
-    return this.nb_players;
-  }
-
   getRoomProps(): RoomProps {
     return this.room;
   }

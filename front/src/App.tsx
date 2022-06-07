@@ -16,7 +16,7 @@ import Header from "./components/header/Header";
 import GameInvite from "./components/game/GameInvite";
 
 function Routes() {
-  if (UserService.isUserConnected() || true)
+  if (UserService.isUserConnected())
     return (
       <BrowserRouter>
         <main>
@@ -38,7 +38,6 @@ function Routes() {
   return (
     <BrowserRouter>
       <main>
-        {/*<Navbar/>*/}
         <Route exact path={"/"} component={Login} />
         <Redirect to="/"/>
       </main>
