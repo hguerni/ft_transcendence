@@ -277,6 +277,7 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 		@MessageBody() mp: {target: number, sender: number}
 	)
 	{
+		//this.chatService.mpexist(mp);
 		const name = randomBytes(4).toString('hex');
 		await this.chatService.addOne({name: name,
 			status: chat_status.private,
