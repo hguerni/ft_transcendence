@@ -59,15 +59,21 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   private handleSendingCurrentRoom(clientId: string) {
     let room: GameService = this.gameRooms.get(this.clientsToRoom.get(clientId));
     if (room) {
-      this.wsServer.to(clientId).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(room.getRoomProps()))
+      this.wsServer.to(clientId).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(room.getRoomProps()));
       this.logger.log("SEND_CURRENT_ROOM_INFOS");
     }
+    else
+      this.wsServer.to(clientId).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(undefined));
   }
 
   @SubscribeMessage('GAME_END')
-  handleEndGamer(client: Socket, game: string) {
+  handleEndGamer(client: Socket, args: string[]) {
+    const game: string = args[0];
+    const userId: number = parseInt(args[1]);
+
     this.logger.log(`Client ${client.id} want to end game ${game}`);
     this.clientsToRoom.delete(client.id);
+    this.usersToClients.delete(userId);
     this.handleSendingRooms(this.getRoomsGroup);
     if (this.gameRooms.has(game)) {
       this.gameRooms.delete(game);
@@ -243,5 +249,18 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     this.gameRooms.get(roomName).setPongProps(JSON.parse(newPongProps));
     this.logger.log('GAME_SET_PONG_PROPS');
+  }
+
+  @SubscribeMessage('GAME_QUIT')
+  handleQuitingRoom(client: Socket, args: string[]) {
+    const roomName: string = args[0];
+    const userId: number = parseInt(args[1]);
+
+    this.clientsToRoom.delete(client.id);
+    this.usersToClients.delete(userId);
+    this.gameRooms.delete(roomName);
+    this.handleSendingRooms(this.getRoomsGroup);
+    this.handleSendingCurrentRoom(client.id);
+    this.logger.log('GAME_QUIT');
   }
 }

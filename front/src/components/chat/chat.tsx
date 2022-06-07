@@ -102,10 +102,10 @@ function ModifierPopupMdp() {
     // };
     const modifier_mdp = (password: string) => {
 
-       
+
         socket.emit("CHANGE_STATUS_CHAN", {channel: global_channel, id: userId, status: chat_status.protected, password: password});
     }
-    
+
 
     return (
       <div>
@@ -141,7 +141,7 @@ function MenuSettings() {
 
     const retirer_mdp = () => {
 
-       
+
         socket.emit("CHANGE_STATUS_CHAN", {channel: global_channel, id: userId, status: chat_status.public, password: ""});
     }
 
@@ -149,32 +149,32 @@ function MenuSettings() {
 
 
     const handleClose = (ind: number) => {
-         
+
         setAnchorEl(null);
         if (ind == 2)
         {
-         
+
             quit_serveur();
         }
-            
+
         else if (ind == 1)
         {
-            
+
             retirer_mdp();
         }
 
-            
- 
+
+
     };
 
-    
+
 
     let menuEngrenage;
     let status_user = 0;
     if (status_user === 0) {
         menuEngrenage = (
         <>
-            
+
             <ModifierPopupMdp/>
             {/* <MenuItem onClick={() => handleClose(0)}>Modifier le mot de passe</MenuItem> */}
             <MenuItem onClick={() => handleClose(1)}>Retirer le mot de passe</MenuItem>
@@ -199,12 +199,12 @@ function MenuSettings() {
         >
             <img
                 id="buttonSettings"
-                src={engrenage} 
+                src={engrenage}
                 alt="settings" />
         </Button>
-        
+
         <Menu
-            
+
             id="basic-menu"
             anchorEl={anchorEl}
             open={open}
@@ -213,10 +213,10 @@ function MenuSettings() {
             'aria-labelledby': 'basic-button',
             }}
         >
-            
+
             {menuEngrenage}
         </Menu>
-     
+
         </div>
     );
 }
@@ -286,7 +286,7 @@ function CreatePopupChannel() {
   function CreatePopupInviteUser() {
     const [InvitUserName, setChannelName] = useState("");
     const [open, setOpen] = useState(false);
-    
+
 
    function sendChannelName ()
    {
@@ -324,24 +324,24 @@ function CreatePopupChannel() {
 
     const [password, setPassword] = useState("");
     const [open, setOpen] = useState(false);
-    
+
    function sendMember ()
    {
        console.log("lbgrjirgjigrjirgjirgji");
        console.log("le password = " + password);
-       
+
 
     //     socket.emit("JOIN_CHAN",  {channel: props.name, id: userId, password: password})
-    
+
    }
-  
+
 
     return (
       <div>
-            
-            <h1 
+
+            <h1
                 className="allServers"
-               
+
                 onClick={() => {setOpen(true)}}>
                 {props.name}
                 <span>{print_status(props.status)}</span>
@@ -353,12 +353,12 @@ function CreatePopupChannel() {
             type="text"
             value={password}
             onChange={(e) =>  setPassword(e.target.value)}
-           
+
           />
           <button className="gameButton" onClick={() => { setOpen(false); sendMember(); setPassword("") ;}}>SEND</button>
         </Popup>
-    
-    
+
+
       </div>
 
     );
@@ -414,7 +414,7 @@ function CreatePopupChannel() {
 
     return (
       <div>
-           <img onClick={() => {setOpen(true); searchChannel();}} 
+           <img onClick={() => {setOpen(true); searchChannel();}}
             src={join_channel}
             alt="account"
             id="imgJoinChannel"
@@ -430,7 +430,7 @@ function CreatePopupChannel() {
                     )
                     : (
                             <>
-                                <h1 
+                                <h1
                                 className="allServers"
                                 onClick={() => {setOpen(true)}}>
                                 {item.name}
@@ -445,8 +445,8 @@ function CreatePopupChannel() {
           </Popup>
 
       </div>
-     
-            
+
+
     );
   }
 
@@ -599,7 +599,7 @@ function Channel() {
                     <CreatePopupSearchChannel/>
                     <div className="headerChatchannel">
                         <h1 id="h1channel"> Channel</h1>
-                    </div>                   
+                    </div>
                 <div className="centerChat">
 
                     {arrayChannelName.map((item) => {
@@ -617,28 +617,28 @@ function Channel() {
 function promouvoir_admin(cible: number) {
 
     //recup la target pour que ca marche
-   
-    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: cible, sender: userId, status: status.admin}); 
-    
+
+    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: cible, sender: userId, status: status.admin});
+
 }
 
 function ban(cible: number) {
 
     //recup la target pour que ca marche
-   
-    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: cible, sender: userId, status: status.ban}); 
-    
+
+    socket.emit("CHANGE_STATUS",  {channel: global_channel,  target: cible, sender: userId, status: status.ban});
+
 }
 
 function mute(cible: number) {
 
     //recup la target pour que ca marche
-    socket.emit("MUTE",  {channel: global_channel,  target: cible, sender: userId}); 
-    
+    socket.emit("MUTE",  {channel: global_channel,  target: cible, sender: userId});
+
 }
 
 function check_profil(cible: number) {
-    
+
 }
 
 function block(cible: number) {
@@ -652,13 +652,13 @@ function unblock(cible: number) {
 }
 
 function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
-    
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  
+
   const handleClose = (param: {n: number, id: number}) => {
 
     setAnchorEl(null);
@@ -681,8 +681,8 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   if (status_du_gars_connecte == 0)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Promouvoir en admin</MenuItem>
         <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Mute</MenuItem>
@@ -695,8 +695,8 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   else if (status_du_gars_connecte == 1)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Mute</MenuItem>
         <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Bloquer</MenuItem>
@@ -706,9 +706,9 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   else if (status_du_gars_connecte)
   {
     menu_onclick =( <>
-        <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
-        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
-        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem> 
+        <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
             </>)
   }
 
@@ -716,14 +716,14 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   {
     h1_name_role = (<>
         <h1 className="personneDansChannelOwner"> {props.item.name}  </h1>
-    </>)   
+    </>)
   }
   else if (props.item.status == 1)
   {
     h1_name_role = (<>
         <h1 className="personneDansChannelAdmin"> {props.item.name}  </h1>
     </>)
-  }  
+  }
   else if (props.item.status == 2) {
     h1_name_role = (<>
         <h1 className="personneDansChannelDefault"> {props.item.name}  </h1>
@@ -741,13 +741,13 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
         onClick={handleClick}
         sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
       >
-        
+
         {/* <h1 className="personneDansChannelOwner"> {props.item.login}  </h1> */}
 
         {h1_name_role}
 
-       
-        
+
+
       </Button>
       <Menu
         id="basic-menu"
@@ -758,12 +758,12 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
           'aria-labelledby': 'basic-button',
         }}
       >
-         
-            {/* <MenuItem onClick={handleClose}>Profil</MenuItem> 
-            <MenuItem onClick={handleClose}>Inviter a jouer</MenuItem> 
-            <MenuItem onClick={handleClose}>Envoyer un message</MenuItem> 
+
+            {/* <MenuItem onClick={handleClose}>Profil</MenuItem>
+            <MenuItem onClick={handleClose}>Inviter a jouer</MenuItem>
+            <MenuItem onClick={handleClose}>Envoyer un message</MenuItem>
             <MenuItem onClick={handleClose}>Promouvoir en admin</MenuItem>
-       
+
             <MenuItem onClick={handleClose}>Mute</MenuItem>
             <MenuItem onClick={handleClose}>Bloquer</MenuItem>
             <MenuItem onClick={handleClose}>Bannir</MenuItem> */}
@@ -812,7 +812,7 @@ function ListChannel() {
                 <div className="centerChat">
                 {/* <Menu_Membre/> */}
                 {arraylistName.map((item) => {
-                    
+
                     return <MenuMembre item={item}/>
                 })}
 
@@ -836,7 +836,7 @@ function Chat() {
     // remplacer par votre pseudo
     return (
         <>
-            <div className="rayaneleboloss">    
+            <div className="rayaneleboloss">
                 <Channel/>
                 {/* <ButtonCreateCanal/> */}
                 <Bodychat/>
@@ -886,4 +886,3 @@ export default Chat;
 function setOpen(arg0: boolean) {
     throw new Error("Function not implemented.");
 }
-
