@@ -77,7 +77,6 @@
 }
 
 .btn {
-
     bottom: 5px;
     left: 50%;
     width: 50px;
@@ -86,11 +85,6 @@
     border: none;
     cursor: pointer;
     position: relative;
-
-
-
-
-
 }
 
 .btncrayon{
