@@ -15,7 +15,7 @@ import { subscribeOn } from 'rxjs';
   import { ChatService, status } from '../services/chat.service';
   import { ChatEntity, chat_status } from '../entities/chat.entity';
   import { UserService } from '../services/user.service';
-import { randomUUID } from 'crypto';
+import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, randomUUID } from 'crypto';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
@@ -40,7 +40,7 @@ import { randomUUID } from 'crypto';
 	}
 
 	@SubscribeMessage('ready')
-	handleReady(
+	async handleReady(
 		@ConnectedSocket() client: Socket,
 		@MessageBody() userId: number
 	)
@@ -53,6 +53,8 @@ import { randomUUID } from 'crypto';
 			client.join(val);
 		})
 		client.join(userId.toString());
+		console.log(userId.toString());
+		client.emit('BLOCKED', await this.userService.getBlocking(userId));
 	}
 
 	@SubscribeMessage('addmsg')
@@ -64,6 +66,7 @@ import { randomUUID } from 'crypto';
 		try {
 			await this.chatService.addMsg(msg);
 			const val = await this.chatService.messageInChannel(msg.channel);
+			console.log(msg.channel, val);
 			this.io.to(msg.channel).emit('LIST_CHAT', {channel: msg.channel, list: val});
 		}
 		catch (error) {console.log(error);}
@@ -89,6 +92,7 @@ import { randomUUID } from 'crypto';
 	)
 	{
 		try {
+			data.target = await this.chatService.getIdByftid(data.target);
 			await this.userService.block(data.sender, data.target);
 		}
 		catch (e) {console.log(e);}
@@ -101,6 +105,7 @@ import { randomUUID } from 'crypto';
 	)
 	{
 		try {
+			data.target = await this.chatService.getIdByftid(data.target);
 			await this.userService.removeFriend(data.sender, data.target);
 		}
 		catch (e) {console.log(e);}
@@ -202,20 +207,24 @@ import { randomUUID } from 'crypto';
 
 	@SubscribeMessage('JUST_NAME_CHANNEL')
 	getchannelinfo(
-		@MessageBody() name: string,
+		@MessageBody() data: {name: string, id: number},
 		@ConnectedSocket() client: Socket
 	)
 	{
-		this.chatService.memberInChannel(name)
+		this.chatService.memberInChannel(data.name)
 		.then((val) => {
+			val.forEach((element) => {
+				if (element.id == data.id)
+					client.emit('STATUS', element.status);
+			})
 			client.emit('LIST_NAME', {
-				channel: name,
+				channel: data.name,
 				list: val
 			})
 		})
-		this.chatService.messageInChannel(name)
+		this.chatService.messageInChannel(data.name)
 		.then((val) => {
-			client.emit('LIST_CHAT', {channel: name, list: val});
+			client.emit('LIST_CHAT', {channel: data.name, list: val});
 		})
 	}
 
@@ -228,6 +237,10 @@ import { randomUUID } from 'crypto';
 		this.chatService.getPvmsg(id)
 		.then((val) => {
 			client.emit('CHANNEL_CREATED', val);
+		})
+		this.chatService.getMpmsg(id)
+		.then((val) => {
+			client.emit('MP_CREATED', val);
 		})
 	}
 
@@ -261,21 +274,46 @@ import { randomUUID } from 'crypto';
 	@SubscribeMessage('CREATE_MP_CHAN')
 	async handleMpChan(
 		@ConnectedSocket() client: Socket,
-		@MessageBody() mp: {id: number, login: string}
+		@MessageBody() mp: {target: number, sender: number}
 	)
 	{
-		const name = 'mp' + randomUUID;
-		this.handleCreateChannel(client, {channel: name, id: mp.id, status: chat_status.private, password: ''});
-		this.addmember({channel: name, login: mp.login}, client);
-		this .chatService.defineMp(name);
+		if (this.chatService.mpexist(mp))
+			throw new Error("deja créé");
+		const name = randomBytes(4).toString('hex');
+		await this.chatService.addOne({name: name,
+			status: chat_status.private,
+			password: ""});
+		this.chatService.defineMp(name);
+		await this.chatService.addMember({channel: name, id: mp.sender, status: status.default});
+		await this.chatService.addMember({channel: name, id: mp.target, status: status.default});
+		
+		const ret = await this.chatService.getMpmsg(mp.sender);
+		this.io.to(mp.sender.toString()).emit('MP_CREATED', ret);
+		this.io.to(mp.sender.toString()).socketsJoin(name);
+		
+		const ret2 = await this.chatService.memberInChannel(name);
+		this.io.to(mp.target.toString()).socketsJoin(name);
+		this.Connected.forEach(element => {
+			if (element.id == mp.target)
+			{
+				this.getchannelname(element.socket, element.id);
+				return;
+			}
+		});
+		this.io.to(name).emit('LIST_NAME', 
+		{
+			channel: name,
+			list: ret2
+		});
 	}
 
 	@SubscribeMessage('ALL_CHAN')
 	async handleAllChan(
+		@MessageBody() id: number,
 		@ConnectedSocket() client: Socket
 	)
 	{
-		const channels = await this.chatService.getAccessibleChan();
+		const channels = await this.chatService.getAccessibleChan(id);
 		client.emit('ALL_CHAN', channels);
 	}
 

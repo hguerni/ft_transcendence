@@ -46,8 +46,47 @@ export class ChatService {
 
         const tmp: string[] = [];
         channels.forEach((element) => {
-            if (element.quit_status == quit_status.none)
+            if (element.quit_status == quit_status.none && element.chat.mp_message == false)
                 tmp.push(element.chat.name);
+        })
+        return tmp;
+    }
+
+    async mpexist(data: {target: number, sender: number})
+    {
+        const user1 = await this.getUser(data.target);
+        if (!user1)
+            throw new Error("user not exist");
+        const user2 = await this.getUser(data.sender);
+        const chat = await this.chatRepository.find({where: {mp_message: true}, relations:['members', 'members.user']});
+        let test: ChatEntity;
+        chat.forEach(element => {
+            if ((element.members[0].user.ft_id == user1.ft_id && element.members[1].user.ft_id == user2.ft_id)
+            || (element.members[0].user.ft_id == user2.ft_id && element.members[1].user.ft_id == user1.ft_id))
+            {
+                test = element;
+                return ;
+            }
+        });
+        return test;
+    }
+
+    getMpuser(user: UserEntity, users: MemberEntity[])
+    {
+        if (users[0].user.login != user.login)
+            return (users[0].user.username);
+        return (users[1].user.username);
+    }
+
+    async getMpmsg(id: number)
+    {
+        const user = await this.userRepo.findOne({where: {ft_id: id}});
+        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user}, relations: ['chat', 'user', 'chat.members', 'chat.members.user']});
+
+        const tmp: {name: string, username: string}[] = [];
+        channels.forEach((element) => {
+            if (element.quit_status == quit_status.none && element.chat.mp_message == true)
+                tmp.push({name: element.chat.name, username: this.getMpuser(user, element.chat.members)});
         })
         return tmp;
     }
@@ -112,7 +151,6 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["messages"]});
         const user = await this.userRepo.findOne({where: {ft_id: data.id}});
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}, relations: ['chat', 'chat.messages']});
-        console.log(member.mute);
         if (member.mute || member.quit_status > quit_status.none)
             throw Error("is mute, quit or ban");
         const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
@@ -143,8 +181,9 @@ export class ChatService {
         return tmp;
     }
 
-    async getAccessibleChan()
+    async getAccessibleChan(id: number)
     {
+        const user = await this.getUser(id);
         const chat = await this.chatRepository.find({
             select: ['name', "status"],
             where: [{status: chat_status.public},
@@ -177,7 +216,7 @@ export class ChatService {
             sender.status = status.default;
             this.membersRepo.save(sender);
         }
-        if (status.ban)
+        if (data.status == status.ban)
             target.quit_status = quit_status.ban;
         this.membersRepo.save(target);
     }
@@ -219,6 +258,12 @@ export class ChatService {
         return user.ft_id;
     }
 
+    async getIdByftid(ft_id: number)
+    {
+        const user = await this.userRepo.findOne({select: ['id'], where: {ft_id: ft_id}});
+        return user.id;
+    }
+
     async addMember(data: AddMemberDTO)
     {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
@@ -232,6 +277,7 @@ export class ChatService {
         if (same && same.quit_status > quit_status.none)
         {
             same.quit_status = quit_status.none;
+            same.status = status.default;//if ban
             member = same;
         }
         else if (!same)
