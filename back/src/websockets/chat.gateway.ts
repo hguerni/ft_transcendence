@@ -9,13 +9,13 @@ import {
 	OnGatewayDisconnect
   } from '@nestjs/websockets';
 import { subscribeOn } from 'rxjs';
-
+  import {hash, compare} from 'bcrypt';
   import { Server, Socket } from 'socket.io'
   import { AddMemberDTO, ChatDTO, MsgDTO } from '../models/chat.model';
   import { ChatService, status } from '../services/chat.service';
   import { ChatEntity, chat_status } from '../entities/chat.entity';
   import { UserService } from '../services/user.service';
-import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, randomUUID } from 'crypto';
+import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomBytes, randomFill, randomInt, randomUUID } from 'crypto';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
@@ -118,8 +118,11 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 	)
 	{
 		await this.chatService.Quit(data);
+		await this.chatService.getPvmsg(data.id)
+		.then((val) => {
+			this.io.in(data.id.toString()).emit('CHANNEL_CREATED', val);
+		});
 		this.io.in(data.id.toString()).socketsLeave(data.channel);
-		this.getchannelname(client, data.id);
 		const ret = await this.chatService.memberInChannel(data.channel);
 		this.io.to(data.channel).emit('LIST_NAME', 
 		{
@@ -256,7 +259,7 @@ import { generateKey, pseudoRandomBytes, randomBytes, randomFill, randomInt, ran
 				throw new Error('cant create null channel');
 			await this.chatService.addOne({name: channelcreation.channel,
 											status: channelcreation.status,
-											password: channelcreation.password});
+											password: await hash(channelcreation.password, 10)});
 			await this.chatService.addMember({channel: channelcreation.channel,
 											id: channelcreation.id,
 											status: status.owner});
