@@ -72,7 +72,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage('GAME_END')
-  handleEndGamer(client: Socket, args: string[]) {
+  handleEndGame(client: Socket, args: string[]) {
     const game: string = args[0];
     const userId: number = parseInt(args[1]);
 
