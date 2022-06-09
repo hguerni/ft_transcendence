@@ -87,12 +87,6 @@ function ActivateTwoFa(){
                 <h1 className="activateText">want to use this service OR continue using this service. Previously saved</h1>
                 <h1 className="activateText">settings in the Google Authenticator app are expired and no longer valid.</h1>
 
-<<<<<<< HEAD
-
-                <button onClick={activate} className="w-100 btn btn-lg btn-primary" type="button">activate</button>
-                <button onClick={disable} className="w-100 btn btn-lg btn-primary" type="button">Disable</button>
-=======
->>>>>>> master
             </form>
         </main>
     )
