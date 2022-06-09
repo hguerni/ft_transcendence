@@ -280,7 +280,7 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		@MessageBody() mp: {target: number, sender: number}
 	)
 	{
-		if (this.chatService.mpexist(mp))
+		if (await this.chatService.mpexist(mp))
 			throw new Error("deja créé");
 		const name = randomBytes(4).toString('hex');
 		await this.chatService.addOne({name: name,

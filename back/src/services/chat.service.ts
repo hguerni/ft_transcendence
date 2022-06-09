@@ -214,6 +214,14 @@ export class ChatService {
         return member;
     }
 
+    async unban(data: {channel: string, target: number, sender: number, status: number})
+    {
+        data.status = status.default;
+        await new Promise(() => setTimeout(() => {
+            this.changeStatus(data)
+        }, 5000));
+    }
+
     async changeStatus(data: {channel: string, target: number, sender: number, status: number})
     {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
@@ -230,11 +238,17 @@ export class ChatService {
         if (data.status == status.ban)
             target.quit_status = quit_status.ban;
         this.membersRepo.save(target);
+        if (data.status == status.ban)
+        {
+            await new Promise(() => setTimeout(() => {
+                target.status = status.default;
+                this.membersRepo.save(target);
+            }, 20000));
+        }
     }
 
     async changeStatusChan(data: {channel: string, id: number, status: number, password: string})
     {
-        console.log(data);
         const chat = await this.getChat(data.channel);
         const member = await this.getMember(chat, data.id);
         if (member.status != status.owner)
@@ -287,8 +301,10 @@ export class ChatService {
         let member: MemberEntity;
         if (same && same.quit_status > quit_status.none)
         {
+            if (same.status == status.ban)
+                throw new Error("you are ban from this chan");
             same.quit_status = quit_status.none;
-            same.status = status.default;//if ban
+            same.status = status.default;
             member = same;
         }
         else if (!same)

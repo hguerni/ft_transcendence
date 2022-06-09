@@ -1,6 +1,3 @@
-
--1 encrypt mdp
-
 -2 bannir timer
 
 -6 ◦ Les administrateurs du channel peuvent bannir ou mute d’autres utilisateurs
