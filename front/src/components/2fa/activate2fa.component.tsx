@@ -66,7 +66,11 @@ function ActivateTwoFa(){
                 <h1 id="leTitre">activate Two Factor authentication</h1>
                 <h1 className="activateSubTitle">Scan this QR-code with the Google Authenticator app</h1>
 
-                <div><img className="qrImg" alt="QRcode" src={QRCode}/></div>
+                <div className="leQR">
+                    <button onClick={activate} id="activate" type="button">activate</button>
+                    <img className="qrImg" alt="QRcode" src={QRCode}/>
+                    <button onClick={disable} id="disable" type="button">Disable</button>
+                </div>
 
                 {   invalid?
                     <p className="faSubTitle">Wrong validation code, please try again</p>
@@ -83,9 +87,12 @@ function ActivateTwoFa(){
                 <h1 className="activateText">want to use this service OR continue using this service. Previously saved</h1>
                 <h1 className="activateText">settings in the Google Authenticator app are expired and no longer valid.</h1>
 
+<<<<<<< HEAD
 
                 <button onClick={activate} className="w-100 btn btn-lg btn-primary" type="button">activate</button>
                 <button onClick={disable} className="w-100 btn btn-lg btn-primary" type="button">Disable</button>
+=======
+>>>>>>> master
             </form>
         </main>
     )

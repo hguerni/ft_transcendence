@@ -2,7 +2,7 @@ import './profile.css';
 import camera from '../../images/camera-solid.svg';
 import level_up from '../../images/level_up.svg';
 import rank from '../../images/rank.svg';
-import React, {ReactEventHandler, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Redirect, Link, useHistory} from "react-router-dom"
 import axios from "axios";
 // import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
@@ -40,7 +40,7 @@ function SearchUser () {
   };
 
   if (user.id !== 0) {
-    let id  = user.id;
+    // let id  = user.id;
     history.push("/profiles", {id: user.id});
     user.id = 0;
   }
@@ -103,11 +103,9 @@ function Profile() {
 
   const handleKey = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter"){
-      let mounted = true
       user.username = e.currentTarget.value;
       await axios.put('update' , user);
       setUser(user);
-      mounted = false;
       setModify(true);
     }
   };

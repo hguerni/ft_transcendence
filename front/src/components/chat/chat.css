@@ -43,17 +43,20 @@
     background-color: rgb(184, 85, 209);
 }
 
-.testPopup-content {
-    overflow: auto;
-    height: 60%;
-    width: 30%;
-    padding: 0.5rem;
-    background-color: red;
-}
+/* .popup-content2 {
+    margin: auto;
+    padding: 2em;
+    border-radius: 0.8em;
+    background-color: #450FBF;
+    color: white;
+    border: solid 0.3em rgb(189, 15, 15);
+    font-size: 6.625vw;
+  }
+  
+  .popup-overlay2 {
+    background: rgba(0, 0, 0, 0.5);
+  } */
 
-.testPopup-content::-webkit-scrollbar {
-    display: none;
-}
 
 .divJoinChannel {
     margin-top: 1.5rem;
@@ -87,7 +90,7 @@
     background-color: rgb(15, 15, 15);
     padding-top: 1.85rem;
     /* width: 20%; */
-    height: 5.2%;
+    height: 5.5%;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     /* color: white; */
@@ -124,7 +127,7 @@
     background-color: rgb(94, 91, 91);
     /* padding-top: 0.5rem; */
     /* width: 20%; */
-    height: 8.98%;
+    height: 8.5%;
     padding-left: 1.5rem;
     /* padding-right: 1.5rem; */
     /* color: white; */
@@ -374,13 +377,13 @@
     font-size: 20px;
 }
 
-.channelName:hover {
+/* .channelName:hover {
     color: blue;
 }
 
 .channelName:active {
     color: blue;
-}
+} */
 
 .personneDansChannelOwner {
     color: rgb(202, 189, 67);
@@ -417,6 +420,25 @@
     font-size: 35px;
 }
 
+.testDM {
+    display: flex;
+    flex-direction: column;
+}
+
+.lesChannels {
+    display: flex;
+    flex-direction: column;
+    border-bottom: red;
+}
+
+#separation2 {
+    border-bottom: 1px solid rgb(68, 54, 197);
+    width: 60%;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .chathistory {
     font-size: 20px;
     color: rgb(184, 190, 190);
@@ -444,6 +466,11 @@
 #buttonSettings {
     padding-bottom: -0.5rem;
 }
+#buttonSettings:hover {
+    background-color: rgb(184, 85, 209);
+    border-radius: 20%;
+}
+
 
 .css-10nakn3-MuiModal-root-MuiPopover-root-MuiMenu-root {
     z-index: 0 !important;

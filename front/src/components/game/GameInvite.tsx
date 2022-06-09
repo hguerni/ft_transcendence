@@ -1,10 +1,7 @@
 import { Redirect, useLocation } from "react-router-dom";
-import { GameJoin, GetCurrentRoom } from "./GameArea";
+import { GameJoin } from "./GameArea";
 import { socket } from "./Game";
-import { GameCreate } from "./GameArea";
 import { useEffect, useState } from "react";
-import { v4 } from "uuid";
-import Popup from "reactjs-popup";
 import { RoomProps } from "./GameSearching";
 
 export function GetGameInviteLink() {

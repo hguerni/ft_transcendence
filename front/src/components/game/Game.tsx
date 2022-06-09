@@ -5,6 +5,7 @@ import { Route, BrowserRouter } from 'react-router-dom';
 import GameTraining from './GameTraining';
 import GameFighting from './GameFighting';
 import GameRules from './GameRules';
+import UserService from '../../services/user.service';
 
 export const socket: Socket = io("ws://54.245.74.93:3030/game");
 
@@ -14,8 +15,8 @@ function Game() {
     socket.on("ALERT", (message: string) => {
       alert(message);
     });
-    socket.on("GAME_END", (game: string) => {
-      socket.emit("GAME_END", game);
+    socket.on("GAME_END", (gameName: string) => {
+      socket.emit("GAME_END", gameName, UserService.getUserId());
     });
   }, []);
 

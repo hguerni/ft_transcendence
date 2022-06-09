@@ -81,11 +81,14 @@ export function GameSetPongProps(client: Socket, newPongProps: PongProps) {
 	client.emit("GAME_SET_PONG_PROPS", JSON.stringify(newPongProps));
 }
 
+export function GameQuit(client: Socket, roomName: string) {
+	client.emit("GAME_QUIT", roomName, UserService.getUserId());
+}
+
 export function GameAutoMaching(client: Socket) {
 	let userDataGame: UserDataGame = new UserDataGame();
 	client.emit("GAME_AUTO_MATCHING", JSON.stringify(userDataGame));
 }
-
 
 export default function Gamezone(props: {client: Socket}) {
 	let pong = new PongProps();

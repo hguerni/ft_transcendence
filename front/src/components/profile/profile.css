@@ -77,7 +77,6 @@
 }
 
 .btn {
-
     bottom: 5px;
     left: 50%;
     width: 50px;
@@ -86,11 +85,6 @@
     border: none;
     cursor: pointer;
     position: relative;
-
-
-
-
-
 }
 
 .btncrayon{
@@ -238,7 +232,7 @@
     margin-right: auto;
     border: none;
     outline: none ;
-    width: 90%;
+    width: fit-content;
     background-color: transparent;
     color: rgb(255, 255, 255);
     font-family: 'CrickxRegular';
@@ -361,14 +355,14 @@
 
 /* ===================== 2FA ===================== */
 
-#separation {
+
+
+.tw#separation {
     border-bottom: 1px solid rgb(118, 224, 48);
     width: 60%;
     margin-left: auto;
     margin-right: auto;
-}
-
-.two-fa {
+}o-fa {
     display: flex;
     justify-content: center;
     align-content: center;

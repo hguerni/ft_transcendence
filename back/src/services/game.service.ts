@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Server } from 'socket.io';
+import { logger } from 'src/websockets/game.gateway';
 import { v4 } from 'uuid';
 import { UserService } from './user.service';
 
@@ -53,7 +54,8 @@ function collision() {
 
 @Injectable()
 export class GameService {
-  constructor(){};
+  private hasGivenUp: boolean = false;
+
   private room: RoomProps = new RoomProps();
 
   private nb_players: number = 0;
@@ -90,10 +92,12 @@ export class GameService {
       game.launchBall(game);
       wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(game.pong));
       wsServer.to(game.room.name).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(game.room))
-      if (game.room.p1_score >= 2 || game.room.p2_score >= 2)
+      if (game.room.p1_score >= 2 || game.room.p2_score >= 2 || this.hasGivenUp)
       {
         clearInterval(game.intervalId_0);
-        if (game.room.p1_score > game.room.p2_score)
+        if (this.hasGivenUp)
+          wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `You have won the game!`);
+        else if (game.room.p1_score > game.room.p2_score)
           wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p1_name} has won the game!`);
         else
           wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p2_name} has won the game!`);
@@ -185,6 +189,10 @@ export class GameService {
     }
   }
 
+  setHasGivenUp() {
+    this.hasGivenUp = true;
+  }
+
   setRoomName(name: string) {
     this.room.name = name;
   }
@@ -252,10 +260,6 @@ export class GameService {
 
   getPongProps(): PongProps {
     return this.pong;
-  }
-
-  getNbPlayers(): number {
-    return this.nb_players;
   }
 
   getRoomProps(): RoomProps {

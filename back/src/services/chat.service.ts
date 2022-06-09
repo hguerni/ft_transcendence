@@ -11,6 +11,7 @@ import { getgroups } from "process";
 import { getHeapCodeStatistics } from "v8";
 import { Console, error } from "console";
 import { LoginDTO } from "src/models/user.model";
+import {hash, compare} from 'bcrypt';
 
 export enum status {
     owner,
@@ -46,8 +47,47 @@ export class ChatService {
 
         const tmp: string[] = [];
         channels.forEach((element) => {
-            if (element.quit_status === quit_status.none)
+            if (element.quit_status == quit_status.none && element.chat.mp_message == false)
                 tmp.push(element.chat.name);
+        })
+        return tmp;
+    }
+
+    async mpexist(data: {target: number, sender: number})
+    {
+        const user1 = await this.getUser(data.target);
+        if (!user1)
+            throw new Error("user not exist");
+        const user2 = await this.getUser(data.sender);
+        const chat = await this.chatRepository.find({where: {mp_message: true}, relations:['members', 'members.user']});
+        let test: ChatEntity;
+        chat.forEach(element => {
+            if ((element.members[0].user.ft_id == user1.ft_id && element.members[1].user.ft_id == user2.ft_id)
+            || (element.members[0].user.ft_id == user2.ft_id && element.members[1].user.ft_id == user1.ft_id))
+            {
+                test = element;
+                return ;
+            }
+        });
+        return test;
+    }
+
+    getMpuser(user: UserEntity, users: MemberEntity[])
+    {
+        if (users[0].user.login != user.login)
+            return (users[0].user.username);
+        return (users[1].user.username);
+    }
+
+    async getMpmsg(id: number)
+    {
+        const user = await this.userRepo.findOne({where: {ft_id: id}});
+        const channels = await this.membersRepo.find({select: ['id', 'quit_status'], where: {user: user}, relations: ['chat', 'user', 'chat.members', 'chat.members.user']});
+
+        const tmp: {name: string, username: string}[] = [];
+        channels.forEach((element) => {
+            if (element.quit_status == quit_status.none && element.chat.mp_message == true)
+                tmp.push({name: element.chat.name, username: this.getMpuser(user, element.chat.members)});
         })
         return tmp;
     }
@@ -58,7 +98,6 @@ export class ChatService {
     }
 
     async addOne(data: ChatDTO){
-        console.log(data);
         const chat = this.chatRepository.create({...data, messages: [], members: [], mp_message: false});
         return await this.chatRepository.save(chat);
     }
@@ -90,20 +129,31 @@ export class ChatService {
         this.membersRepo.save(tomute);
     }
 
+    async removeChat(chat: ChatEntity)
+    {
+        const msg = await this.msgRepo.find({where: {chat: chat}});
+        await this.msgRepo.remove(msg);
+        const members = await this.membersRepo.find({where: {chat: chat}});
+        await this.membersRepo.remove(members);
+        await this.chatRepository.remove(chat);
+    }
+
     async Quit(data: {channel: string, id: number})
     {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}});
+        if (chat.mp_message == true)
+            throw new Error("you can't quit private message");
         const membre = await this.getMember(chat, data.id);
         membre.quit_status = quit_status.quit;
-        if (membre.status === status.owner)
+        await this.membersRepo.save(membre);
+        if (membre.status == status.owner)
         {
-            try {
-                const member = await this.membersRepo.findOne({where: {chat: chat, status: Not(status.owner), quit_status: 0}, relations: ['user']});
-                member.status = status.owner;
-                this.changeStatus({channel: data.channel, target: member.user.ft_id, sender: data.id, status: 0});
-                console.log(member.user);
-            }
-            catch (e) { console.log(e);}
+            const member = await this.membersRepo.findOne({where: {chat: chat, status: Not(status.owner), quit_status: 0}, relations: ['user']});
+            console.log(member);
+            if (!member)
+                return this.removeChat(chat);
+            member.status = status.owner;
+            this.changeStatus({channel: data.channel, target: member.user.ft_id, sender: data.id, status: 0});
         }
         return this.membersRepo.save(membre);
     }
@@ -112,7 +162,6 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["messages"]});
         const user = await this.userRepo.findOne({where: {ft_id: data.id}});
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}, relations: ['chat', 'chat.messages']});
-        console.log(member.mute);
         if (member.mute || member.quit_status > quit_status.none)
             throw Error("is mute, quit or ban");
         const message = this.msgRepo.create({"member": member, "message": data.message, "chat": chat});
@@ -143,8 +192,9 @@ export class ChatService {
         return tmp;
     }
 
-    async getAccessibleChan()
+    async getAccessibleChan(id: number)
     {
+        const user = await this.getUser(id);
         const chat = await this.chatRepository.find({
             select: ['name', "status"],
             where: [{status: chat_status.public},
@@ -157,11 +207,19 @@ export class ChatService {
     {
         const user = await this.userRepo.findOne({where: {ft_id: id}});
         if (!user)
-            throw new NotFoundException();
+            throw new Error("user " + id + " not found");
         const member = await this.membersRepo.findOne({where: {user: user, chat: chat}});
         if (!member)
-            throw new NotFoundException();
+            throw new Error("user "+ id + " is not in channel");
         return member;
+    }
+
+    async unban(data: {channel: string, target: number, sender: number, status: number})
+    {
+        data.status = status.default;
+        await new Promise(() => setTimeout(() => {
+            this.changeStatus(data)
+        }, 5000));
     }
 
     async changeStatus(data: {channel: string, target: number, sender: number, status: number})
@@ -177,22 +235,28 @@ export class ChatService {
             sender.status = status.default;
             this.membersRepo.save(sender);
         }
-        if (status.ban)
+        if (data.status == status.ban)
             target.quit_status = quit_status.ban;
         this.membersRepo.save(target);
+        if (data.status == status.ban)
+        {
+            await new Promise(() => setTimeout(() => {
+                target.status = status.default;
+                this.membersRepo.save(target);
+            }, 20000));
+        }
     }
 
     async changeStatusChan(data: {channel: string, id: number, status: number, password: string})
     {
-        console.log(data);
         const chat = await this.getChat(data.channel);
         const member = await this.getMember(chat, data.id);
         if (member.status != status.owner)
             throw Error('not privilige');
         chat.status = data.status;
         console.log(chat);
-        if (chat.status === chat_status.protected)
-            chat.password = data.password;
+        if (chat.status == chat_status.protected)
+            chat.password = await hash(data.password, 10);
         this.chatRepository.save(chat);
     }
 
@@ -201,7 +265,7 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
         if (!chat)
             throw new NotFoundException();
-        if (chat.status === chat_status.protected && data.password != chat.password)
+        if (chat.status == chat_status.protected && await !compare(data.password, chat.password))
             throw new Error("not good password");
         if (chat.status === chat_status.private)
             throw new Error("cant join private chan");
@@ -219,6 +283,12 @@ export class ChatService {
         return user.ft_id;
     }
 
+    async getIdByftid(ft_id: number)
+    {
+        const user = await this.userRepo.findOne({select: ['id'], where: {ft_id: ft_id}});
+        return user.id;
+    }
+
     async addMember(data: AddMemberDTO)
     {
         const chat = await this.chatRepository.findOne({where: {name: data.channel}});
@@ -231,7 +301,10 @@ export class ChatService {
         let member: MemberEntity;
         if (same && same.quit_status > quit_status.none)
         {
+            if (same.status == status.ban)
+                throw new Error("you are ban from this chan");
             same.quit_status = quit_status.none;
+            same.status = status.default;
             member = same;
         }
         else if (!same)
