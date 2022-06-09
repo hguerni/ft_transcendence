@@ -47,13 +47,8 @@ export class AuthController {
 
     @Post('2fa/verify')
     async verify2fa (@Req() request: Request, @Body() data) {
-        console.log("wesh");
-        console.log(data);
         const clientID = await this.authService.clientID(request);
-        console.log(data);
         const validated = await this.authService.twoFactorAuthVerify("555555", clientID);
-        console.log(validated);
-        console.log("LOL");
 
         if (!validated)
             throw new UnauthorizedException('Wrong authentication code');
@@ -150,7 +145,6 @@ export class AuthController {
     async getUserID(@Req() request: Request) {
         console.log(request.cookies)
         const clientID = await this.authService.clientID(request);
-        console.log(clientID);
         return clientID;
     }
 
@@ -185,12 +179,24 @@ export class AuthController {
 
     @Put("EndGame")
     async endGame(@Body() data: any, @Req() request: Request) {
-        const clientID = await this.authService.clientID(request);
-        return await this.userService.saveGame(clientID, data);
     }
 
     @Get('uploads/:path')
     async getImage(@Param('path') path, @Res() res: Response) {
         res.sendFile(path, {root: 'uploads'});
+    }
+
+    @Get("games")
+    async Game(@Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        let games = await this.userService.getGames(clientID);
+        return (games)
+    }
+
+    @Get("stats")
+    async Stats(@Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        let stats = await this.userService.getStats(clientID);;
+        return (stats);
     }
 }

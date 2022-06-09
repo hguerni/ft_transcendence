@@ -1,8 +1,9 @@
-import { Logger } from '@nestjs/common';
+import { forwardRef, Inject, Logger } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, OnGatewayInit, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { GameService, RoomProps } from '../services/game.service';
 import { v4 } from 'uuid'
+import { UserService } from '../services/user.service';
 
 export let logger: Logger = new Logger('gameTest');
 
@@ -30,7 +31,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   private usersToClients: Map<number, Array<string>> = new Map();
   //private usersToClients: Map<number, string> = new Map();
 
-  constructor() {
+  constructor(
+    @Inject(UserService)
+    public userService: UserService) {
     this.gameRooms = new Map();
   }
 
@@ -70,8 +73,11 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage('GAME_END')
-  handleEndGamer(client: Socket, game: string) {
+  async handleEndGamer(client: Socket, game: string) {
     this.logger.log(`Client ${client.id} want to end game ${game}`);
+    let gamer = this.gameRooms.get(game);
+    await this.userService.saveGame(gamer.getRoomProps());
+    await this.userService.saveGameadversary(gamer.getRoomProps());
     this.clientsToRoom.delete(client.id);
     this.handleSendingRooms(this.getRoomsGroup);
     if (this.gameRooms.has(game)) {
@@ -152,6 +158,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('START_TRAINING')
   handleStartingTraining(client: Socket) {
     if (!(this.clientsToRoom.has(client.id))) {
+      this.userService.helloworld()
       const gameRoom = new GameService();
       const gameRoomName = gameRoom.getRoomProps().name;
       gameRoom.setPlayersSocketIds(client.id);

@@ -52,4 +52,20 @@ export class UserController {
   async update(@Body(new ValidationPipe()) data: UpdateUserDTO) {
     return await this.userService.updateUser(data);
   }
+  @Get("games/:id")
+  async Game(@Param('param') id) {
+      console.log(id);
+      const clientID = await this.userService.getById(id);
+      let games = await this.userService.getGames(clientID.ft_id);
+      return (games)
+  }
+
+  @Get("stats/:id")
+  async Stats(@Param('param') id) {
+      const clientID = await this.userService.getById(id);
+      console.log(clientID);
+      let stats = await this.userService.getStats(clientID.ft_id);
+      console.log(stats);
+      return (stats);
+  }
 }

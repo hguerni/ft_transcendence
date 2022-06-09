@@ -53,12 +53,6 @@ function ActivateTwoFa(){
         setRedirect(true);
     }
 
-    const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter"){
-            return activate();
-        }
-      };
-
     if (unauthorized)
         return <Redirect to={'/'} />;
 
@@ -81,7 +75,7 @@ function ActivateTwoFa(){
 
                 <div className="form-floating">
                     <input required className="form-control" id="floatingInput" placeholder="Entrer le code"
-                           onChange={e => setCode(e.target.value)} onKeyPress={e => handleKey(e)}/>
+                           onChange={e => setCode(e.target.value)}/>
                     <label htmlFor="floatingInput"></label>
                 </div>
 
@@ -90,8 +84,8 @@ function ActivateTwoFa(){
                 <h1 className="activateText">settings in the Google Authenticator app are expired and no longer valid.</h1>
 
 
-                {/* <button onClick={activate} className="w-100 btn btn-lg btn-primary" type="button">activate</button>
-                <button onClick={disable} className="w-100 btn btn-lg btn-primary" type="button">Disable</button> */}
+                <button onClick={activate} className="w-100 btn btn-lg btn-primary" type="button">activate</button>
+                <button onClick={disable} className="w-100 btn btn-lg btn-primary" type="button">Disable</button>
             </form>
         </main>
     )

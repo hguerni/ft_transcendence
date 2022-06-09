@@ -18,6 +18,6 @@ import { GameEntity } from '../entities/game.entity';
         }),],
     controllers: [UserController],
     providers: [UserService, AuthService],
-    exports: [UserService],
+    exports: [UserService, TypeOrmModule.forFeature([UserEntity, FriendEntity, GameEntity])],
 })
 export class UserModule {}

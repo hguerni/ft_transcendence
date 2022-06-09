@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { v4 } from 'uuid';
 import { UserService } from './user.service';
@@ -53,8 +53,7 @@ function collision() {
 
 @Injectable()
 export class GameService {
-
-  private userService: UserService;
+  constructor(){};
   private room: RoomProps = new RoomProps();
 
   private nb_players: number = 0;
@@ -74,7 +73,7 @@ export class GameService {
     game.pong.ball_vy = genRandomVelocity();
   }
 
-  private checkWin(game: GameService, wsServer: Server)
+  private async checkWin(game: GameService, wsServer: Server)
   {
     if (game.pong.ball_x < 0 || game.pong.ball_x > game.pong.width)
     {
@@ -94,8 +93,6 @@ export class GameService {
       if (game.room.p1_score >= 2 || game.room.p2_score >= 2)
       {
         clearInterval(game.intervalId_0);
-        this.userService.saveGame(game.room.p1_userId, game.room);
-        this.userService.saveGameadversary(game.room.p2_userId, game.room);
         if (game.room.p1_score > game.room.p2_score)
           wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p1_name} has won the game!`);
         else

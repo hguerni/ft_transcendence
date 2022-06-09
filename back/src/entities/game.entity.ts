@@ -3,7 +3,8 @@ import {  BaseEntity,
     PrimaryGeneratedColumn,
     Column,
     Entity,
-    ManyToOne} from 'typeorm';
+    ManyToOne,
+    JoinColumn} from 'typeorm';
 import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { UserEntity } from './user.entity';
 
@@ -15,10 +16,10 @@ import { UserEntity } from './user.entity';
   @CreateDateColumn()
   endGameTime: Date;
 
-  //@Column()
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, user => user.advgames)
   adversary: UserEntity;
 
+  @Column()
   @IsString()
   gameName: string;
 

@@ -55,6 +55,9 @@ donotuse: FriendEntity[];
 @OneToMany(() => GameEntity, games => games.user)
 games: GameEntity[];
 
+@OneToMany(() => GameEntity, games => games.adversary)
+advgames: GameEntity[];
+
 @Column({default: false})
 @IsBoolean()
 isBan: boolean;
