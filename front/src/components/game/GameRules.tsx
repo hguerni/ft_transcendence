@@ -26,12 +26,14 @@ export default function GameRules () {
         to hit a ball back and forth. The goal is for each player to reach eleven points before the opponent;
         points are earned when one fails to return the ball to the other.
       </p>
-      <p style={{fontSize: '2em', textAlign: 'center', marginBottom: '1.5em'}}>
+      <div style={{fontSize: '2em', textAlign: 'center', marginBottom: '1.5em'}}>
         <h6>Controls:</h6>
         <br></br>
-        Press <span style={{color: '#e74c3c'}}>Z</span> to move paddle <span style={{color: '#e74c3c'}}>UP</span> /
-        Press <span style={{color: '#e74c3c'}}>S</span> to move paddle <span style={{color: '#e74c3c'}}>DOWN</span>
-      </p>
+        <p style={{fontSize: '1em'}}>
+          Press <span style={{color: '#e74c3c'}}>Z</span> to move paddle <span style={{color: '#e74c3c'}}>UP</span> /
+          Press <span style={{color: '#e74c3c'}}>S</span> to move paddle <span style={{color: '#e74c3c'}}>DOWN</span>
+        </p>
+      </div>
       <br></br>
       <div style={{margin: 'auto', width: 'fit-content'}}>
         <button onClick={() => history.push('/game/training')} style={{marginRight: '5em'}} className="gameTrainingButton"><h4>1 player</h4></button>

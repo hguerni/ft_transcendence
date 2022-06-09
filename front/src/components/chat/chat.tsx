@@ -20,7 +20,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import UserService from '../../services/user.service'
-// import { Input } from "@mui/material";
+import { Input } from "@mui/material";
+import { RoomProps } from "../game/GameSearching";
+import {socket as GameSocket} from "../game/Game"
+import { CreateGamePopUp } from "../game/GameFighting";
+import { GameCreate } from "../game/GameArea";
 
 //import { getchannel } from "../../../../shares/models"
 const userId: number = UserService.getUserId(); // à récupérer
@@ -123,7 +127,7 @@ function ModifierPopupMdp() {
       <div>
           <MenuItem onClick={() => setOpen(true)}>Modifier le mot de passe</MenuItem>
         <Popup contentStyle={{fontSize:'20px'}} open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
-            
+
           <div>Quel est le nouveau mot de pass ?</div>
           <input className="input"
             type="text"
@@ -248,7 +252,7 @@ function CreatePopupChannel() {
     return (
       <div>
           <button className="buttonaddgroup"  onClick={() => setOpen(true)}> <img src={loupe} alt="niqueLaLoupe" id="imgLoupe"/></button>
-        
+
           <Popup contentStyle={{fontSize:'20px'}} open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
           <div>Nom du Channel à créer:</div>
 
@@ -285,7 +289,7 @@ function CreatePopupChannel() {
 
           <button className="gameButton" onClick={() => { setOpen(false); sendChannelName(); setChannelName("")}}>SEND</button>
         </Popup>
-        
+
 
       </div>
 
@@ -600,7 +604,7 @@ function Channel() {
             console.log("<List channel>", message);
             setArrayChannelName(message);
         });
-        
+
         socket.on("MP_CREATED", (data: {name: string, username: string}[]) => {
             console.log("<List mp>", data);
             setArrayMpName(data);
@@ -651,7 +655,7 @@ function Channel() {
                                             {display_channel('#', item)}
                                 </button>
                     })}
-                    
+
                     </div>
                 </div>
                 <div className="footerChatchannel">
@@ -700,6 +704,57 @@ function sendmp(cible: number)
     socket.emit("CREATE_MP_CHAN", {target: cible, sender: userId});
 }
 
+function InviteUser(cible: number, gameName: string) { // à finir !
+
+    const gameInviteLink = "http://localhost/game/join/".concat(gameName);
+
+    socket.emit("????", {target: cible, sender: userId}); //send invite link to user
+}
+
+function InviteUserPopUp(props: {cible: number}) {
+    const [gameName, setGameName] = useState<string>(v4().substring(0, 10));
+    const [open, setOpen] = useState(false);
+    const [customMode, setCustomMode] = useState<string>("");
+
+    return (
+      <div>
+        <MenuItem onClick={() => setOpen(true)}>Inviter à jouer</MenuItem>
+        <Popup open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+          <h5>Enter a name for your game:</h5>
+
+          <div style={{margin: '2.5em auto 0 auto', width: 'fit-content'}}>
+            <input className="input"
+              type="text"
+              value={gameName}
+              onChange={(e) => setGameName(e.target.value)}
+            />
+          </div>
+
+          <div className="checkBoxes">
+            <input type="checkbox" id="customModeSpeed" name="customModeSpeed"
+              onChange={(e) => {setCustomMode("customModeSpeed")}}/>
+            <label><p>2x speed</p></label>
+
+            <input type="checkbox" id="customModeColor" name="customModeColor"
+              onChange={(e) => {setCustomMode("customModeColor")}}/>
+            <label><p>color mode</p></label>
+
+            <input type="checkbox" id="customModeOther" name="customModeOther"
+              onChange={(e) => {setCustomMode("customModeOther")}}/>
+            <label><p>other</p></label>
+          </div>
+
+          <br></br>
+
+          <div style={{margin: 'auto', width: 'fit-content'}}>
+            <button className="gameButton"
+            onClick={() => {GameCreate(GameSocket, gameName, customMode); InviteUser(props.cible, gameName); setOpen(false); setGameName(v4().substring(0, 10))}}><h4>SEND</h4></button>
+          </div>
+        </Popup>
+      </div>
+    );
+  }
+
 function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -716,7 +771,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     else
         return <MenuItem onClick={() => handleClose({n: 6, id: id})}>Bloquer</MenuItem>;
   }
-  
+
   const handleClose = (param: {n: number, id: number}) => {
 
     setAnchorEl(null);
@@ -736,7 +791,6 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
         history.push("/profile");
         // <Link to={{ pathname: "/profiles", state: {id: param.id} }}></Link>
     }
-
   };
 
   let menu_onclick;
@@ -754,6 +808,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
+        <InviteUserPopUp cible={props.item.id}/>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Promouvoir en admin</MenuItem>
         <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Mute</MenuItem>
@@ -769,6 +824,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
+        <InviteUserPopUp cible={props.item.id}/>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Mute</MenuItem>
         {BlockOrUnblock(props.item.id)}
@@ -779,7 +835,8 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   {
     menu_onclick =( <>
         <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
-        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
+        <InviteUserPopUp cible={props.item.id}/>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         {BlockOrUnblock(props.item.id)}
             </>)

@@ -72,7 +72,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage('GAME_END')
-  handleEndGamer(client: Socket, args: string[]) {
+  handleEndGame(client: Socket, args: string[]) {
     const game: string = args[0];
     const userId: number = parseInt(args[1]);
 
@@ -283,18 +283,18 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     this.clientsToRoom.delete(client.id);
     this.usersToClients.delete(userId);
-    if (this.gameRooms.get(roomName).getRoomProps().p1_userId === userId)
-    {
-      this.gameRooms.delete(roomName);
-      this.handleSendingCurrentRoom(client.id);
+
+    if (this.gameRooms.get(roomName).getRoomProps().p1_userId === userId) {
+      if (this.gameRooms.get(roomName).getRoomProps().p2_userId === -1)
+        this.gameRooms.delete(roomName);
       this.wsServer.to(p2_id).emit("SEND_GAME_STATUS", `${p1_name} is quiting the game :/`);
     }
     else if (this.gameRooms.get(roomName).getRoomProps().p2_userId === userId)
-    {
-      this.gameRooms.delete(roomName);
-      this.handleSendingCurrentRoom(client.id);
       this.wsServer.to(p1_id).emit("SEND_GAME_STATUS", `${p2_name} has left the game :/`);
-    }
+
+    if (this.gameRooms.has(roomName))
+      this.gameRooms.get(roomName).setHasGivenUp();
+    this.wsServer.to(client.id).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(undefined));
     this.handleSendingRooms(this.getRoomsGroup);
     this.logger.log('GAME_QUIT');
   }
