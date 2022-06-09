@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from 'react';
+import { useHistory, Link } from 'react-router-dom';
 import './chat.css';
 // import { AppSettingsAltRounded, ConstructionOutlined, RestaurantRounded } from "@mui/icons-material";
 // import ClearIcon from '@mui/icons-material/Clear';
@@ -684,10 +685,6 @@ function mute(cible: number) {
 
 }
 
-function check_profil(cible: number) {
-
-}
-
 function block(cible: number) {
 
     socket.emit("BLOCK", {target: cible, sender: userId});
@@ -704,12 +701,14 @@ function sendmp(cible: number)
 }
 
 function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
-
+    
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    let history = useHistory();
 
   const BlockOrUnblock = (id: number) => {
     if (global_blocked.includes(id))
@@ -733,8 +732,10 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
         block(param.id);
     else if (param.n === 8)
         unblock(param.id);
-    else if (param.n === 1)
-        check_profil(param.id);
+    else if (param.n === 1) {
+        history.push("/profile");
+        // <Link to={{ pathname: "/profiles", state: {id: param.id} }}></Link>
+    }
 
   };
 
@@ -745,13 +746,13 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   if (props.item.id === userId)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
       </>)
   }
   else if (global_status === 0)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Promouvoir en admin</MenuItem>
@@ -766,7 +767,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   else if (global_status === 1)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Mute</MenuItem>
@@ -777,7 +778,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   else if (global_status)
   {
     menu_onclick =( <>
-        <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
+        <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
         <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem> 
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         {BlockOrUnblock(props.item.id)}
