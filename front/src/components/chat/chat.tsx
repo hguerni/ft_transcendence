@@ -1,25 +1,25 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useState } from 'react';
 import './chat.css';
-import { AppSettingsAltRounded, ConstructionOutlined, RestaurantRounded } from "@mui/icons-material";
-import ClearIcon from '@mui/icons-material/Clear';
+// import { AppSettingsAltRounded, ConstructionOutlined, RestaurantRounded } from "@mui/icons-material";
+// import ClearIcon from '@mui/icons-material/Clear';
 import loupe from "../../images/loupe.png";
 import buttonsubmit from "../../images/submitChat2.png";
-import directmessage from "../../images/directChat.png";
+// import directmessage from "../../images/directChat.png";
 import addgroup from "../../images/add-group.png";
 import engrenage from "../../images/engrenage.png";
 import join_channel from "../../images/join_channel.png";
 import cadenas from "../../images/cadenas.png";
 import Popup from 'reactjs-popup';
-import { Server } from "socket.io";
+// import { Server } from "socket.io";
 import { io } from "socket.io-client";
-import { V4MAPPED } from "dns";
+// import { V4MAPPED } from "dns";
 import { v4 } from 'uuid'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import UserService from '../../services/user.service'
-import { Input } from "@mui/material";
+// import { Input } from "@mui/material";
 
 //import { getchannel } from "../../../../shares/models"
 const userId: number = UserService.getUserId(); // à récupérer
@@ -49,7 +49,7 @@ socket.emit('ready', userId);
 
 let global_channel = "";
 let global_status = status.ban;
-let global_name_click = "";
+// let global_name_click = "";
 
 socket.on('STATUS', (status: number) => {
     global_status = status;
@@ -84,25 +84,25 @@ interface info2 {
     list: message[];
 }
 
-function ButtonCreateCanal(){
+// function ButtonCreateCanal(){
 
-    const [Chatbox, setChatbox] = useState(["Direct Messages"]);
+//     const [Chatbox, setChatbox] = useState(["Direct Messages"]);
 
-    function addComponent() {
-        setChatbox([...Chatbox, "Direct Messages"]);
-    }
+//     function addComponent() {
+//         setChatbox([...Chatbox, "Direct Messages"]);
+//     }
 
-    return (
-         <>
-             <div className="chat">
-             {/* <button onClick={addComponent} className="button" name="button 1">
-                 call component
-              </button> */}
-              {/* {Chatbox.map((item) => (<DirectMessages text={item} />))} */}
-             </div>
-         </>
-     );
-}
+//     return (
+//          <>
+//              <div className="chat">
+//              {/* <button onClick={addComponent} className="button" name="button 1">
+//                  call component
+//               </button> */}
+//               {/* {Chatbox.map((item) => (<DirectMessages text={item} />))} */}
+//              </div>
+//          </>
+//      );
+// }
 
 function ModifierPopupMdp() {
     const [newPassword, setNewPassword] = useState("");
@@ -162,13 +162,13 @@ function MenuSettings() {
     const handleClose = (ind: number) => {
 
         setAnchorEl(null);
-        if (ind == 2)
+        if (ind === 2)
         {
 
             quit_serveur();
         }
 
-        else if (ind == 1)
+        else if (ind === 1)
         {
 
             retirer_mdp();
@@ -181,7 +181,7 @@ function MenuSettings() {
 
 
     let menuEngrenage;
-    let status_user = 0;
+    // let status_user = 0;
     if (global_status === 0) {
         menuEngrenage = (
         <>
@@ -333,50 +333,50 @@ function CreatePopupChannel() {
         );
 }
 
-  function PopupPassword(props: {name: string, status: number}) {
+//   function PopupPassword(props: {name: string, status: number}) {
 
-    const [password, setPassword] = useState("");
-    const [open, setOpen] = useState(false);
+//     const [password, setPassword] = useState("");
+//     const [open, setOpen] = useState(false);
 
-   function sendMember ()
-   {
-       console.log("lbgrjirgjigrjirgjirgji");
-       console.log("le password = " + password);
-
-
-    //     socket.emit("JOIN_CHAN",  {channel: props.name, id: userId, password: password})
-
-   }
+//    function sendMember ()
+//    {
+//        console.log("lbgrjirgjigrjirgjirgji");
+//        console.log("le password = " + password);
 
 
-    return (
-      <div>
+//     //     socket.emit("JOIN_CHAN",  {channel: props.name, id: userId, password: password})
 
-            <h1
-                className="allServers"
-
-                onClick={() => {setOpen(true)}}>
-                {props.name}
-                <span>{print_status(props.status)}</span>
-                </h1>
-        <Popup contentStyle={{fontSize:'20px'}} open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
-
-          <div>Qu'elle est le mot de passe ?</div>
-          <input className="input"
-            type="text"
-            value={password}
-            onChange={(e) =>  setPassword(e.target.value)}
-
-          />
-          <button className="gameButton" onClick={() => { setOpen(false); sendMember(); setPassword("") ;}}>SEND</button>
-        </Popup>
+//    }
 
 
-      </div>
+//     return (
+//       <div>
 
-    );
+//             <h1
+//                 className="allServers"
 
-  }
+//                 onClick={() => {setOpen(true)}}>
+//                 {props.name}
+//                 <span>{print_status(props.status)}</span>
+//                 </h1>
+//         <Popup contentStyle={{fontSize:'20px'}} open={open} closeOnDocumentClick onClose={() => setOpen(false)}>
+
+//           <div>Qu'elle est le mot de passe ?</div>
+//           <input className="input"
+//             type="text"
+//             value={password}
+//             onChange={(e) =>  setPassword(e.target.value)}
+
+//           />
+//           <button className="gameButton" onClick={() => { setOpen(false); sendMember(); setPassword("") ;}}>SEND</button>
+//         </Popup>
+
+
+//       </div>
+
+//     );
+
+//   }
 
   function InputPassword(props: {name: string, status: number, setOpen: (open: boolean) => void}) {
       const [password, setPassword] = useState("");
@@ -404,9 +404,9 @@ function CreatePopupChannel() {
 
 
   function CreatePopupSearchChannel() {
-    const [isclic, setisclic] = useState(false);
+    // const [isclic, setisclic] = useState(false);
     const [open, setOpen] = useState(false);
-    const [password, setPassword] = useState("");
+    // const [password, setPassword] = useState("");
     const [serverName, setServerName] = useState<{name: string, status: number}[]>([]);
     const searchChannel = () => {
         socket.emit("ALL_CHAN", userId);
@@ -477,8 +477,8 @@ function sendInput(message: string) {
 function Bodychat() {
     /*A chaque fois que le state sera appeler le composant sera recre et changera*/
 
-    const [arrayHistory, setArrayhistory] = useState<info[]>([]);
-    const [newInfo, setNewInfo] = useState<info>(new info());
+    // const [arrayHistory, setArrayhistory] = useState<info[]>([]);
+    // const [newInfo, setNewInfo] = useState<info>(new info());
     const [message, setMessage] = useState("");
 
 /*************************************************** */
@@ -492,7 +492,7 @@ function Bodychat() {
         // let tmp = [...arraylistName];
         // tmp.push(message);
         console.log("<List chat>", global_channel, message.channel)
-        if (global_channel == message.channel)
+        if (global_channel === message.channel)
             setArraylistChat(message.list);
         });
     },[])
@@ -536,7 +536,7 @@ function Bodychat() {
 
                 <div className="centerChat">
                     {arrayChat.map((item) => {
-                        // if (item.name == "psemsari" && login == "ellarbi")
+                        // if (item.name === "psemsari" && login === "ellarbi")
                         //     return(
                         //         <>
                         //         </>
@@ -551,6 +551,10 @@ function Bodychat() {
                                 </div>
                             );
                         }
+                        else
+                            return (
+                                <></>
+                            );
                     })}
 
                     {/* {arrayHistory.map((item) => {
@@ -586,7 +590,7 @@ function Bodychat() {
 
 function Channel() {
 
-    const [channelName, setChannelName] = useState("");
+    // const [channelName, setChannelName] = useState("");
     const [arrayChannelName, setArrayChannelName] = useState<string[]>([]);
     const [arrayMpName, setArrayMpName] = useState<{name: string, username: string}[]>([]);
 
@@ -717,34 +721,34 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   const handleClose = (param: {n: number, id: number}) => {
 
     setAnchorEl(null);
-    if (param.n == 4)
+    if (param.n === 4)
         promouvoir_admin(param.id);
-    else if (param.n == 3)
+    else if (param.n === 3)
         sendmp(param.id);
-    else if (param.n == 5)
+    else if (param.n === 5)
         mute(param.id);
-    else if (param.n == 7)
+    else if (param.n === 7)
         ban(param.id);
-    else if (param.n == 6)
+    else if (param.n === 6)
         block(param.id);
-    else if (param.n == 8)
+    else if (param.n === 8)
         unblock(param.id);
-    else if (param.n == 1)
+    else if (param.n === 1)
         check_profil(param.id);
 
   };
 
   let menu_onclick;
   let h1_name_role;
-  let status_du_gars_connecte = 0;
+//   let status_du_gars_connecte = 0;
   //recup le status
-  if (props.item.id == userId)
+  if (props.item.id === userId)
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem> 
       </>)
   }
-  else if (global_status == 0)
+  else if (global_status === 0)
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem>
@@ -759,7 +763,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
 
       </>)
   }
-  else if (global_status == 1)
+  else if (global_status === 1)
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}>Profil</MenuItem>
@@ -780,19 +784,19 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
             </>)
   }
 
-  if (props.item.status == 0)
+  if (props.item.status === 0)
   {
     h1_name_role = (<>
         <h1 className="personneDansChannelOwner"> {props.item.name}  </h1>
     </>)
   }
-  else if (props.item.status == 1)
+  else if (props.item.status === 1)
   {
     h1_name_role = (<>
         <h1 className="personneDansChannelAdmin"> {props.item.name}  </h1>
     </>)
   }
-  else if (props.item.status == 2) {
+  else if (props.item.status === 2) {
     h1_name_role = (<>
         <h1 className="personneDansChannelDefault"> {props.item.name}  </h1>
     </>)
@@ -862,7 +866,7 @@ function ListChannel() {
             // let tmp = [...arraylistName];
             // tmp.push(message);
             console.log("<List name>", global_channel, message.channel);
-            if (message.channel == global_channel)
+            if (message.channel === global_channel)
                 setArraylistName(message.list);
         });
       }, []);
@@ -918,37 +922,37 @@ function Chat() {
     );
 }
 
-function DirectMessages(props: any) {
-    return (
-        <>
-            <div className="allBodyChat">
-                <div className="headerChat">
+// function DirectMessages(props: any) {
+//     return (
+//         <>
+//             <div className="allBodyChat">
+//                 <div className="headerChat">
 
-                    <div className="iconeChat">
-                        <button className="buttonaddgroup"> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
-                        <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
+//                     <div className="iconeChat">
+//                         <button className="buttonaddgroup"> <img src={addgroup} alt="account" id="imgaddgroupet"/></button>
+//                         <button className="buttonDirectChat"> <img src={directmessage} alt="account" id="imgDirectChat"/></button>
 
-                    </div>
+//                     </div>
 
 
-                </div>
+//                 </div>
 
-                <div className="centerChat">
-                    <h1> {props.text} </h1>
-                </div>
-                <div className="footerChat">
+//                 <div className="centerChat">
+//                     <h1> {props.text} </h1>
+//                 </div>
+//                 <div className="footerChat">
 
-                    <input id="inputrayane" type="text" placeholder="Write message" />
-                    <div className="submitChat">
-                        <button className="buttonSubmit"> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
+//                     <input id="inputrayane" type="text" placeholder="Write message" />
+//                     <div className="submitChat">
+//                         <button className="buttonSubmit"> <img src={buttonsubmit} alt="account" id="imgSubmit"/></button>
 
-                    </div>
-                </div>
+//                     </div>
+//                 </div>
 
-            </div>
-        </>
-    );
-}
+//             </div>
+//         </>
+//     );
+// }
 
 export default Chat;
 function setOpen(arg0: boolean) {
