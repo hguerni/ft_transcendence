@@ -1,6 +1,7 @@
 import GameArea, { GameStartTraining, GameReset } from './GameArea';
 import { Socket, io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
+import UserService from '../../services/user.service';
 
 const socket: Socket = io("ws://localhost:3030/game");
 
@@ -12,7 +13,7 @@ export default function GameTraining() {
 
   useEffect(() => {
     socket.on("GAME_END", (game: string) => {
-      socket.emit("GAME_END", game);
+      socket.emit("GAME_END", game, UserService.getUserId());
     });
   }, [])
 

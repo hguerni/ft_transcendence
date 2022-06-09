@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Server } from 'socket.io';
+import { logger } from 'src/websockets/game.gateway';
 import { v4 } from 'uuid';
 
 export class PongProps {
@@ -95,7 +96,6 @@ export class GameService {
           wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p1_name} has won the game!`);
         else
           wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p2_name} has won the game!`);
-        wsServer.to(game.room.name).emit('GAME_END', game.room.name);
       }
     }
   }
