@@ -706,7 +706,8 @@ function sendmp(cible: number)
 
 function InviteUser(cible: number, gameName: string) { // à finir !
 
-    const gameInviteLink = "http://localhost/game/join/".concat(gameName);
+    const gameInviteLink = "http://localhost:3000/game/join/".concat(gameName);
+
     socket.emit("INVITE", {target: cible, message: gameInviteLink, sender: userId}); //send invite link to user
 }
 
@@ -755,7 +756,7 @@ function InviteUserPopUp(props: {cible: number}) {
   }
 
 function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
-    
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -799,7 +800,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   if (props.item.id === userId)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
       </>)
   }
   else if (global_status === 0)
@@ -807,7 +808,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <InviteUserPopUp cible={props.item.id}/>
-        
+
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Promouvoir en admin</MenuItem>
         <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Mute</MenuItem>
@@ -833,7 +834,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   else if (global_status)
   {
     menu_onclick =( <>
-        <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
+        <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
         <InviteUserPopUp cible={props.item.id}/>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
