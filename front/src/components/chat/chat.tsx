@@ -706,7 +706,7 @@ function sendmp(cible: number)
 
 function InviteUser(cible: number, gameName: string) { // à finir !
 
-    const gameInviteLink = "http://localhost/game/join/".concat(gameName);
+    const gameInviteLink = "http://localhost:3000/game/join/".concat(gameName);
     socket.emit("INVITE", {target: cible, message: gameInviteLink, sender: userId}); //send invite link to user
 }
 
@@ -806,7 +806,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
-        <InviteUserPopUp cible={props.item.id}/>
+        <InviteUserPopUp cible={props.item.id}/>s
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Promouvoir en admin</MenuItem>
         <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Mute</MenuItem>
