@@ -16,6 +16,7 @@ import { subscribeOn } from 'rxjs';
   import { ChatEntity, chat_status } from '../entities/chat.entity';
   import { UserService } from '../services/user.service';
 import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomBytes, randomFill, randomInt, randomUUID } from 'crypto';
+import { getRepository } from 'typeorm';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
@@ -83,6 +84,25 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 			await new Promise(() => setTimeout(() => {this.chatService.unMute(data)}, 5000));
 		}
 		catch (e) {console.log(e);}
+	}
+
+	@SubscribeMessage('INVITE')
+	async invitetoplay(
+		@MessageBody() data: {target: number, message: string, sender: number},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		console.log('hey');
+		try {
+			await this.handleMpChan(client, {target: data.target, sender: data.sender});
+		}
+		catch (e) {console.log(e)}
+		const chat = await this.chatService.mpexist({target: data.target, sender: data.sender});
+		await this.addmsg({
+			message: data.message,
+			channel: chat.name,
+			id: data.sender
+		}, client);
 	}
 
 	@SubscribeMessage('BLOCK')
