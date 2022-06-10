@@ -807,7 +807,6 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <InviteUserPopUp cible={props.item.id}/>
-        
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Promouvoir en admin</MenuItem>
         <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Mute</MenuItem>
@@ -822,7 +821,6 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   {
     menu_onclick = (<>
         <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
-        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
         <InviteUserPopUp cible={props.item.id}/>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Mute</MenuItem>
@@ -834,7 +832,6 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   {
     menu_onclick =( <>
         <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
-        <MenuItem onClick={() => handleClose({n: 2, id: props.item.id})}>Inviter a jouer</MenuItem>
         <InviteUserPopUp cible={props.item.id}/>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
         {BlockOrUnblock(props.item.id)}
@@ -959,9 +956,13 @@ function ListChannel() {
 }
 
 function Chat() {
+    socket.on('ERROR', (data: Error)=>{
+      return (alert(data.name));
+    });
     //all ready
-
-    useEffect(() => {socket.emit("GET_CHANNEL", userId); }, []);
+    useEffect(() => {
+      socket.emit("GET_CHANNEL", userId); 
+    }, []);
     // remplacer par votre pseudo
     return (
         <>

@@ -185,6 +185,10 @@ export class ChatService {
     async messageInChannel(name: string)
     {
         const chat = await this.chatRepository.findOne({select: ["id"], where: {name: name}, relations: ['messages', 'messages.member', 'messages.member.user']});
+        if (!chat)
+        {
+            throw new Error('no channel find');
+        }
         const tmp: {id: number, name: string, message: string}[] = [];
         chat.messages.forEach((element) => {
             tmp.push({id: element.member.user.ft_id, name: element.member.user.username, message: element.message});
