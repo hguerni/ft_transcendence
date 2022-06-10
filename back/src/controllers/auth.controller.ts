@@ -41,7 +41,7 @@ export class AuthController {
     async activate2fa(@Req() request: Request) {
         const clientID = await this.authService.clientID(request);
         const OtpAuthUrl = await this.authService.twoFactorAuthSecret(clientID);
-        console.log(OtpAuthUrl);
+        //console.log(OtpAuthUrl);
         return this.authService.createQRcode(OtpAuthUrl);
     }
 
@@ -114,21 +114,22 @@ export class AuthController {
 
     @Get('userData')
     async getUserData(@Req() request: Request) {
-        console.log(request.cookies)
+        //console.log(request.cookies)
         const clientID = await this.authService.clientID(request);
-        console.log(clientID);
+        //console.log(clientID);
         return await this.userService.findByFtId(clientID);
     }
 
     @Get('userModel')
     async getUserModel(@Req() request: Request) {
-        //console.log(request.cookies)
+        ////console.log(request.cookies)
         try {
             const clientID = await this.authService.clientID(request);
-            //console.log(clientID);
+            ////console.log(clientID);
             const user = await this.userService.findByFtId(clientID);
-            let usermodel = {id: 0, username: '', online: 0, email: '', avatar: '', twofa: false}
+            let usermodel = {id: 0, username: '', online: 0, rlid: 0, email: '', avatar: '', twofa: false}
             usermodel.id = user.ft_id;
+            usermodel.rlid = user.id;
             usermodel.username = user.username;
             usermodel.online = user.online;
             usermodel.email = user.email
@@ -143,7 +144,7 @@ export class AuthController {
 
     @Get('userID')
     async getUserID(@Req() request: Request) {
-        console.log(request.cookies)
+        //console.log(request.cookies)
         const clientID = await this.authService.clientID(request);
         return clientID;
     }

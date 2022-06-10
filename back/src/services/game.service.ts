@@ -255,7 +255,7 @@ export class GameService {
 
   gameUpdate (wsServer: Server) {
     wsServer.to(this.room.name).emit('GAME_UPDATE', JSON.stringify(this.pong));
-    console.log(` test: ${this.room.name}`);
+    //console.log(` test: ${this.room.name}`);
   }
 
   getPongProps(): PongProps {

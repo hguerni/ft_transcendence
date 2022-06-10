@@ -43,7 +43,7 @@ enum chat_status {
     pv_message
   }
 
-const socket = io("ws://localhost:3030/chat");
+const socket = io("ws://54.245.74.93:3030/chat");
 let global_blocked: number[] = [];
 
 
@@ -344,8 +344,8 @@ function CreatePopupChannel() {
 
 //    function sendMember ()
 //    {
-//        console.log("lbgrjirgjigrjirgjirgji");
-//        console.log("le password = " + password);
+//        //console.log("lbgrjirgjigrjirgjirgji");
+//        //console.log("le password = " + password);
 
 
 //     //     socket.emit("JOIN_CHAN",  {channel: props.name, id: userId, password: password})
@@ -386,8 +386,8 @@ function CreatePopupChannel() {
       const [password, setPassword] = useState("");
       const handleKey = async (e: React.KeyboardEvent<HTMLInputElement>, name: string, password: string) => {
         if (e.key === "Enter"){
-          console.log('enter' + password);
-          console.log('nom du channel = ' + name);
+          //console.log('enter' + password);
+          //console.log('nom du channel = ' + name);
           socket.emit("JOIN_CHAN",  {channel: name, id: userId, password: password});
           setPassword("");
           setOpen(false);
@@ -418,9 +418,9 @@ function CreatePopupChannel() {
 
     // const handleKey = async (e: React.KeyboardEvent<HTMLInputElement>, name: string, password: string) => {
     //     if (e.key === "Enter"){
-    //       console.log('enter' + password);
+    //       //console.log('enter' + password);
     //       setOpen(false);
-    //       console.log('nom du channel = ' + name);
+    //       //console.log('nom du channel = ' + name);
     //       socket.emit("JOIN_CHAN",  {channel: name, id: userId, password: password});
     //     }
     //   };
@@ -495,7 +495,7 @@ function Bodychat() {
         // setlistName(message);
         // let tmp = [...arraylistName];
         // tmp.push(message);
-        console.log("<List chat>", global_channel, message.channel)
+        //console.log("<List chat>", global_channel, message.channel)
         if (global_channel === message.channel)
             setArraylistChat(message.list);
         });
@@ -564,7 +564,7 @@ function Bodychat() {
                     {/* {arrayHistory.map((item) => {
                         return (
                             <div >
-                              { console.log(item)};
+                              { //console.log(item)};
                                 <h1 className="inputName"> {item.name} </h1>
                                 <h1 className="chathistory"> {item.inputValue} </h1>
                                 <h1> </h1>
@@ -600,12 +600,12 @@ function Channel() {
 
     useEffect(() => {
         socket.on("CHANNEL_CREATED", (message: string[]) => {
-            console.log("<List channel>", message);
+            //console.log("<List channel>", message);
             setArrayChannelName(message);
         });
 
         socket.on("MP_CREATED", (data: {name: string, username: string}[]) => {
-            console.log("<List mp>", data);
+            //console.log("<List mp>", data);
             setArrayMpName(data);
         });
     }, []);
@@ -705,7 +705,7 @@ function sendmp(cible: number)
 
 function InviteUser(cible: number, gameName: string) { // à finir !
 
-    const gameInviteLink = "http://localhost/game/join/".concat(gameName);
+    const gameInviteLink = "http://54.245.74.93/game/join/".concat(gameName);
 
     socket.emit("????", {target: cible, sender: userId}); //send invite link to user
 }
@@ -922,7 +922,7 @@ function ListChannel() {
 
             // let tmp = [...arraylistName];
             // tmp.push(message);
-            console.log("<List name>", global_channel, message.channel);
+            //console.log("<List name>", global_channel, message.channel);
             if (message.channel === global_channel)
                 setArraylistName(message.list);
         });

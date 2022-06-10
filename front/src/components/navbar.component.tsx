@@ -20,7 +20,7 @@ function Navbar(){
     if (e.key === "Enter"){
       let mounted = true
       const {data} = await axios.get('user/name/' + e.currentTarget.value);
-      console.log(data);
+      //console.log(data);
       if (mounted && data) setUser(data);
       mounted = false;
     }

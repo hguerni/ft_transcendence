@@ -24,7 +24,8 @@ function SearchUser () {
     username: '',
     avatar: '',
     email: '',
-    id: 0
+    id: 0,
+    ft_id: 0
   });
 
   const history = useHistory();
@@ -33,7 +34,7 @@ function SearchUser () {
     if (e.key === "Enter"){
       let mounted = true
       const {data} = await axios.get('user/name/' + e.currentTarget.value);
-      console.log(data);
+      //console.log(data);
       if (mounted && data) setUser(data);
       mounted = false;
     }
@@ -41,7 +42,7 @@ function SearchUser () {
 
   if (user.id !== 0) {
     // let id  = user.id;
-    history.push("/profiles", {id: user.id});
+    history.push("/profiles", {id: user.ft_id});
     user.id = 0;
   }
 
@@ -87,12 +88,12 @@ function Profile() {
     const target = e.target;
     if (target.checked) {
         target.checked = true;
-        console.log(target.checked);
+        //console.log(target.checked);
         setTwofa(true);
         setToggle(true)
     }
     else {
-        console.log(target.checked);
+        //console.log(target.checked);
         target.checked = false
         user.twofa = false;
         setUser(user);
@@ -141,7 +142,7 @@ function Profile() {
       const getUser = async () => {
           try {
               const {data} = await axios.get('userData')
-              console.log(data);
+              //console.log(data);
               if (mounted) setUser(data);
               if (mounted) setAvatar(data.avatar);
               if (mounted) setToggle(data.twofa);
@@ -222,7 +223,7 @@ function Amis() {
         const getFriends = async () => {
             try {
                 const friends = (await axios.get('friends')).data;
-                console.log(friends);
+                //console.log(friends);
                 if (mounted) setGetFriends(friends);
             }
             catch(err){}
@@ -236,7 +237,7 @@ function Amis() {
         const getRequests = async () => {
             try {
                 const frrequests = (await axios.get('friendrequests')).data;
-                console.log(frrequests);
+                //console.log(frrequests);
                 if (mounted) setGetRequests(frrequests);
             }
             catch(err){}
@@ -247,7 +248,7 @@ function Amis() {
 
     const handleClick = (e : React.MouseEvent<HTMLElement>) => {
         const appMode = e.currentTarget.getAttribute('data-arg1');
-        console.log(appMode);
+        //console.log(appMode);
         axios.get('acceptfriend/' + appMode?.toString());
       };
 
@@ -263,7 +264,7 @@ function Amis() {
                <h1 id='info-online'>Online</h1>
                <ul>
                {friends.length ? friends.map((element : any) => {
-                console.log(element);
+                //console.log(element);
 
            // Affichage
                 return (
@@ -272,14 +273,14 @@ function Amis() {
                        element.friend.online === 0 ? (
                         <li key={element}>
                             <h1 id='texteh1'> 
-                            <img src={rond_vert} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.id} }}> {element.friend.username} 
+                            <img src={rond_vert} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.ft_id} }}> {element.friend.username} 
                             </Link></h1>
                         </li>
                         )
                         :(
                         <li key={element}>
                                                         <h1 id='texteh1'> 
-                            <img src={nitendo} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.id} }}> {element.friend.username} 
+                            <img src={nitendo} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.ft_id} }}> {element.friend.username} 
                             </Link></h1>
                         </li>
                         )
@@ -295,7 +296,7 @@ function Amis() {
                           <h1 id='info-offline'>Offline</h1>
                           <ul>
                {friends.length ? friends.map((element: any) => {
-                console.log(element);
+                //console.log(element);
 
            // Affichage
                 return (
@@ -317,7 +318,7 @@ function Amis() {
                         <h1 id='info-online'>Pending</h1>
                         <ul>
                         {requests.length ? requests.map((element: any) => {
-                console.log(element);
+                //console.log(element);
 
            // Affichage
                 return (
@@ -343,7 +344,7 @@ function Stats() {
         const getFriends = async () => {
             try {
                 const games = (await axios.get('stats')).data;
-                console.log(games);
+                //console.log(games);
                 if (mounted) setGetGames(games);
             }
             catch(err){}
@@ -387,7 +388,7 @@ function History(props: any) {
         const getFriends = async () => {
             try {
                 const games = (await axios.get('games')).data;
-                console.log(games);
+                //console.log(games);
                 if (mounted) setGetGames(games);
             }
             catch(err){}
@@ -463,7 +464,7 @@ export default Profile;
 
 //   const [file, setFile] = useState('../../images/avatar.png');
 //   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-//     console.log(e.target.files);
+//     //console.log(e.target.files);
 //     setFile(URL.createObjectURL(e.target.files[0]));
 //   }
 //   return (

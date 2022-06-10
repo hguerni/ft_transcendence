@@ -28,6 +28,7 @@ function Profiles(props : any) {
       email: '',
       id: 0,
   });
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
       let mounted = true;
@@ -39,13 +40,14 @@ function Profiles(props : any) {
       authorization();
       return () => {mounted = false;}
   }, []);
-
+    //console.log(props.location.state.id);
   useEffect(() => {
       let mounted = true;
       const getUser = async () => {
           try {
-              const {data} = await axios.get('user/' + props.location.state.id);
-              console.log(data);
+              const {data} = await axios.get('user/ft/' + props.location.state.id);
+              //console.log(data);
+              if (mounted) setReady(true);
               if (mounted) setUser(data);
               if (mounted) setAvatar(data.avatar);
           }
@@ -87,9 +89,8 @@ function Profiles(props : any) {
                 </div>
             </div>
         </div>
-
-        <Stats user={user}/>
-        <History user={user}/>
+        <Stats id={props.location.state.id}/>
+        <History id={props.location.state.id}/>
 
     </>
   );
@@ -116,7 +117,7 @@ function Profiles(props : any) {
 
 //                <h1 id='info-online'>Online</h1>
 //                {data.map((element, i) => {
-//                 console.log(element);
+//                 //console.log(element);
 
 //            // Affichage
 //                 return (
@@ -142,7 +143,7 @@ function Profiles(props : any) {
 //                     })}
 //                           <h1 id='info-offline'>Offline</h1>
 //                {data.map((element, i) => {
-//                 console.log(element);
+//                 //console.log(element);
 
 //            // Affichage
 //                 return (
@@ -167,13 +168,13 @@ function Profiles(props : any) {
 
 function Stats(props: any) {
     const [games, setGetGames] = useState({n: 0, v: 0, d: 0});
-
+    console.log(props.id)
     useEffect(() => {
         let mounted = true;
         const getFriends = async () => {
             try {
-                const games = (await axios.get('user/stats/' + props.user.id)).data;
-                console.log(games);
+                const games = (await axios.get('user/stats/' + props.id)).data;
+                //console.log(games);
                 if (mounted) setGetGames(games);
             }
             catch(err){}
@@ -211,18 +212,19 @@ function Stats(props: any) {
 
 function History(props: any) {
     const [games, setGetGames] = useState([]);
-
+    console.log(props.id)
     useEffect(() => {
         let mounted = true;
-        const getFriends = async () => {
+        const getStats = async () => {
             try {
-                const games = (await axios.get('user/games/' + props.user.id)).data;
-                console.log(games);
+                //console.log(props.user);
+                const games = (await axios.get('user/games/' + props.id)).data;
+                //console.log(games);
                 if (mounted) setGetGames(games);
             }
             catch(err){}
         }
-        getFriends();
+        getStats();
         return () => {mounted = false;}
     }, []);
     return (
@@ -234,11 +236,11 @@ function History(props: any) {
                         return (
                                 element.winner === true ? (
                                 <li key={element}>
-                                    <Game user={props.user} color="#25b62ca8" game={element}/>
+                                    <Game user={element.user} color="#25b62ca8" game={element}/>
                                 </li>
                             ) : (
                                 <li key={element}>
-                                    <Game user={props.user} color="#bd2148f8" game={element}/>
+                                    <Game user={element.user} color="#bd2148f8" game={element}/>
                                 </li>
                             )
                         )}) : 0
@@ -293,7 +295,7 @@ export default Profiles;
 
 //   const [file, setFile] = useState('../../images/avatar.png');
 //   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-//     console.log(e.target.files);
+//     //console.log(e.target.files);
 //     setFile(URL.createObjectURL(e.target.files[0]));
 //   }
 //   return (

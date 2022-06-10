@@ -31,8 +31,8 @@ export class AuthService {
 
     async twoFactorAuthVerify(code: string, clientID: number) {
         const client = await this.userService.findByFtId(clientID);
-        console.log(code)
-        console.log(client.twofaSecret)
+        //console.log(code)
+        //console.log(client.twofaSecret)
         return authenticator.verify({token: code, secret: client.twofaSecret});
     }
 

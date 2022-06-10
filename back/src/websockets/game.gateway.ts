@@ -164,7 +164,6 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('START_TRAINING')
   handleStartingTraining(client: Socket) {
     if (!(this.clientsToRoom.has(client.id))) {
-      this.userService.helloworld()
       const gameRoom = new GameService();
       const gameRoomName = gameRoom.getRoomProps().name;
       gameRoom.setPlayersSocketIds(client.id);

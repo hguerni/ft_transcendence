@@ -49,11 +49,11 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		this.Connected.push(ret);
 		this.chatService.getPvmsg(ret.id)
 		.then((val) => {
-			console.log(val);
+			//console.log(val);
 			client.join(val);
 		})
 		client.join(userId.toString());
-		console.log(userId.toString());
+		//console.log(userId.toString());
 		client.emit('BLOCKED', await this.userService.getBlocking(userId));
 	}
 
@@ -66,7 +66,7 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		try {
 			await this.chatService.addMsg(msg);
 			const val = await this.chatService.messageInChannel(msg.channel);
-			console.log(msg.channel, val);
+			//console.log(msg.channel, val);
 			this.io.to(msg.channel).emit('LIST_CHAT', {channel: msg.channel, list: val});
 		}
 		catch (error) {console.log(error);}

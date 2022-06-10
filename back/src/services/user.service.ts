@@ -23,8 +23,6 @@ export class UserService {
     return this.userRepo.update(client.id, { twofaSecret: secret });
   }
 
-  helloworld(){console.log("hello")}
-
   async enableTwoFactor(clientID: number): Promise<any> {
     const client = await this.findByFtId(clientID);
     return this.userRepo.update(client.id, { twofa: true });
@@ -65,12 +63,12 @@ export class UserService {
   }
 
   async saveGame(data: any) : Promise<void> {
-    console.log(data);
+    //console.log(data);
     if (data.p1_userId < 0 || data.p2_userId < 0)
       return ;
     this.findByFtId(data.p1_userId).then(async(client) =>{
       let game = new GameEntity;
-      console.log(data);
+      //console.log(data);
       game.adversary = await this.findByFtId(data.p2_userId);
       game.gameName = data.name;
       if (data.p1_score > data.p2_score) 
@@ -80,18 +78,18 @@ export class UserService {
       game.userscore = data.p1_score;
       game.adversaryscore = data.p2_score;
       game.user = client
-      console.log(game);
+      //console.log(game);
       await this.gameRepo.save(game);
     });
   } 
 
   async saveGameadversary(data: any) : Promise<void>  {
-    console.log(data);
+    //console.log(data);
     if (data.p1_userId < 0 || data.p2_userId < 0)
       return ;
     this.findByFtId(data.p2_userId).then(async(client) =>{
         let game = new GameEntity;
-        console.log(data);
+        //console.log(data);
         game.adversary = await this.findByFtId(data.p1_userId);
         game.gameName = data.name;
         if (data.p1_score >= data.p2_score) 
@@ -101,7 +99,7 @@ export class UserService {
         game.userscore = data.p2_score;
         game.adversaryscore = data.p1_score;
         game.user = client;
-        console.log(game);
+        //console.log(game);
         await this.gameRepo.save(game);
     });
   }
@@ -110,7 +108,7 @@ export class UserService {
     this.findByFtId(clientid).then((client) =>{
       this.getById(friendid).then(async (friend) => {
         let previousfriend = await this.friendRepo.findOne({where: {friend: client, user: friend}});
-        console.log("LOL" + previousfriend);
+        //console.log("LOL" + previousfriend);
         if (previousfriend)
           return ;
         let friendship1 = new FriendEntity;
@@ -177,7 +175,7 @@ export class UserService {
     const client = await this.findByFtId(clientID);
     let friends = await this.friendRepo.find({where: {user: client, status: "blocked"}, relations: ['friend', 'user'],});
     let req = JSON.stringify(instanceToPlain(friends));
-    console.log(req)
+    //console.log(req)
     return req
   }
 
@@ -198,7 +196,7 @@ export class UserService {
     stats.n = await this.gameRepo.count({where: {user: client}})
     stats.v = await this.gameRepo.count({where: {user: client, winner: true}});
     stats.d = await this.gameRepo.count({where: {user: client, winner: false}});
-    console.log(stats)
+    //console.log(stats)
     return stats
   }
 
@@ -206,7 +204,7 @@ export class UserService {
     const client = await this.findByFtId(clientID);
     let games = await this.gameRepo.find({where: {user: client}, relations: ['user', 'adversary'],});
     let req = JSON.stringify(instanceToPlain(games));
-    console.log(req)
+    //console.log(req)
     return req
   }
 

@@ -4,5 +4,6 @@ export interface User {
   online?: number
   email? : string
   avatar?: string
+  rlid?: number
   twofa: boolean
 }

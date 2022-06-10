@@ -34,6 +34,11 @@ export class UserController {
     return await this.userService.getById(id);
   }
 
+  @Get("ft/:id")
+  async getFtProfile(@Param('id', new ParseIntPipe()) id) {
+    return await this.userService.findByFtId(id);
+  }
+
   @Post('upload')
   @UseInterceptors(FileInterceptor('image', {
       storage: diskStorage({
@@ -53,19 +58,21 @@ export class UserController {
     return await this.userService.updateUser(data);
   }
   @Get("games/:id")
-  async Game(@Param('param') id) {
-      console.log(id);
-      const clientID = await this.userService.getById(id);
+  async Game(@Param('id') id) {
+      console.log("game " + id);
+      const clientID = await this.userService.findByFtId(id);
+      console.log(clientID);
       let games = await this.userService.getGames(clientID.ft_id);
       return (games)
   }
 
   @Get("stats/:id")
-  async Stats(@Param('param') id) {
-      const clientID = await this.userService.getById(id);
+  async Stats(@Param('id') id) {
+      console.log("stats " + id);
+      const clientID = await this.userService.findByFtId(id);
       console.log(clientID);
       let stats = await this.userService.getStats(clientID.ft_id);
-      console.log(stats);
+      //console.log(stats);
       return (stats);
   }
 }

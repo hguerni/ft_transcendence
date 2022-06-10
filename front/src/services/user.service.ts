@@ -7,6 +7,7 @@ class DefaultUser implements User {
   username: string = '';
   online: number = 0;
   avatar: string = '';
+  rlid: number = 0;
   email: string = '';
   twofa: boolean = false;
 }
@@ -42,6 +43,14 @@ export default class UserService {
 
     if (userData)
       return JSON.parse(userData).id;
+    return 0;
+  }
+
+  static getUserRealID() {
+    const userData = localStorage.getItem("userData");
+
+    if (userData)
+      return JSON.parse(userData).rlid;
     return 0;
   }
 

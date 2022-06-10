@@ -149,7 +149,7 @@ export class ChatService {
         if (membre.status == status.owner)
         {
             const member = await this.membersRepo.findOne({where: {chat: chat, status: Not(status.owner), quit_status: 0}, relations: ['user']});
-            console.log(member);
+            //console.log(member);
             if (!member)
                 return this.removeChat(chat);
             member.status = status.owner;
@@ -254,7 +254,7 @@ export class ChatService {
         if (member.status != status.owner)
             throw Error('not privilige');
         chat.status = data.status;
-        console.log(chat);
+        //console.log(chat);
         if (chat.status == chat_status.protected)
             chat.password = await hash(data.password, 10);
         this.chatRepository.save(chat);
