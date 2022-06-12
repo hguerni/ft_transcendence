@@ -9,7 +9,7 @@ export default function GameRules () {
     return location.pathname;
   }
 
-  if (usePathname() != "/game")
+  if (usePathname() !== "/game")
     return (<></>);
 
   return (

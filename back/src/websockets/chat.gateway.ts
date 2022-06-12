@@ -16,6 +16,7 @@ import { subscribeOn } from 'rxjs';
   import { ChatEntity, chat_status } from '../entities/chat.entity';
   import { UserService } from '../services/user.service';
 import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomBytes, randomFill, randomInt, randomUUID } from 'crypto';
+import { getRepository } from 'typeorm';
 
   @WebSocketGateway({cors: {origin: "*"}, namespace: 'chat'})
   export class ChatGateway implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect{
@@ -49,11 +50,9 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		this.Connected.push(ret);
 		this.chatService.getPvmsg(ret.id)
 		.then((val) => {
-			//console.log(val);
 			client.join(val);
 		})
 		client.join(userId.toString());
-		//console.log(userId.toString());
 		client.emit('BLOCKED', await this.userService.getBlocking(userId));
 	}
 
@@ -66,10 +65,12 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		try {
 			await this.chatService.addMsg(msg);
 			const val = await this.chatService.messageInChannel(msg.channel);
-			//console.log(msg.channel, val);
 			this.io.to(msg.channel).emit('LIST_CHAT', {channel: msg.channel, list: val});
 		}
-		catch (error) {console.log(error);}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('MUTE')
@@ -82,7 +83,31 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 			await this.chatService.Mute(data);
 			await new Promise(() => setTimeout(() => {this.chatService.unMute(data)}, 5000));
 		}
-		catch (e) {console.log(e);}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
+	}
+
+	@SubscribeMessage('INVITE')
+	async invitetoplay(
+		@MessageBody() data: {target: number, message: string, sender: number},
+		@ConnectedSocket() client: Socket
+	)
+	{
+		try {
+			await this.handleMpChan(client, {target: data.target, sender: data.sender});
+		}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
+		const chat = await this.chatService.mpexist({target: data.target, sender: data.sender});
+		await this.addmsg({
+			message: data.message,
+			channel: chat.name,
+			id: data.sender
+		}, client);
 	}
 
 	@SubscribeMessage('BLOCK')
@@ -95,7 +120,10 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 			data.target = await this.chatService.getIdByftid(data.target);
 			await this.userService.block(data.sender, data.target);
 		}
-		catch (e) {console.log(e);}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('UNBLOCK')
@@ -108,7 +136,10 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 			data.target = await this.chatService.getIdByftid(data.target);
 			await this.userService.removeFriend(data.sender, data.target);
 		}
-		catch (e) {console.log(e);}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('QUIT_CHAN')
@@ -117,18 +148,24 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		@ConnectedSocket() client: Socket
 	)
 	{
-		await this.chatService.Quit(data);
-		await this.chatService.getPvmsg(data.id)
-		.then((val) => {
-			this.io.in(data.id.toString()).emit('CHANNEL_CREATED', val);
-		});
-		this.io.in(data.id.toString()).socketsLeave(data.channel);
-		const ret = await this.chatService.memberInChannel(data.channel);
-		this.io.to(data.channel).emit('LIST_NAME', 
-		{
-			channel: data.channel,
-			list: ret
-		});
+		try {
+			await this.chatService.Quit(data);
+			await this.chatService.getPvmsg(data.id)
+			.then((val) => {
+				this.io.in(data.id.toString()).emit('CHANNEL_CREATED', val);
+			});
+			this.io.in(data.id.toString()).socketsLeave(data.channel);
+			const ret = await this.chatService.memberInChannel(data.channel);
+			this.io.to(data.channel).emit('LIST_NAME', 
+			{
+				channel: data.channel,
+				list: ret
+			});
+		}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('CHANGE_STATUS')
@@ -151,7 +188,10 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 				});
 			}
 		}
-		catch (e) { console.log(e) }
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('CHANGE_STATUS_CHAN')
@@ -163,7 +203,10 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		try {
 			await this.chatService.changeStatusChan(data);
 		}
-		catch (e) { console.log(e) }
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('JOIN_CHAN')
@@ -180,7 +223,8 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 			this.getchannelname(client, data.id);
 		}
 		catch (e) {
-			console.log(e);
+			const error: Error = e;
+			client.emit('ERROR', error.message);
 		}
 	}
 
@@ -190,22 +234,28 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		@ConnectedSocket() client: Socket
 	)
 	{
-		const id = await this.chatService.getIdByLogin(data.login);
-		await this.chatService.addMember({channel: data.channel, id: id, status: status.default});
-		const ret = await this.chatService.memberInChannel(data.channel);
-		this.Connected.forEach(element => {
-			if (element.id === id)
+		try {
+			const id = await this.chatService.getIdByLogin(data.login);
+			await this.chatService.addMember({channel: data.channel, id: id, status: status.default});
+			const ret = await this.chatService.memberInChannel(data.channel);
+			this.Connected.forEach(element => {
+				if (element.id == id)
+				{
+					element.socket.join(data.channel);
+					this.getchannelname(element.socket, element.id);
+					return;
+				}
+			});
+			this.io.to(data.channel).emit('LIST_NAME', 
 			{
-				element.socket.join(data.channel);
-				this.getchannelname(element.socket, element.id);
-				return;
-			}
-		});
-		this.io.to(data.channel).emit('LIST_NAME', 
-		{
-			channel: data.channel,
-			list: ret
-		});
+				channel: data.channel,
+				list: ret
+			});
+		}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('JUST_NAME_CHANNEL')
@@ -268,7 +318,8 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 			this.io.to(channelcreation.id.toString()).socketsJoin(channelcreation.channel);
 		}
 		catch (e) {
-			console.log(e);
+			const error: Error = e;
+			client.emit('ERROR', error.name);
 		}
 
 		// le serveur se connect sur le channel1 et retour le message
@@ -280,34 +331,40 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		@MessageBody() mp: {target: number, sender: number}
 	)
 	{
-		if (await this.chatService.mpexist(mp))
-			throw new Error("deja créé");
-		const name = randomBytes(4).toString('hex');
-		await this.chatService.addOne({name: name,
-			status: chat_status.private,
-			password: ""});
-		this.chatService.defineMp(name);
-		await this.chatService.addMember({channel: name, id: mp.sender, status: status.default});
-		await this.chatService.addMember({channel: name, id: mp.target, status: status.default});
-		
-		const ret = await this.chatService.getMpmsg(mp.sender);
-		this.io.to(mp.sender.toString()).emit('MP_CREATED', ret);
-		this.io.to(mp.sender.toString()).socketsJoin(name);
-		
-		const ret2 = await this.chatService.memberInChannel(name);
-		this.io.to(mp.target.toString()).socketsJoin(name);
-		this.Connected.forEach(element => {
-			if (element.id == mp.target)
+		try{
+			if (await this.chatService.mpexist(mp))
+				throw new Error("deja créé");
+			const name = randomBytes(4).toString('hex');
+			await this.chatService.addOne({name: name,
+				status: chat_status.private,
+				password: ""});
+			this.chatService.defineMp(name);
+			await this.chatService.addMember({channel: name, id: mp.sender, status: status.default});
+			await this.chatService.addMember({channel: name, id: mp.target, status: status.default});
+			
+			const ret = await this.chatService.getMpmsg(mp.sender);
+			this.io.to(mp.sender.toString()).emit('MP_CREATED', ret);
+			this.io.to(mp.sender.toString()).socketsJoin(name);
+			
+			const ret2 = await this.chatService.memberInChannel(name);
+			this.io.to(mp.target.toString()).socketsJoin(name);
+			this.Connected.forEach(element => {
+				if (element.id == mp.target)
+				{
+					this.getchannelname(element.socket, element.id);
+					return;
+				}
+			});
+			this.io.to(name).emit('LIST_NAME', 
 			{
-				this.getchannelname(element.socket, element.id);
-				return;
-			}
-		});
-		this.io.to(name).emit('LIST_NAME', 
-		{
-			channel: name,
-			list: ret2
-		});
+				channel: name,
+				list: ret2
+			});
+		}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('ALL_CHAN')
@@ -316,8 +373,14 @@ import { createHash, generateKey, getHashes, Hash, pseudoRandomBytes, randomByte
 		@ConnectedSocket() client: Socket
 	)
 	{
-		const channels = await this.chatService.getAccessibleChan(id);
-		client.emit('ALL_CHAN', channels);
+		try{
+			const channels = await this.chatService.getAccessibleChan(id);
+			client.emit('ALL_CHAN', channels);
+		}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
     @SubscribeMessage('disconnect')

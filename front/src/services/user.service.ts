@@ -1,16 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { User } from "../models/user.model";
-
-class DefaultUser implements User {
-  id: number = 0;
-  username: string = '';
-  online: number = 0;
-  avatar: string = '';
-  rlid: number = 0;
-  email: string = '';
-  twofa: boolean = false;
-}
 
 export function GetUserData() { //do not call this function more than one time, userData is updated every one second
   async function getActiveUserData() {
