@@ -516,7 +516,7 @@ function Channel() {
 
 function InviteUser(cible: number, gameName: string) {
 
-    const gameInviteLink = "http://localhost:3000/game/join/".concat(gameName);
+    const gameInviteLink = "http://54.245.74.93:3000/game/join/".concat(gameName);
     socket.emit("INVITE", {target: cible, message: gameInviteLink, sender: userId}); //send invite link to user
 }
 

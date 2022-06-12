@@ -305,8 +305,10 @@ export class ChatService {
 
     async addMember(data: AddMemberDTO)
     {
-        const chat = await this.getChat(data.channel);
-        if (chat.mp_message)
+        const chat = await this.chatRepository.findOne({where:{name: data.channel}, relations: ["members"]});
+        if (!chat)
+            throw new Error("chat not find");
+        if (chat.mp_message && chat.members.length == 2)
             throw new Error("you can't add member to a private message");
         const user = await this.getUser(data.id);
         const same = await this.membersRepo.findOne({where: {user: user, chat: chat}});

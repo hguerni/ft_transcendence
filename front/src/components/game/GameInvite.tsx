@@ -9,7 +9,7 @@ export function GetGameInviteLink() {
 
   useEffect(() => {
     socket.on("GET_CURRENT_ROOM", (roomProps: RoomProps) => {
-      setGameInviteLink("http://localhost:3000/game/join/".concat(roomProps.name));
+      setGameInviteLink("http://54.245.74.93:3000/game/join/".concat(roomProps.name));
     });
   }, []);
 }
