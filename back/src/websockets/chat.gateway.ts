@@ -67,7 +67,10 @@ import { getRepository } from 'typeorm';
 			const val = await this.chatService.messageInChannel(msg.channel);
 			this.io.to(msg.channel).emit('LIST_CHAT', {channel: msg.channel, list: val});
 		}
-		catch (error) {client.emit('ERROR', error);}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('MUTE')
@@ -80,7 +83,10 @@ import { getRepository } from 'typeorm';
 			await this.chatService.Mute(data);
 			await new Promise(() => setTimeout(() => {this.chatService.unMute(data)}, 5000));
 		}
-		catch (e) {client.emit('ERROR', e);}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('INVITE')
@@ -92,7 +98,10 @@ import { getRepository } from 'typeorm';
 		try {
 			await this.handleMpChan(client, {target: data.target, sender: data.sender});
 		}
-		catch (e) {client.emit('ERROR', e);}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 		const chat = await this.chatService.mpexist({target: data.target, sender: data.sender});
 		await this.addmsg({
 			message: data.message,
@@ -111,7 +120,10 @@ import { getRepository } from 'typeorm';
 			data.target = await this.chatService.getIdByftid(data.target);
 			await this.userService.block(data.sender, data.target);
 		}
-		catch (e) {client.emit('ERROR', e);}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('UNBLOCK')
@@ -124,7 +136,10 @@ import { getRepository } from 'typeorm';
 			data.target = await this.chatService.getIdByftid(data.target);
 			await this.userService.removeFriend(data.sender, data.target);
 		}
-		catch (e) {client.emit('ERROR', e);}
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('QUIT_CHAN')
@@ -147,7 +162,10 @@ import { getRepository } from 'typeorm';
 				list: ret
 			});
 		}
-		catch (error) {client.emit('ERROR', error)};
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('CHANGE_STATUS')
@@ -170,7 +188,10 @@ import { getRepository } from 'typeorm';
 				});
 			}
 		}
-		catch (e) { client.emit('ERROR', e); }
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('CHANGE_STATUS_CHAN')
@@ -182,7 +203,10 @@ import { getRepository } from 'typeorm';
 		try {
 			await this.chatService.changeStatusChan(data);
 		}
-		catch (e) { client.emit('ERROR', e); }
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('JOIN_CHAN')
@@ -199,7 +223,8 @@ import { getRepository } from 'typeorm';
 			this.getchannelname(client, data.id);
 		}
 		catch (e) {
-			client.emit('ERROR', e);
+			const error: Error = e;
+			client.emit('ERROR', error.message);
 		}
 	}
 
@@ -227,7 +252,10 @@ import { getRepository } from 'typeorm';
 				list: ret
 			});
 		}
-		catch (error) {client.emit('ERROR', error)};
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('JUST_NAME_CHANNEL')
@@ -290,7 +318,8 @@ import { getRepository } from 'typeorm';
 			this.io.to(channelcreation.id.toString()).socketsJoin(channelcreation.channel);
 		}
 		catch (e) {
-			client.emit('ERROR', e);
+			const error: Error = e;
+			client.emit('ERROR', error.name);
 		}
 
 		// le serveur se connect sur le channel1 et retour le message
@@ -332,7 +361,10 @@ import { getRepository } from 'typeorm';
 				list: ret2
 			});
 		}
-		catch (error) {client.emit('ERROR', error)};
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
 	@SubscribeMessage('ALL_CHAN')
@@ -345,7 +377,10 @@ import { getRepository } from 'typeorm';
 			const channels = await this.chatService.getAccessibleChan(id);
 			client.emit('ALL_CHAN', channels);
 		}
-		catch (error) {client.emit('ERROR', error)};
+		catch (e) {
+			const error: Error = e;
+			client.emit('ERROR', error.message);
+		}
 	}
 
     @SubscribeMessage('disconnect')
