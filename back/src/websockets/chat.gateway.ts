@@ -97,17 +97,17 @@ import { getRepository } from 'typeorm';
 	{
 		try {
 			await this.handleMpChan(client, {target: data.target, sender: data.sender});
+			const chat = await this.chatService.mpexist({target: data.target, sender: data.sender});
+			await this.addmsg({
+				message: data.message,
+				channel: chat.name,
+				id: data.sender
+			}, client);
 		}
 		catch (e) {
 			const error: Error = e;
 			client.emit('ERROR', error.message);
 		}
-		const chat = await this.chatService.mpexist({target: data.target, sender: data.sender});
-		await this.addmsg({
-			message: data.message,
-			channel: chat.name,
-			id: data.sender
-		}, client);
 	}
 
 	@SubscribeMessage('BLOCK')

@@ -22,10 +22,10 @@ function Game() {
     }
     authorization();
     return () => {mounted = false;}
-}, []);
+  }, []);
 
-if (unauthorized)
-  return <Redirect to={'/'}/>;
+  if (unauthorized)
+    return <Redirect to={'/'}/>;
 
   useEffect(() => {
     socket.removeListener("ALERT");

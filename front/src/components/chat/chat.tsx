@@ -516,7 +516,7 @@ function Channel() {
 
 function InviteUser(cible: number, gameName: string) {
 
-    const gameInviteLink = "http://localhost:3000/game/join/".concat(gameName);
+    const gameInviteLink = "http://54.245.74.93:3000/game/join/".concat(gameName);
     socket.emit("INVITE", {target: cible, message: gameInviteLink, sender: userId}); //send invite link to user
 }
 
@@ -761,22 +761,21 @@ function ListChannel() {
 }
 
 function Chat() {
-    //all ready
-    const [unauthorized, setUnauthorized] = useState(false);
+  const [unauthorized, setUnauthorized] = useState(false);
 
-    useEffect(() => {
-      let mounted = true;
-  
-      const authorization = async () => {
-          try { await axios.get('userData'); }
-          catch(err){if(mounted) setUnauthorized(true);}
-      }
-      authorization();
-      return () => {mounted = false;}
-    }, []);
-  
-    if (unauthorized)
-      return <Redirect to={'/'}/>;
+  useEffect(() => {
+    let mounted = true;
+
+    const authorization = async () => {
+        try { await axios.get('userData'); }
+        catch(err){if(mounted) setUnauthorized(true);}
+    }
+    authorization();
+    return () => {mounted = false;}
+  }, []);
+
+  if (unauthorized)
+    return <Redirect to={'/'}/>;
 
     useEffect(() => {
 
