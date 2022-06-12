@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, Redirect } from 'react-router-dom';
 import './chat.css';
 import loupe from "../../images/loupe.png";
 import buttonsubmit from "../../images/submitChat2.png";
@@ -17,6 +17,7 @@ import Button from '@mui/material/Button';
 import UserService from '../../services/user.service'
 import {socket as GameSocket} from "../game/Game"
 import { GameCreate } from "../game/GameArea";
+import axios from "axios";
 
 const userId: number = UserService.getUserId(); // à récupérer
 
