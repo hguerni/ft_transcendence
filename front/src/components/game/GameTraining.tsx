@@ -3,7 +3,7 @@ import { Socket, io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import UserService from '../../services/user.service';
 
-const socket: Socket = io("ws://54.245.74.93:3030/game");
+const socket: Socket = io("ws://localhost:3030/game");
 
 let intervalId: NodeJS.Timer;
 

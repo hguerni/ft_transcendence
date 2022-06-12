@@ -50,7 +50,7 @@ export class UserController {
   }))
 
   uploadFile(@UploadedFile() file) {
-      return { url: `http://54.245.74.93:3030/uploads/${file.filename}`}
+      return { url: `http://localhost:3030/uploads/${file.filename}`}
   }
 
   @Post("updateUser")
