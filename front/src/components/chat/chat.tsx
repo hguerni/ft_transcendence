@@ -761,21 +761,6 @@ function ListChannel() {
 }
 
 function Chat() {
-  const [unauthorized, setUnauthorized] = useState(false);
-
-  useEffect(() => {
-    let mounted = true;
-
-    const authorization = async () => {
-        try { await axios.get('userData'); }
-        catch(err){if(mounted) setUnauthorized(true);}
-    }
-    authorization();
-    return () => {mounted = false;}
-  }, []);
-
-  if (unauthorized)
-    return <Redirect to={'/'}/>;
 
     useEffect(() => {
 

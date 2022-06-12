@@ -11,21 +11,6 @@ import axios from 'axios';
 export const socket: Socket = io("ws://localhost:3030/game");
 
 function Game() {
-  const [unauthorized, setUnauthorized] = useState(false);
-
-  useEffect(() => {
-    let mounted = true;
-
-    const authorization = async () => {
-        try { await axios.get('userData'); }
-        catch(err){if(mounted) setUnauthorized(true);}
-    }
-    authorization();
-    return () => {mounted = false;}
-  }, []);
-
-  if (unauthorized)
-    return <Redirect to={'/'}/>;
 
   useEffect(() => {
     socket.removeListener("ALERT");
