@@ -6,7 +6,7 @@ export default function HeaderLogout () {
 
   return (
     <button className="buttonLogout" onClick={() => {UserService.logout()}}>
-      <img style={{width: '40px'}} src={logout}/>
+      <img style={{width: '40px'}} src={logout} alt=""/>
     </button>
   );
 }

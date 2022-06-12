@@ -46,14 +46,14 @@ function GamesCards(props: {room: RoomProps}) {
   );
 }
 
-function isGameWaitingPlayer(rooms: RoomProps[]) {
-  for (const room of rooms) {
-    if (room.canJoinGame === true) {
-      return true;
-    }
-  }
-  return false;
-}
+// function isGameWaitingPlayer(rooms: RoomProps[]) {
+//   for (const room of rooms) {
+//     if (room.canJoinGame === true) {
+//       return true;
+//     }
+//   }
+//   return false;
+// }
 
 /*
 function AutoMatching(props: {rooms: RoomProps[]}) {
@@ -78,6 +78,7 @@ function GameCards(props: {rooms: RoomProps[]}) {
         {props.rooms.map(item => {
           if (item.name.includes(name))
             return <GamesCards key={item.name} room={item}/>
+          return <></>
         })}
       </div>
     </div>

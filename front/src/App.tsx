@@ -1,9 +1,9 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Redirect, Route } from "react-router-dom";
 import Login from "./components/login.component";
 // import LoginSuccess from "./components/loginsuccess.component";
 import Profile from './components/profile/profile';
-import Navbar from './components/navbar.component';
+// import Navbar from './components/navbar.component';
 import Game from './components/game/Game';
 import Chat from "./components/chat/chat";
 import Profiles from './components/profile/profilepublic';

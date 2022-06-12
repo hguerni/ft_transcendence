@@ -18,7 +18,7 @@ export function GameInProgress() {
 
   if (room?.p2_name === "")
     room.p2_name = "?";
-  if (room != undefined) {
+  if (room !== undefined) {
     return (
       <div>
         <h4>Game <span style={{color: '#e74c3c'}}>{room?.name}</span></h4>
