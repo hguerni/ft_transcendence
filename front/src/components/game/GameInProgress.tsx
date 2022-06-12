@@ -12,7 +12,7 @@ export function GameInProgress() {
     });
     socket.on("SEND_GAME_STATUS", (message: string) => {
       setMsg(message);
-      console.log(message);
+      //console.log(message);
     });
   }, [])
 

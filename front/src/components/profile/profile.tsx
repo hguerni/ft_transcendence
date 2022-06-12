@@ -24,7 +24,8 @@ function SearchUser () {
     username: '',
     avatar: '',
     email: '',
-    id: 0
+    id: 0,
+    ft_id: 0
   });
 
   const history = useHistory();
@@ -33,7 +34,7 @@ function SearchUser () {
     if (e.key === "Enter"){
       let mounted = true
       const {data} = await axios.get('user/name/' + e.currentTarget.value);
-      console.log(data);
+      //console.log(data);
       if (mounted && data) setUser(data);
       mounted = false;
     }
@@ -41,7 +42,7 @@ function SearchUser () {
 
   if (user.id !== 0) {
     // let id  = user.id;
-    history.push("/profiles", {id: user.id});
+    history.push("/profiles", {id: user.ft_id});
     user.id = 0;
   }
 
@@ -87,12 +88,12 @@ function Profile() {
     const target = e.target;
     if (target.checked) {
         target.checked = true;
-        console.log(target.checked);
+        //console.log(target.checked);
         setTwofa(true);
         setToggle(true)
     }
     else {
-        console.log(target.checked);
+        //console.log(target.checked);
         target.checked = false
         user.twofa = false;
         setUser(user);
@@ -121,7 +122,7 @@ function Profile() {
         await axios.put('updateAvatar', {avatar: data.url});
         setAvatar(data.url);
     }
-    catch (err) {setAvatar('http://localhost:3030/uploads/avatar.png')}
+    catch (err) {setAvatar('http://54.245.74.93:3030/uploads/avatar.png')}
 
     }
 
@@ -141,7 +142,7 @@ function Profile() {
       const getUser = async () => {
           try {
               const {data} = await axios.get('userData')
-              console.log(data);
+              //console.log(data);
               if (mounted) setUser(data);
               if (mounted) setAvatar(data.avatar);
               if (mounted) setToggle(data.twofa);
@@ -222,7 +223,7 @@ function Amis() {
         const getFriends = async () => {
             try {
                 const friends = (await axios.get('friends')).data;
-                console.log(friends);
+                //console.log(friends);
                 if (mounted) setGetFriends(friends);
             }
             catch(err){}
@@ -236,7 +237,7 @@ function Amis() {
         const getRequests = async () => {
             try {
                 const frrequests = (await axios.get('friendrequests')).data;
-                console.log(frrequests);
+                //console.log(frrequests);
                 if (mounted) setGetRequests(frrequests);
             }
             catch(err){}
@@ -247,7 +248,7 @@ function Amis() {
 
     const handleClick = (e : React.MouseEvent<HTMLElement>) => {
         const appMode = e.currentTarget.getAttribute('data-arg1');
-        console.log(appMode);
+        //console.log(appMode);
         axios.get('acceptfriend/' + appMode?.toString());
       };
 
@@ -263,23 +264,23 @@ function Amis() {
                <h1 id='info-online'>Online</h1>
                <ul>
                {friends.length ? friends.map((element : any) => {
-                console.log(element);
+                //console.log(element);
 
            // Affichage
                 return (
-                    element.friend.online !== 0 ? (
+                    element.friend.online !== 2 ? (
 
-                       element.friend.online === 1 ? (
+                       element.friend.online === 0 ? (
                         <li key={element}>
                             <h1 id='texteh1'> 
-                            <img src={rond_vert} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.id} }}> {element.friend.username} 
+                            <img src={rond_vert} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.ft_id} }}> {element.friend.username} 
                             </Link></h1>
                         </li>
                         )
                         :(
                         <li key={element}>
                                                         <h1 id='texteh1'> 
-                            <img src={nitendo} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.id} }}> {element.friend.username} 
+                            <img src={nitendo} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.ft_id} }}> {element.friend.username} 
                             </Link></h1>
                         </li>
                         )
@@ -295,11 +296,11 @@ function Amis() {
                           <h1 id='info-offline'>Offline</h1>
                           <ul>
                {friends.length ? friends.map((element: any) => {
-                console.log(element);
+                //console.log(element);
 
            // Affichage
                 return (
-                   element.friend.online === 0 ? (
+                   element.friend.online === 2 ? (
 
 
                         <li key={element}>
@@ -317,7 +318,7 @@ function Amis() {
                         <h1 id='info-online'>Pending</h1>
                         <ul>
                         {requests.length ? requests.map((element: any) => {
-                console.log(element);
+                //console.log(element);
 
            // Affichage
                 return (
@@ -336,6 +337,22 @@ function Amis() {
 }
 
 function Stats() {
+    const [games, setGetGames] = useState({n: 0, v: 0, d: 0});
+
+    useEffect(() => {
+        let mounted = true;
+        const getFriends = async () => {
+            try {
+                const games = (await axios.get('stats')).data;
+                //console.log(games);
+                if (mounted) setGetGames(games);
+            }
+            catch(err){}
+        }
+        getFriends();
+        return () => {mounted = false;}
+    }, []);
+
     return (
         <>
             <div className="stats">
@@ -343,17 +360,17 @@ function Stats() {
                 <section className="things">
                     <div className="ico">
                         <img src={pong_image} alt="pong" id="pong"/>
-                        <h1 id="games">45</h1>
+                        <h1 id="games">{games.n}</h1>
                         <span id="games"><h2>Games</h2></span>
                     </div>
                     <div className="ico">
                         <img src={trophy_image} alt="trophy" id="trophy"/>
-                        <h1 id="victory">24</h1>
+                        <h1 id="victory">{games.v}</h1>
                         <span id="victory"><h2>Victories</h2></span>
                     </div>
                     <div className="ico">
                         <img src={lose_image} alt="lose" id="lose"/>
-                        <h1 id="defeat">13</h1>
+                        <h1 id="defeat">{games.d}</h1>
                         <span id="defeat"><h2>Defeats</h2></span>
                     </div>
                 </section>
@@ -364,12 +381,40 @@ function Stats() {
 
 
 function History(props: any) {
-        return (
+    const [games, setGetGames] = useState([]);
+
+    useEffect(() => {
+        let mounted = true;
+        const getFriends = async () => {
+            try {
+                const games = (await axios.get('games')).data;
+                //console.log(games);
+                if (mounted) setGetGames(games);
+            }
+            catch(err){}
+        }
+        getFriends();
+        return () => {mounted = false;}
+    }, []);
+    return (
         <>
             <div className="history">
                 <div id="title"><h1>HISTORIQUE</h1></div>
-                <Game user={props.user} color="#25b62ca8"/>
-                <Game user={props.user} color="#bd2148f8"/>
+                <ul>
+                    {games.length ? games.map((element : any) => {
+                        return (
+                                element.winner === true ? (
+                                <li key={element}>
+                                    <Game user={props.user} color="#25b62ca8" game={element}/>
+                                </li>
+                            ) : (
+                                <li key={element}>
+                                    <Game user={props.user} color="#bd2148f8" game={element}/>
+                                </li>
+                            )
+                        )}) : 0
+                    }
+                </ul>
             </div>
         </>
     );
@@ -377,7 +422,7 @@ function History(props: any) {
 
 function Game(props: any) {
     const color = {backgroundColor: props.color };
-    const year = new Date();
+    const year = props.game.endGameTime;
 
     return (
         <>
@@ -389,10 +434,10 @@ function Game(props: any) {
                     <h1>{props.user.username}</h1>
                 </div>
                 <div className="score">
-                    <h1>100 / 055555500</h1>
+                    <h1>{props.game.userscore} / {props.game.adversaryscore}</h1>
                 </div>
                 <div className="login_2">
-                    <h1>{props.user.username}</h1>
+                    <h1>{props.game.adversary.username}</h1>
                 </div>
             </div>
         </>
@@ -419,7 +464,7 @@ export default Profile;
 
 //   const [file, setFile] = useState('../../images/avatar.png');
 //   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-//     console.log(e.target.files);
+//     //console.log(e.target.files);
 //     setFile(URL.createObjectURL(e.target.files[0]));
 //   }
 //   return (

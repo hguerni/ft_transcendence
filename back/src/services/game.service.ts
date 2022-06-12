@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { logger } from 'src/websockets/game.gateway';
 import { v4 } from 'uuid';
+import { UserService } from './user.service';
 
 export class PongProps {
   gameIsStarted: boolean = false;
@@ -74,7 +75,7 @@ export class GameService {
     game.pong.ball_vy = genRandomVelocity();
   }
 
-  private checkWin(game: GameService, wsServer: Server)
+  private async checkWin(game: GameService, wsServer: Server)
   {
     if (game.pong.ball_x < 0 || game.pong.ball_x > game.pong.width)
     {
@@ -141,7 +142,7 @@ export class GameService {
     this.pong.gameIsStarted = true;
     this.pong.ball_y = this.pong.height / 2;
     wsServer.to(this.room.name).emit('GAME_UPDATE', JSON.stringify(this.pong));
-    if (this.intervalId_0 == null)
+    if (this.intervalId_0 === null)
       this.intervalId_0 = setInterval(this.ballMoving, 10, this, wsServer);
     this.intervalId_1 = setInterval(this.checkWin, 20, this, wsServer);
   }
@@ -198,12 +199,12 @@ export class GameService {
 
   setPlayersSocketIds(clientId: string)
   {
-    if (this.playersIds.get("left") == "")
+    if (this.playersIds.get("left") === "")
     {
       this.playersIds.set("left", clientId);
       this.nb_players++;
     }
-    else if (this.playersIds.get("right") == "")
+    else if (this.playersIds.get("right") === "")
     {
       this.playersIds.set("right", clientId);
       this.nb_players++;
@@ -254,7 +255,7 @@ export class GameService {
 
   gameUpdate (wsServer: Server) {
     wsServer.to(this.room.name).emit('GAME_UPDATE', JSON.stringify(this.pong));
-    console.log(` test: ${this.room.name}`);
+    //console.log(` test: ${this.room.name}`);
   }
 
   getPongProps(): PongProps {

@@ -28,6 +28,7 @@ function Profiles(props : any) {
       email: '',
       id: 0,
   });
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
       let mounted = true;
@@ -39,13 +40,14 @@ function Profiles(props : any) {
       authorization();
       return () => {mounted = false;}
   }, []);
-
+    //console.log(props.location.state.id);
   useEffect(() => {
       let mounted = true;
       const getUser = async () => {
           try {
-              const {data} = await axios.get('user/' + props.location.state.id);
-              console.log(data);
+              const {data} = await axios.get('user/ft/' + props.location.state.id);
+              //console.log(data);
+              if (mounted) setReady(true);
               if (mounted) setUser(data);
               if (mounted) setAvatar(data.avatar);
           }
@@ -87,9 +89,8 @@ function Profiles(props : any) {
                 </div>
             </div>
         </div>
-
-        <Stats />
-        <History user={user}/>
+        <Stats id={props.location.state.id}/>
+        <History id={props.location.state.id}/>
 
     </>
   );
@@ -116,7 +117,7 @@ function Profiles(props : any) {
 
 //                <h1 id='info-online'>Online</h1>
 //                {data.map((element, i) => {
-//                 console.log(element);
+//                 //console.log(element);
 
 //            // Affichage
 //                 return (
@@ -142,7 +143,7 @@ function Profiles(props : any) {
 //                     })}
 //                           <h1 id='info-offline'>Offline</h1>
 //                {data.map((element, i) => {
-//                 console.log(element);
+//                 //console.log(element);
 
 //            // Affichage
 //                 return (
@@ -165,7 +166,23 @@ function Profiles(props : any) {
 //     );
 // }
 
-function Stats() {
+function Stats(props: any) {
+    const [games, setGetGames] = useState({n: 0, v: 0, d: 0});
+    console.log(props.id)
+    useEffect(() => {
+        let mounted = true;
+        const getFriends = async () => {
+            try {
+                const games = (await axios.get('user/stats/' + props.id)).data;
+                //console.log(games);
+                if (mounted) setGetGames(games);
+            }
+            catch(err){}
+        }
+        getFriends();
+        return () => {mounted = false;}
+    }, []);
+
     return (
         <>
             <div className="stats">
@@ -173,17 +190,17 @@ function Stats() {
                 <section className="things">
                     <div className="ico">
                         <img src={pong_image} alt="pong" id="pong"/>
-                        <h1 id="games">45</h1>
+                        <h1 id="games">{games.n}</h1>
                         <span id="games"><h2>Games</h2></span>
                     </div>
                     <div className="ico">
                         <img src={trophy_image} alt="trophy" id="trophy"/>
-                        <h1 id="victory">24</h1>
+                        <h1 id="victory">{games.v}</h1>
                         <span id="victory"><h2>Victories</h2></span>
                     </div>
                     <div className="ico">
                         <img src={lose_image} alt="lose" id="lose"/>
-                        <h1 id="defeat">13</h1>
+                        <h1 id="defeat">{games.d}</h1>
                         <span id="defeat"><h2>Defeats</h2></span>
                     </div>
                 </section>
@@ -194,12 +211,41 @@ function Stats() {
 
 
 function History(props: any) {
-        return (
+    const [games, setGetGames] = useState([]);
+    console.log(props.id)
+    useEffect(() => {
+        let mounted = true;
+        const getStats = async () => {
+            try {
+                //console.log(props.user);
+                const games = (await axios.get('user/games/' + props.id)).data;
+                //console.log(games);
+                if (mounted) setGetGames(games);
+            }
+            catch(err){}
+        }
+        getStats();
+        return () => {mounted = false;}
+    }, []);
+    return (
         <>
             <div className="history">
                 <div id="title"><h1>HISTORIQUE</h1></div>
-                <Game user={props.user} color="#25b62ca8"/>
-                <Game user={props.user} color="#bd2148f8"/>
+                <ul>
+                    {games.length ? games.map((element : any) => {
+                        return (
+                                element.winner === true ? (
+                                <li key={element}>
+                                    <Game user={element.user} color="#25b62ca8" game={element}/>
+                                </li>
+                            ) : (
+                                <li key={element}>
+                                    <Game user={element.user} color="#bd2148f8" game={element}/>
+                                </li>
+                            )
+                        )}) : 0
+                    }
+                </ul>
             </div>
         </>
     );
@@ -207,7 +253,7 @@ function History(props: any) {
 
 function Game(props: any) {
     const color = {backgroundColor: props.color };
-    const year = new Date();
+    const year = props.game.endGameTime;
 
     return (
         <>
@@ -219,10 +265,10 @@ function Game(props: any) {
                     <h1>{props.user.username}</h1>
                 </div>
                 <div className="score">
-                    <h1>100 / 055555500</h1>
+                    <h1>{props.game.userscore} / {props.game.adversaryscore}</h1>
                 </div>
                 <div className="login_2">
-                    <h1>{props.user.username}</h1>
+                    <h1>{props.game.adversary.username}</h1>
                 </div>
             </div>
         </>
@@ -249,7 +295,7 @@ export default Profiles;
 
 //   const [file, setFile] = useState('../../images/avatar.png');
 //   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-//     console.log(e.target.files);
+//     //console.log(e.target.files);
 //     setFile(URL.createObjectURL(e.target.files[0]));
 //   }
 //   return (

@@ -1,15 +1,6 @@
 import axios from "axios";
 import { User } from "../models/user.model";
 
-// class DefaultUser implements User {
-//   id: number = 0;
-//   username: string = '';
-//   online: number = 0;
-//   avatar: string = '';
-//   email: string = '';
-//   twofa: boolean = false;
-// }
-
 export function GetUserData() { //do not call this function more than one time, userData is updated every one second
   async function getActiveUserData() {
     const {data} = await axios.get("userModel");
@@ -41,6 +32,14 @@ export default class UserService {
 
     if (userData)
       return JSON.parse(userData).id;
+    return 0;
+  }
+
+  static getUserRealID() {
+    const userData = localStorage.getItem("userData");
+
+    if (userData)
+      return JSON.parse(userData).rlid;
     return 0;
   }
 

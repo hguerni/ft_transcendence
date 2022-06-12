@@ -34,7 +34,7 @@ enum chat_status {
     pv_message
   }
 
-const socket = io("ws://localhost:3030/chat");
+const socket = io("ws://54.245.74.93:3030/chat");
 let global_blocked: number[] = [];
 let global_channel = "";
 let global_status = status.ban;
@@ -120,7 +120,6 @@ function MenuSettings() {
 
             quit_serveur();
         }
-
         else if (ind === 1)
         {
 

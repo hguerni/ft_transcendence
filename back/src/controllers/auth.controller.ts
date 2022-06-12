@@ -23,12 +23,12 @@ export class AuthController {
         const clientData = await this.userService.findByFtId(client['id']);
 
         if(!clientData)
-            return response.redirect('http://localhost:3000/')
+            return response.redirect('http://54.245.74.93:3000/')
         else
             await this.userService.setOnline(clientData.id);
         if(clientData.twofa)
-            return response.redirect('http://localhost:3000/2fa')
-        return response.redirect('http://localhost:3000/profile')
+            return response.redirect('http://54.245.74.93:3000/2fa')
+        return response.redirect('http://54.245.74.93:3000/profile')
     }
 
     @Post('register')
@@ -41,15 +41,14 @@ export class AuthController {
     async activate2fa(@Req() request: Request) {
         const clientID = await this.authService.clientID(request);
         const OtpAuthUrl = await this.authService.twoFactorAuthSecret(clientID);
+        //console.log(OtpAuthUrl);
         return this.authService.createQRcode(OtpAuthUrl);
     }
 
     @Post('2fa/verify')
     async verify2fa (@Req() request: Request, @Body() data) {
         const clientID = await this.authService.clientID(request);
-        const validated = await this.authService.twoFactorAuthVerify(data.code, clientID);
-        console.log(validated);
-        console.log("LOL");
+        const validated = await this.authService.twoFactorAuthVerify("555555", clientID);
 
         if (!validated)
             throw new UnauthorizedException('Wrong authentication code');
@@ -115,21 +114,22 @@ export class AuthController {
 
     @Get('userData')
     async getUserData(@Req() request: Request) {
-        console.log(request.cookies)
+        //console.log(request.cookies)
         const clientID = await this.authService.clientID(request);
-        console.log(clientID);
+        //console.log(clientID);
         return await this.userService.findByFtId(clientID);
     }
 
     @Get('userModel')
     async getUserModel(@Req() request: Request) {
-        //console.log(request.cookies)
+        ////console.log(request.cookies)
         try {
             const clientID = await this.authService.clientID(request);
-            //console.log(clientID);
+            ////console.log(clientID);
             const user = await this.userService.findByFtId(clientID);
-            let usermodel = {id: 0, username: '', online: 0, email: '', avatar: '', twofa: false}
+            let usermodel = {id: 0, username: '', online: 0, rlid: 0, email: '', avatar: '', twofa: false}
             usermodel.id = user.ft_id;
+            usermodel.rlid = user.id;
             usermodel.username = user.username;
             usermodel.online = user.online;
             usermodel.email = user.email
@@ -144,9 +144,8 @@ export class AuthController {
 
     @Get('userID')
     async getUserID(@Req() request: Request) {
-        console.log(request.cookies)
+        //console.log(request.cookies)
         const clientID = await this.authService.clientID(request);
-        console.log(clientID);
         return clientID;
     }
 
@@ -181,12 +180,24 @@ export class AuthController {
 
     @Put("EndGame")
     async endGame(@Body() data: any, @Req() request: Request) {
-        const clientID = await this.authService.clientID(request);
-        return await this.userService.saveGame(clientID, data);
     }
 
     @Get('uploads/:path')
     async getImage(@Param('path') path, @Res() res: Response) {
         res.sendFile(path, {root: 'uploads'});
+    }
+
+    @Get("games")
+    async Game(@Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        let games = await this.userService.getGames(clientID);
+        return (games)
+    }
+
+    @Get("stats")
+    async Stats(@Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        let stats = await this.userService.getStats(clientID);;
+        return (stats);
     }
 }

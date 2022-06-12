@@ -38,9 +38,7 @@ function ActivateTwoFa(){
         return () => {mounted = false;}
     }, []);
 
-    const activate = async (e: SyntheticEvent) => {
-        e.preventDefault();
-
+    const activate = async () => {
         try {
             await axios.post('2fa/verify', { code: code,} );
             setRedirect(true);

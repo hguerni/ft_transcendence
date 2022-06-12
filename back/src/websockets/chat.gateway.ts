@@ -176,7 +176,7 @@ import { getRepository } from 'typeorm';
 	{
 		try {
 			await this.chatService.changeStatus(data);
-			if (data.status == status.ban)
+			if (data.status === status.ban)
 				this.quitChan({channel: data.channel, id: data.target}, client);
 			else
 			{
@@ -305,7 +305,7 @@ import { getRepository } from 'typeorm';
 										status: number, password: string})
 	{
 		try {
-			if (channelcreation.channel[0] == " " || channelcreation.channel == "")
+			if (channelcreation.channel[0] === " " || channelcreation.channel === "")
 				throw new Error('cant create null channel');
 			await this.chatService.addOne({name: channelcreation.channel,
 											status: channelcreation.status,
@@ -389,7 +389,7 @@ import { getRepository } from 'typeorm';
 	): void
 	{
 		this.Connected.forEach(element => {
-			if (element.socket == client)
+			if (element.socket === client)
 			{
 				let index = this.Connected.indexOf(element);
 				this.Connected.splice(index);

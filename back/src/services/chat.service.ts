@@ -183,7 +183,7 @@ export class ChatService {
         const chat = await this.chatRepository.findOne({select: ["id"], where: {name: name}, relations: ['members', 'members.user']});
         const tmp: {id: number, name: string, status: number}[] = [];
         chat.members.forEach((element) => {
-            if (element.quit_status == quit_status.none)
+            if (element.quit_status === quit_status.none)
                 tmp.push({id: element.user.ft_id, name: element.user.username, status: element.status});
         })
         return tmp;
@@ -236,10 +236,10 @@ export class ChatService {
         const chat = await this.getChat(data.channel);
         const target = await this.getMember(chat, data.target);
         const sender = await this.getMember(chat, data.sender);
-        if (sender.status >= data.status && (data.status == status.ban && sender.status == status.default))
+        if (sender.status >= data.status && (data.status === status.ban && sender.status === status.default))
             throw new Error("you cant up this user");
         target.status = data.status;
-        if (sender.status == status.owner && data.status == status.owner)
+        if (sender.status === status.owner && data.status === status.owner)
         {
             sender.status = status.default;
             this.membersRepo.save(sender);
@@ -271,8 +271,6 @@ export class ChatService {
     async joinChan(data: {channel: string, id: number, password: string})
     {
         const chat = await this.getChat(data.channel);
-        if (!chat)
-            throw new NotFoundException();
         if (chat.status == chat_status.protected)
         {
             const check = await compare(data.password, chat.password);
