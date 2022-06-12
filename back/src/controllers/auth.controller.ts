@@ -112,6 +112,13 @@ export class AuthController {
         return await this.userService.block(clientID, id)
     }
 
+    // @Get("isfriend/:id")
+    // async getIsFriend(@Param('id', new ParseIntPipe()) id, @Req() request: Request) {
+    //     const clientID = await this.authService.clientID(request);
+    //     const friend = await this.userService.findByFtId(id);
+    //     const friends = await 
+    // }
+
     @Get('userData')
     async getUserData(@Req() request: Request) {
         //console.log(request.cookies)
