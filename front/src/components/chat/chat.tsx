@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, Redirect } from 'react-router-dom';
 import './chat.css';
 // import { AppSettingsAltRounded, ConstructionOutlined, RestaurantRounded } from "@mui/icons-material";
 // import ClearIcon from '@mui/icons-material/Clear';
@@ -25,6 +25,7 @@ import { RoomProps } from "../game/GameSearching";
 import {socket as GameSocket} from "../game/Game"
 import { CreateGamePopUp } from "../game/GameFighting";
 import { GameCreate } from "../game/GameArea";
+import axios from "axios";
 
 //import { getchannel } from "../../../../shares/models"
 const userId: number = UserService.getUserId(); // à récupérer
@@ -960,6 +961,21 @@ function ListChannel() {
 
 function Chat() {
     //all ready
+    const [unauthorized, setUnauthorized] = useState(false);
+
+    useEffect(() => {
+      let mounted = true;
+  
+      const authorization = async () => {
+          try { await axios.get('userData'); }
+          catch(err){if(mounted) setUnauthorized(true);}
+      }
+      authorization();
+      return () => {mounted = false;}
+  }, []);
+  
+  if (unauthorized)
+    return <Redirect to={'/'}/>;
 
     useEffect(() => {socket.emit("GET_CHANNEL", userId); }, []);
     // remplacer par votre pseudo
