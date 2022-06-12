@@ -106,7 +106,7 @@ export class UserService {
 
   async addFriend(clientid: number, friendid: number) {
     this.findByFtId(clientid).then((client) =>{
-      this.getById(friendid).then(async (friend) => {
+      this.findByFtId(friendid).then(async (friend) => {
         let previousfriend = await this.friendRepo.findOne({where: {friend: client, user: friend}});
         //console.log("LOL" + previousfriend);
         if (previousfriend)

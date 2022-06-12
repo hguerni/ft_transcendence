@@ -96,18 +96,13 @@ import { getRepository } from 'typeorm';
 	)
 	{
 		try {
-			await this.handleMpChan(client, {target: data.target, sender: data.sender});
-			const chat = await this.chatService.mpexist({target: data.target, sender: data.sender});
-			await this.addmsg({
-				message: data.message,
-				channel: chat.name,
-				id: data.sender
-			}, client);
-		}
-		catch (e) {
-			const error: Error = e;
-			client.emit('ERROR', error.message);
-		}
+            await this.handleMpChan(client, {target: data.target, sender: data.sender});
+        }
+        catch (e) {
+            const error: Error = e;
+            if (error.message != "deja créé")
+                client.emit('ERROR', error.message);
+        }
 	}
 
 	@SubscribeMessage('BLOCK')

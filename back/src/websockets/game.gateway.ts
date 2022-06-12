@@ -81,6 +81,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     this.logger.log(`Client ${client.id} want to end game ${game}`);
     let gamer = this.gameRooms.get(game);
+    console.log(gamer)
+    // if (typeof(gamer) === undefined)
+    //   return ;
     await this.userService.saveGame(gamer.getRoomProps());
     await this.userService.saveGameadversary(gamer.getRoomProps());
     this.clientsToRoom.delete(client.id);
@@ -113,6 +116,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const room = this.clientsToRoom.get(client.id);
     if (room != undefined) {
       client.join(room);
+      console.log(this.gameRooms.get(room));
       this.gameRooms.get(room).gameUpdate(this.wsServer);
     }
 
