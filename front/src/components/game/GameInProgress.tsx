@@ -3,7 +3,7 @@ import { RoomProps } from "./GameSearching";
 import { socket } from "./Game";
 
 export function GameInProgress() {
-  const [room, setRoom] = useState<RoomProps>();
+  const [room, setRoom] = useState<RoomProps | null>(null);
   const [msg, setMsg] = useState<string>("");
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export function GameInProgress() {
 
   if (room?.p2_name === "")
     room.p2_name = "?";
-  if (room !== undefined) {
+  if (room !== null) {
     return (
       <div>
         <h4>Game <span style={{color: '#e74c3c'}}>{room?.name}</span></h4>
