@@ -52,6 +52,10 @@ import { getRepository } from 'typeorm';
 		.then((val) => {
 			client.join(val);
 		})
+		this.chatService.getMpmsg(ret.id)
+		.then((val) => {
+			val.forEach((e) => client.join(e.name))
+		})
 		client.join(userId.toString());
 		client.emit('BLOCKED', await this.userService.getBlocking(userId));
 	}
