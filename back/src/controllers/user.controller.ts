@@ -76,11 +76,4 @@ export class UserController {
       //console.log(stats);
       return (stats);
   }
-
-  // @Get("/isfriend/:id")
-  // async getIsFriend(@Param('id', new ParseIntPipe()) id, @Req() request: Request) {
-    
-    
-  //   return await this.userService.getById(id);
-  // }
 }

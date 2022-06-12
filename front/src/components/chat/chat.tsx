@@ -35,7 +35,7 @@ enum chat_status {
     pv_message
   }
 
-const socket = io("ws://54.245.74.93:3030/chat");
+const socket = io("ws://localhost:3030/chat");
 let global_blocked: number[] = [];
 let global_channel = "";
 let global_status = status.ban;
@@ -761,21 +761,6 @@ function ListChannel() {
 }
 
 function Chat() {
-  const [unauthorized, setUnauthorized] = useState(false);
-
-  useEffect(() => {
-    let mounted = true;
-
-    const authorization = async () => {
-        try { await axios.get('userData'); }
-        catch(err){if(mounted) setUnauthorized(true);}
-    }
-    authorization();
-    return () => {mounted = false;}
-  }, []);
-
-  if (unauthorized)
-    return <Redirect to={'/'}/>;
 
     useEffect(() => {
 
@@ -798,7 +783,7 @@ function Chat() {
           socket.off('BLOCKED');
         }
     }, [])
-
+    
     return (
         <>
             <div className="rayaneleboloss">
