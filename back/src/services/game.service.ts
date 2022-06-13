@@ -14,7 +14,7 @@ export class PongProps {
 	ball_y: number = this.height / 2;
 	ball_vx: number = 2;
 	ball_vy: number = 2;
-  speepFactor: number = 5;
+  speepFactor: number = 8;
 	paddle_width: number = this.width / 60;
 	paddle_height: number = this.height / 8.5;
 	paddle_l_x: number = this.width / 30;
