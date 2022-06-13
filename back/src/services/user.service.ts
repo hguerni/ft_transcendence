@@ -69,6 +69,10 @@ export class UserService {
     this.findByFtId(data.p1_userId).then(async(client) =>{
       let game = new GameEntity;
       //console.log(data);
+      if (typeof (await this.findByFtId(data.p2_userId)) === "undefined" || typeof client === "undefined" ){
+        console.log("yes")
+        return ;
+      }
       game.adversary = await this.findByFtId(data.p2_userId);
       game.gameName = data.name;
       if (data.p1_score > data.p2_score) 
@@ -92,6 +96,10 @@ export class UserService {
     this.findByFtId(data.p2_userId).then(async(client) =>{
         let game = new GameEntity;
         //console.log(data);
+        if (typeof (await this.findByFtId(data.p1_userId)) === "undefined" || typeof client === "undefined" ){
+          console.log("yes")
+          return ;
+        }
         game.adversary = await this.findByFtId(data.p1_userId);
         game.gameName = data.name;
         if (data.p1_score >= data.p2_score) 

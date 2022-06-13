@@ -236,8 +236,8 @@ export class ChatService {
         const chat = await this.getChat(data.channel);
         const target = await this.getMember(chat, data.target);
         const sender = await this.getMember(chat, data.sender);
-        if (sender.status >= data.status && (data.status === status.ban && sender.status === status.default))
-            throw new Error("you cant up this user");
+        if (sender.status >= target.status || sender.status === status.ban || sender.status === status.default)
+            throw new Error("you can't change status of this user");
         target.status = data.status;
         if (sender.status === status.owner && data.status === status.owner)
         {

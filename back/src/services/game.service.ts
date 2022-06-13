@@ -92,7 +92,9 @@ export class GameService {
       game.launchBall(game);
       wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(game.pong));
       wsServer.to(game.room.name).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(game.room))
-      if (game.room.p1_score >= 2 || game.room.p2_score >= 2 || game.hasGivenUp)
+      if (game.hasGivenUp)
+        clearInterval(game.intervalId_0);
+      else if (game.room.p1_score >= 2 || game.room.p2_score >= 2)
       {
         clearInterval(game.intervalId_0);
         if (game.room.p1_score > game.room.p2_score)
@@ -144,6 +146,7 @@ export class GameService {
       this.intervalId_0 = setInterval(this.ballMoving, 10, this, wsServer);
     this.intervalId_1 = setInterval(this.checkWin, 20, this, wsServer);
   }
+
 
   resetGame(wsServer: Server)
   {
