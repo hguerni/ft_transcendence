@@ -1,15 +1,30 @@
 import './Game.css';
 import { Socket, io } from 'socket.io-client';
-import { useEffect } from 'react';
-import { Route, BrowserRouter } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Route, BrowserRouter, Redirect } from 'react-router-dom';
 import GameTraining from './GameTraining';
 import GameFighting from './GameFighting';
 import GameRules from './GameRules';
 import UserService from '../../services/user.service';
+import axios from 'axios';
 
 export const socket: Socket = io("ws://54.245.74.93:3030/game");
 
 function Game() {
+
+  const [unauthorized, setUnauthorized] = useState(false);
+
+  useEffect(() => {
+      let mounted = true;
+
+      const authorization = async () => {
+          try { await axios.get('userData'); }
+          catch(err){if(mounted) setUnauthorized(true);}
+      }
+      authorization();
+      return () => {mounted = false;}
+  }, []);
+
   useEffect(() => {
     socket.removeListener("ALERT");
     socket.on("ALERT", (message: string) => {
@@ -19,6 +34,9 @@ function Game() {
       socket.emit("GAME_END", gameName, UserService.getUserId());
     });
   }, []);
+
+  if (unauthorized)
+    return <Redirect to={'/'}/>;
 
   return (
       <div className='gameWrap'>

@@ -406,11 +406,12 @@ function Bodychat() {
                 </div>
 
                 <div className="centerChat">
-                    {arrayChat.map((item) => {
+                    {arrayChat.map((item, index) => {
+                        console.log(index)
                         if (!global_blocked.includes(item.id))
                         {
                             return (
-                                <div >
+                                <div key={index} >
                                     <h1 className="inputName"> {item.name} </h1>
                                     <h1 className="chathistory"> {item.message} </h1>
                                     <h1> </h1>
@@ -482,7 +483,7 @@ function Channel() {
 
                     <div className="testDM">
                     {arrayMpName.map((item) => {
-                        return  <button className="buttonInviteUsers"
+                        return  <button className="buttonInviteUsers" key={item.name}
                                         onClick={() => {
                                             socket.emit("JUST_NAME_CHANNEL",
                                             {name: item.name, id: userId});
@@ -495,7 +496,7 @@ function Channel() {
                     <div id="separation2"></div>
                     <div className="lesChannels">
                     {arrayChannelName.map((item) => {
-                        return  <button className="buttonInviteUsers"
+                        return  <button className="buttonInviteUsers" key={item}
                                         onClick={() => {
                                             socket.emit("JUST_NAME_CHANNEL",
                                             {name: item, id: userId});
@@ -723,11 +724,13 @@ function ListChannel() {
 
       // réception d'un message envoyé par le serveur
     useEffect(() => {
+      let mounted = true;
         socket.on("LIST_NAME", (message: {channel: string, list: {id: number, name: string, status: number}[]}) => {
             // ... on recupere le message envoyer par le serveur ici et on remet la string en un objet
             if (message.channel === global_channel)
-                setArraylistName(message.list);
+                if (mounted) {setArraylistName(message.list)};
         });
+        return () => {mounted = false;}
       }, []);
 
 
@@ -744,7 +747,7 @@ function ListChannel() {
                 {/* <Menu_Membre/> */}
                 {arraylistName.map((item) => {
 
-                    return <MenuMembre item={item} />
+                    return <MenuMembre item={item} key={item.id} />
                 })}
 
                 </div>
@@ -761,6 +764,20 @@ function ListChannel() {
 }
 
 function Chat() {
+
+
+  const [unauthorized, setUnauthorized] = useState(false);
+
+  useEffect(() => {
+      let mounted = true;
+
+      const authorization = async () => {
+          try { await axios.get('userData'); }
+          catch(err){if(mounted) setUnauthorized(true);}
+      }
+      authorization();
+      return () => {mounted = false;}
+  }, []);
 
     useEffect(() => {
 
@@ -784,6 +801,9 @@ function Chat() {
         }
     }, [])
     
+    if (unauthorized)
+      return <Redirect to={'/'}/>;
+
     return (
         <>
             <div className="rayaneleboloss">

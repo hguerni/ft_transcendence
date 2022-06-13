@@ -269,7 +269,7 @@ function Amis() {
 
            // Affichage
                 return (
-                    element.friend.online !== 2 ? (
+                    element.friend.online !== 1 ? (
 
                        element.friend.online === 0 ? (
                         <li key={element.friend.id}>
@@ -301,7 +301,7 @@ function Amis() {
 
            // Affichage
                 return (
-                   element.friend.online === 2 ? (
+                   element.friend.online === 1 ? (
 
 
                         <li key={element.friend.id}>

@@ -99,7 +99,8 @@ import { getRepository } from 'typeorm';
 		@ConnectedSocket() client: Socket
 	)
 	{
-		await this.handleMpChan(client, {target: data.target, sender: data.sender});
+		if (!(await this.chatService.mpexist({target: data.target, sender: data.sender})))
+			await this.handleMpChan(client, {target: data.target, sender: data.sender});
 		const chat = await this.chatService.mpexist({target: data.target, sender: data.sender});
 		await this.addmsg({
 			message: data.message,

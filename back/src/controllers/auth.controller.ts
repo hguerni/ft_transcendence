@@ -48,7 +48,7 @@ export class AuthController {
     @Post('2fa/verify')
     async verify2fa (@Req() request: Request, @Body() data) {
         const clientID = await this.authService.clientID(request);
-        const validated = await this.authService.twoFactorAuthVerify("555555", clientID);
+        const validated = await this.authService.twoFactorAuthVerify(data.code, clientID);
 
         if (!validated)
             throw new UnauthorizedException('Wrong authentication code');

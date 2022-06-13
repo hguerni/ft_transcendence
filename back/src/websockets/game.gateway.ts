@@ -195,6 +195,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     let customMode = args[1];
 
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
+      console.log(this.clientsToRoom.get(client.id));
+      if(typeof  this.gameRooms.get(this.clientsToRoom.get(client.id)) === "undefined")
+        this.clientsToRoom.delete(client.id);
       this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
       return ;
     }
@@ -218,6 +221,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     let roomName = userData.roomToJoin;
 
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
+      console.log(this.clientsToRoom.get(client.id));
+      if(typeof  this.gameRooms.get(this.clientsToRoom.get(client.id)) === "undefined")
+        this.clientsToRoom.delete(client.id);
       this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
       return ;
     }
@@ -245,6 +251,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('GAME_WATCH')
   handleWatchingGame(client: Socket, roomToWatch: string) {
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
+      console.log(this.clientsToRoom.get(client.id));
+
+      if (typeof this.clientsToRoom.get(client.id) === "undefined")
+        this.clientsToRoom.delete(client.id);
       this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
       return ;
     }
@@ -270,7 +280,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     let userData: UserDataGame =JSON.parse(userDataGame);
 
     if (this.clientsToRoom.has(client.id) && !this.watchersIds.includes(client.id)) {
-      this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
+      this.clientsToRoom.delete(client.id)
+      this.wsServer.to(client.id).emit("ALERT", "You have already joined a game! Quitting previous room");
       return ;
     }
     if (this.gameRooms.size > 0) {
@@ -291,17 +302,18 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     this.clientsToRoom.delete(client.id);
     this.usersToClients.delete(userId);
+    this.gameRooms.get(roomName).setHasGivenUp();
 
     if (this.gameRooms.get(roomName).getRoomProps().p1_userId === userId) {
-      if (this.gameRooms.get(roomName).getRoomProps().p2_userId === -1)
-        this.gameRooms.delete(roomName);
+      this.clientsToRoom.delete(p2_id);
+      this.gameRooms.delete(roomName);
       this.wsServer.to(p2_id).emit("SEND_GAME_STATUS", `${p1_name} is quiting the game :/`);
     }
-    else if (this.gameRooms.get(roomName).getRoomProps().p2_userId === userId)
+    else if (this.gameRooms.get(roomName).getRoomProps().p2_userId === userId){
+      this.clientsToRoom.delete(p1_id);
+      this.gameRooms.delete(roomName);
       this.wsServer.to(p1_id).emit("SEND_GAME_STATUS", `${p2_name} has left the game :/`);
-
-    if (this.gameRooms.has(roomName))
-      this.gameRooms.get(roomName).setHasGivenUp();
+    }
     this.wsServer.to(client.id).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(undefined));
     this.handleSendingRooms(this.getRoomsGroup);
     this.logger.log('GAME_QUIT');

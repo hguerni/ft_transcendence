@@ -133,10 +133,12 @@ export class UserService {
 
   async acceptFriend(clientid, friendid) {
     this.findByFtId(clientid).then((client) =>{
-      this.findByFtId(friendid).then(async (friend) => {
+      this.getById(friendid).then(async (friend) => {
         this.friendRepo.findOne({where: {friend: friend, user: client}}).then(async (friendship) => {
+          console.log(friendship);
           await this.friendRepo.update(friendship.id, {status: "accepted"});
           this.friendRepo.findOne({where: {friend: client, user: friend}}).then(async (friendship2) => {
+            console.log(friendship2);
             await this.friendRepo.update(friendship2.id, {status: "accepted"});
           });
         });

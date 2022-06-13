@@ -92,12 +92,10 @@ export class GameService {
       game.launchBall(game);
       wsServer.to(game.room.name).emit('GAME_UPDATE', JSON.stringify(game.pong));
       wsServer.to(game.room.name).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(game.room))
-      if (game.room.p1_score >= 2 || game.room.p2_score >= 2 || this.hasGivenUp)
+      if (game.room.p1_score >= 2 || game.room.p2_score >= 2 || game.hasGivenUp)
       {
         clearInterval(game.intervalId_0);
-        if (this.hasGivenUp)
-          wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `You have won the game!`);
-        else if (game.room.p1_score > game.room.p2_score)
+        if (game.room.p1_score > game.room.p2_score)
           wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p1_name} has won the game!`);
         else
           wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p2_name} has won the game!`);
