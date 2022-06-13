@@ -1,14 +1,13 @@
 import './Game.css';
 import { Socket, io } from 'socket.io-client';
-import { useEffect, useState } from 'react';
-import { Route, BrowserRouter, Redirect } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Route, BrowserRouter } from 'react-router-dom';
 import GameTraining from './GameTraining';
 import GameFighting from './GameFighting';
 import GameRules from './GameRules';
 import UserService from '../../services/user.service';
-import axios from 'axios';
 
-export const socket: Socket = io("ws://54.245.74.93:3030/game");
+export const socket: Socket = io("ws://localhost:3030/game");
 
 function Game() {
   useEffect(() => {

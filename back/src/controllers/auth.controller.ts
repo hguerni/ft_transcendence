@@ -23,12 +23,12 @@ export class AuthController {
         const clientData = await this.userService.findByFtId(client['id']);
 
         if(!clientData)
-            return response.redirect('http://54.245.74.93:3000/')
+            return response.redirect('http://localhost:3000/')
         else
             await this.userService.setOnline(clientData.id);
         if(clientData.twofa)
-            return response.redirect('http://54.245.74.93:3000/2fa')
-        return response.redirect('http://54.245.74.93:3000/profile')
+            return response.redirect('http://localhost:3000/2fa')
+        return response.redirect('http://localhost:3000/profile')
     }
 
     @Post('register')
@@ -118,6 +118,13 @@ export class AuthController {
         const clientID = await this.authService.clientID(request);
         return await this.userService.block(clientID, id)
     }
+
+    // @Get("isfriend/:id")
+    // async getIsFriend(@Param('id', new ParseIntPipe()) id, @Req() request: Request) {
+    //     const clientID = await this.authService.clientID(request);
+    //     const friend = await this.userService.findByFtId(id);
+    //     const friends = await 
+    // }
 
     @Get('userData')
     async getUserData(@Req() request: Request) {

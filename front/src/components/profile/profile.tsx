@@ -8,6 +8,7 @@ import axios from "axios";
 // import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 // import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 // import {createTheme} from '@mui/material/styles';
+import validate from "../../images/correct.png";
 import trophy_image from "../../images/trophy.svg";
 import pong_image from "../../images/pong-icon.svg";
 import lose_image from "../../images/lose-icon.svg";
@@ -122,7 +123,7 @@ function Profile() {
         await axios.put('updateAvatar', {avatar: data.url});
         setAvatar(data.url);
     }
-    catch (err) {setAvatar('http://54.245.74.93:3030/uploads/avatar.png')}
+    catch (err) {setAvatar('http://localhost:3030/uploads/avatar.png')}
 
     }
 
@@ -324,7 +325,7 @@ function Amis() {
                 return (
                         <li key={element}>
                             <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.friend.username}</h1>
-                            <button className="btncrayon" onClick={handleClick} data-arg1={element.friend.id}><img src={crayon} alt="account" id="crayon"/></button>
+                            <button className="btncrayon" onClick={handleClick} data-arg1={element.friend.id}><img src={validate} alt="account" id="validate"/></button>
                         </li>
 
                 )

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User } from "../models/user.model";
+// import { User } from "../models/user.model";
 
 export function GetUserData() { //do not call this function more than one time, userData is updated every one second
   async function getActiveUserData() {

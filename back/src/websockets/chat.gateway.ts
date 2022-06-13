@@ -52,6 +52,10 @@ import { getRepository } from 'typeorm';
 		.then((val) => {
 			client.join(val);
 		})
+		this.chatService.getMpmsg(ret.id)
+		.then((val) => {
+			val.forEach((e) => client.join(e.name))
+		})
 		client.join(userId.toString());
 		client.emit('BLOCKED', await this.userService.getBlocking(userId));
 	}
@@ -95,14 +99,13 @@ import { getRepository } from 'typeorm';
 		@ConnectedSocket() client: Socket
 	)
 	{
-		try {
-            await this.handleMpChan(client, {target: data.target, sender: data.sender});
-        }
-        catch (e) {
-            const error: Error = e;
-            if (error.message != "deja créé")
-                client.emit('ERROR', error.message);
-        }
+		await this.handleMpChan(client, {target: data.target, sender: data.sender});
+		const chat = await this.chatService.mpexist({target: data.target, sender: data.sender});
+		await this.addmsg({
+			message: data.message,
+			channel: chat.name,
+			id: data.sender
+		}, client);
 	}
 
 	@SubscribeMessage('BLOCK')

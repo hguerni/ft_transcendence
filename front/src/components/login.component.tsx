@@ -15,7 +15,7 @@ class Login extends Component {
         <img src={logo_entier} className="trs_full" alt="logo_entier" /> 
         <div className="start_button">
           <img src={logo_start} className="start_image" alt="logo_start" />
-          <a href={'http://54.245.74.93:3030/auth/login'}><button type="button" id="strt_btn"></button></a>
+          <a href={'http://localhost:3030/auth/login'}><button type="button" id="strt_btn"></button></a>
         </div>
       </header>
     </div>
