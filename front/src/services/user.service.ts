@@ -3,9 +3,12 @@ import axios from "axios";
 
 export function GetUserData() { //do not call this function more than one time, userData is updated every one second
   async function getActiveUserData() {
-    const {data} = await axios.get("userModel");
-    if (data)
-      localStorage.setItem("userData", JSON.stringify(data))
+    try{
+      const {data} = await axios.get("userModel");
+      if (data)
+        localStorage.setItem("userData", JSON.stringify(data))
+    }
+    catch {};
   }
   setInterval(getActiveUserData, 1000);
 }
