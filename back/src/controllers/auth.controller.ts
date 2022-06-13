@@ -94,6 +94,13 @@ export class AuthController {
         return await this.userService.addFriend(clientID, id)
     }
 
+    @Get("isfriend/:id")
+    async isFriend(@Param('id', new ParseIntPipe()) id, @Req() request: Request) {
+        const clientID = await this.authService.clientID(request);
+        const res = await this.userService.isFriend(clientID, id)
+        return ({status: res});
+    } 
+
     @Get("acceptfriend/:id")
     async acceptFriend(@Param('id', new ParseIntPipe()) id, @Req() request: Request) {
         const clientID = await this.authService.clientID(request);

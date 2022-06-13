@@ -83,6 +83,8 @@ export class UserService {
     });
   } 
 
+
+
   async saveGameadversary(data: any) : Promise<void>  {
     //console.log(data);
     if (data.p1_userId < 0 || data.p2_userId < 0)
@@ -107,8 +109,11 @@ export class UserService {
   async addFriend(clientid: number, friendid: number) {
     this.findByFtId(clientid).then((client) =>{
       this.findByFtId(friendid).then(async (friend) => {
+        console.log(friend);
+        if (typeof friend === "undefined")
+          return;
         let previousfriend = await this.friendRepo.findOne({where: {friend: client, user: friend}});
-        //console.log("LOL" + previousfriend);
+        console.log(previousfriend);
         if (previousfriend)
           return ;
         let friendship1 = new FriendEntity;
@@ -119,6 +124,7 @@ export class UserService {
         friendship2.status = "pending";
         friendship2.friend = client;
         friendship2.user = friend;
+        console.log(friendship1);
         await this.friendRepo.save(friendship2);
         await this.friendRepo.save(friendship1);
       });
@@ -127,7 +133,7 @@ export class UserService {
 
   async acceptFriend(clientid, friendid) {
     this.findByFtId(clientid).then((client) =>{
-      this.getById(friendid).then(async (friend) => {
+      this.findByFtId(friendid).then(async (friend) => {
         this.friendRepo.findOne({where: {friend: friend, user: client}}).then(async (friendship) => {
           await this.friendRepo.update(friendship.id, {status: "accepted"});
           this.friendRepo.findOne({where: {friend: client, user: friend}}).then(async (friendship2) => {
@@ -140,7 +146,7 @@ export class UserService {
 
   async removeFriend(clientid, friendid) {
     this.findByFtId(clientid).then((client) =>{
-      this.getById(friendid).then(async (friend) => {
+      this.findByFtId(friendid).then(async (friend) => {
         await this.friendRepo.delete({user: client, friend: friend})
         await this.friendRepo.delete({user: friend, friend: client})
       });
@@ -177,6 +183,17 @@ export class UserService {
     let req = JSON.stringify(instanceToPlain(friends));
     //console.log(req)
     return req
+  }
+
+  async isFriend(clientID: number, friendId: number){
+    const client = await this.findByFtId(clientID);
+    const friend = await this.findByFtId(friendId);
+    let friends = await this.friendRepo.findOne({where: {user: client, friend: friend}, relations: ['friend', 'user'],})
+    let status = '';
+    if (typeof friends !== "undefined") 
+      status = friends.status;
+    console.log(status);
+    return status;
   }
 
   async getBlocking(clientID: number) {

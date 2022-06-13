@@ -21,6 +21,7 @@ import TimeAgo from 'react-timeago';
 function Profiles(props : any) {
   const [unauthorized, setUnauthorized] = useState(false);
   const [avatar, setAvatar] = useState('');
+  const [friendship, setFriendship] = useState({status: ""});
   const [user, setUser] = useState({
       online: 0,
       username: '',
@@ -46,8 +47,11 @@ function Profiles(props : any) {
       const getUser = async () => {
           try {
               const {data} = await axios.get('user/ft/' + props.location.state.id);
-              //console.log(data);
+              const  isfriend = (await axios.get('isfriend/' + props.location.state.id)).data;
+              console.log(isfriend);
               if (mounted) setReady(true);
+              if (mounted) setFriendship(isfriend)
+              console.log(friendship.status)
               if (mounted) setUser(data);
               if (mounted) setAvatar(data.avatar);
           }
@@ -57,8 +61,13 @@ function Profiles(props : any) {
       return () => {mounted = false;}
   }, []);
 
-  const handleClick = () => {
+  const handleClickAccept = () => {
+    console.log("h");
     axios.get('addfriend/' + props.location.state.id);
+  };
+
+  const handleClickRevoke = () => {
+    axios.get('removefriend/' + props.location.state.id);
   };
 
 
@@ -77,7 +86,7 @@ function Profiles(props : any) {
                 <img src={avatar} alt="account" id="acc-img"/>
 
                 <div className="login">
-                    <h1>{user.username} <button className="btncrayon" onClick={handleClick}> <img src={add_friend} alt="account" id="crayon"/></button> </h1>
+                    <h1>{user.username} {friendship.status === "" ?  (<button className="btncrayon" onClick={handleClickAccept}> <img src={add_friend} alt="account" id="crayon"/></button>) : (<button className="btncrayon" onClick={handleClickRevoke}><img src={add_friend} alt="account" id="crayon"/></button>)} </h1>
                 </div>
                 <div className="rank">
                     <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1>
