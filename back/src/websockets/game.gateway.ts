@@ -160,6 +160,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const p1_id = this.gameRooms.get(room).getPlayerSocketId('left');
     const p2_id = this.gameRooms.get(room).getPlayerSocketId('right');
 
+    if (this.gameRooms.get(room).getPongProps().gameIsStarted)
+      return ;
+
     this.gameRooms.get(room).setPlayerReady(client.id);
     if (this.gameRooms.get(room).getRoomProps().p1_readyToStart === true &&
       this.gameRooms.get(room).getRoomProps().p2_readyToStart === true)
@@ -192,6 +195,9 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       this.logger.log(`Client ${client.id} has joined the room ${gameRoomName}`);
     }
     const room = this.clientsToRoom.get(client.id);
+
+    if (this.gameRooms.get(room).getPongProps().gameIsStarted)
+      return ;
     this.gameRooms.get(room).startGame(this.wsServer, room);
     this.logger.log("TRAINING_STARTED");
   }
