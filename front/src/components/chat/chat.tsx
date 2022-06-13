@@ -136,16 +136,17 @@ function MenuSettings() {
     let menuEngrenage;
     if (global_status === 0) {
         menuEngrenage = (
-        <>
+        <div key={Math.random() * 100}>
 
             <ModifierPopupMdp/>
             <MenuItem onClick={() => handleClose(1)}>Retirer le mot de passe</MenuItem>
             <MenuItem onClick={() => handleClose(2)}>Quitter le channel</MenuItem>
-        </>)
+        </div>)
     }
     else {
-        menuEngrenage = (
+        menuEngrenage = (<div key={Math.random() * 100}>
             <MenuItem onClick={() => handleClose(2)}>Quitter le channel</MenuItem>
+            </div>
         )
     }
 
@@ -634,13 +635,13 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   let h1_name_role;
   if (props.item.id === userId)
   {
-    menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})} key={1}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
-      </>)
+    menu_onclick = (<div key={Math.random() * 100}>
+        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})} key={1}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
+        </div>)
   }
   else if (global_status === 0)
   {
-    menu_onclick = (<>
+    menu_onclick = (<div key={Math.random() * 100}>
         <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})} key={0}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <InviteUserPopUp cible={props.item.id}/>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})} key={3}>Envoyer un message</MenuItem>
@@ -650,27 +651,28 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
         <MenuItem onClick={() => handleClose({n: 7, id: props.item.id})} key={7}>Bannir</MenuItem>
 
 
-      </>)
+      </div>)
   }
   else if (global_status === 1)
   {
-    menu_onclick = (<>
+    menu_onclick = (
+      <div key={Math.random() * 100}>
         <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})} key={0}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <InviteUserPopUp cible={props.item.id}/>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})} key={3}>Envoyer un message</MenuItem>
         <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})} key={4}>Mute</MenuItem>
         {BlockOrUnblock(props.item.id)}
         <MenuItem onClick={() => handleClose({n: 7, id: props.item.id})} key={7}>Bannir</MenuItem>
-        </>)
+        </div>)
   }
   else if (global_status)
   {
-    menu_onclick =( <>
+    menu_onclick =( <div key={Math.random() * 100}>
         <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 0, id: props.item.id})} key={0}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
         <InviteUserPopUp cible={props.item.id}/>
         <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})} key={3}>Envoyer un message</MenuItem>
         {BlockOrUnblock(props.item.id)}
-            </>)
+            </div>)
   }
 
   if (props.item.status === 0)
@@ -712,7 +714,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
           'aria-labelledby': 'basic-button',
         }}
       >
-            {menu_onclick}
+            {}menu_onclick
       </Menu>
     </div>
   );

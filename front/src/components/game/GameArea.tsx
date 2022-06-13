@@ -3,9 +3,6 @@ import p5Types from "p5";
 import { Socket } from 'socket.io-client';
 import UserService from "../../services/user.service";
 import dancing_gnome from "../../images/dancing_gnome.gif";
-import cat from "../../images/neon-cat-cute.gif";
-import baguette from "../../images/baguette.png";
-import cheese from "../../images/cheese.png";
 import randomcolor from "randomcolor";
 
 const UP = 90;
@@ -93,16 +90,9 @@ export function GameAutoMaching(client: Socket) {
 export default function Gamezone(props: {client: Socket}) {
 	let pong = new PongProps();
 	let gnome_gif: p5Types.Image;
-	let cat_gif: p5Types.Image;
-	let baguette_png: p5Types.Image;
-	let cheese_png: p5Types.Image;
 
 	const preload = (p5: p5Types) => {
-
 		gnome_gif = p5.loadImage(dancing_gnome);
-		cat_gif = p5.loadImage(cat);
-		baguette_png = p5.loadImage(baguette);
-		cheese_png = p5.loadImage(cheese);
 	}
 
 	// use parent to render the canvas in this ref
@@ -139,8 +129,16 @@ export default function Gamezone(props: {client: Socket}) {
 	let color_4: string = "#FFFFFF"
 	let color_5: string = "#FFFFFF"
 
+	function setColorWhite() {
+		color_0 = "#FFFFFF"
+		color_1 = "#FFFFFF"
+		color_2 = "#FFFFFF"
+		color_3 = "#FFFFFF"
+		color_4 = "#FFFFFF"
+		color_5 = "#FFFFFF"
+	}
 
-	function getRandomColor() {
+	function setRandomColor() {
 		if (n >= 10) {
 			color_0 = randomcolor();
 			color_1 = randomcolor();
@@ -158,7 +156,10 @@ export default function Gamezone(props: {client: Socket}) {
 
 		if (pong.customMode === "customModeColor") {
 			p5.image(gnome_gif, pong.width / 2 - 200, pong.height / 2 - 200, 400, 400);
-			getRandomColor();
+			setRandomColor();
+		}
+		else {
+			setColorWhite();
 		}
 		//p5.image(cat_gif, pong.ball_x - 15, pong.ball_y - 15, 30, 30);
 
