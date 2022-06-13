@@ -65,8 +65,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   private handleSendingCurrentRoom(clientId: string) {
+    console.log(clientId);
     let room: GameService = this.gameRooms.get(this.clientsToRoom.get(clientId));
     if (room) {
+      console.log("yes frr")
       this.wsServer.to(clientId).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(room.getRoomProps()));
       this.logger.log("SEND_CURRENT_ROOM_INFOS");
     }
@@ -82,8 +84,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.logger.log(`Client ${client.id} want to end game ${game}`);
     let gamer = this.gameRooms.get(game);
     console.log(gamer)
-    await this.userService.saveGame(gamer.getRoomProps());
-    await this.userService.saveGameadversary(gamer.getRoomProps());
+    if (typeof gamer !== "undefined"){
+      await this.userService.saveGame(gamer.getRoomProps());
+      await this.userService.saveGameadversary(gamer.getRoomProps());
+    }
     this.clientsToRoom.delete(client.id);
     this.usersToClients.delete(userId);
     this.handleSendingRooms(this.getRoomsGroup);
@@ -124,6 +128,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('MOVE_PADDLE_UP')
   handlePaddleMovingUp(client: Socket) {
+    if (!this.clientsToRoom.has(client.id)) {
+      this.logger.log("Client is not connected to a game, moving paddle is not allowed");
+      return ;
+    }
     const room = this.clientsToRoom.get(client.id);
 
     this.gameRooms.get(room).movePaddleUp(this.wsServer, client.id);
@@ -131,6 +139,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('MOVE_PADDLE_DOWN')
   handlePaddleMovingDown(client: Socket) {
+    if (!this.clientsToRoom.has(client.id)) {
+      this.logger.log("Client is not connected to a game, moving paddle is not allowed");
+      return ;
+    }
     const room = this.clientsToRoom.get(client.id);
 
     this.gameRooms.get(room).movePaddleDown(this.wsServer, client.id);
@@ -138,6 +150,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('GAME_START')
   handleGameStarting(client: Socket) {
+    if (!this.clientsToRoom.has(client.id)) {
+      this.logger.log("Client is not connected to a game, start is not allowed");
+      return ;
+    }
     const room = this.clientsToRoom.get(client.id);
     const p1_name = this.gameRooms.get(room).getRoomProps().p1_name;
     const p2_name = this.gameRooms.get(room).getRoomProps().p2_name;
@@ -182,6 +198,10 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('GAME_RESET')
   handleGameReset(client: Socket) {
+    if (!this.clientsToRoom.has(client.id)) {
+      this.logger.log("Client is not connected to a game, reseting is not allowed");
+      return ;
+    }
     const room = this.clientsToRoom.get(client.id);
 
     this.gameRooms.get(room).resetGame(this.wsServer);
@@ -201,6 +221,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       this.wsServer.to(client.id).emit("ALERT", "You have already joined a game!");
       return ;
     }
+
+    if (this.gameRooms.has(roomName)) {
+      this.wsServer.to(client.id).emit("ALERT", "This game name already exist. Please try to create another game.");
+      return ;
+    }
+
     this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1);
     const gameRoom = new GameService();
     gameRoom.setRoomName(roomName);
