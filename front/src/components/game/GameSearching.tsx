@@ -93,6 +93,10 @@ export function GameSearching() {
       setRooms(JSON.parse(rooms));
     });
     GetRooms(socket);
+
+    return () => {
+      socket.off("SEND_ROOMS_INFOS");
+    }
   }, []);
 
   return (

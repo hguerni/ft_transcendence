@@ -250,7 +250,17 @@ export class UserService {
     return this.userRepo.update(clientID, { online: 0 });
   }
 
+  async setFtOnline(clientID: number): Promise<any> {
+    let client = await this.findByFtId(clientID);
+    if (typeof client === "undefined")
+      return ;
+    return this.userRepo.update(client.id, { online: 0 });
+  }
+
   async setInGame(clientID: number): Promise<any> {
-    return this.userRepo.update(clientID, { online: 2 });
+    let client = await this.findByFtId(clientID);
+    if (typeof client === "undefined")
+      return ;
+    return this.userRepo.update(client.id, { online: 2 });
   }
 }

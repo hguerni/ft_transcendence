@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Put, Req, Res, UnauthorizedException, ParseIntPipe, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put, Req, Res, UnauthorizedException, ParseIntPipe, UseGuards, BadRequestException} from '@nestjs/common';
 import { UserService } from "../services/user.service";
 import { AuthService } from "../services/auth.service";
 import { UpdateUserDTO, RegisterDTO} from "../models/user.model";
@@ -128,10 +128,13 @@ export class AuthController {
 
     @Get('userData')
     async getUserData(@Req() request: Request) {
+        try{const data = await this.jwtService.verifyAsync(request.cookies['clientID']);} catch {throw new BadRequestException('Invalid user')}
         //console.log(request.cookies)
-        const clientID = await this.authService.clientID(request);
+        try{
+            const clientID = await this.authService.clientID(request);
         //console.log(clientID);
-        return await this.userService.findByFtId(clientID);
+            return await this.userService.findByFtId(clientID);
+        } catch{console.log("ptn")}
     }
 
     @Get('userModel')

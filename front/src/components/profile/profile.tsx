@@ -185,14 +185,6 @@ function Profile() {
                         onKeyDown={handleKey}
                         /> } <button className="btncrayon" > <img src={crayon} alt="account" id="crayon" onClick={handleClickName}/></button></h1>
                 </div>
-                <div className="rank">
-                    <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1>
-                    <h1> 5 </h1>
-                </div>
-                <div className="level">
-                    <h1>Level <img src={level_up} alt="account" id="level"/> </h1>
-                    <h1> 30 </h1>
-                </div>
             </div>
         </div>
 

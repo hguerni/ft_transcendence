@@ -88,14 +88,6 @@ function Profiles(props : any) {
                 <div className="login">
                     <h1>{user.username} {friendship.status === "" ?  (<button className="btncrayon" onClick={handleClickAccept}> <img src={add_friend} alt="account" id="crayon"/></button>) : (<button className="btncrayon" onClick={handleClickRevoke}><img src={add_friend} alt="account" id="crayon"/></button>)} </h1>
                 </div>
-                <div className="rank">
-                    <h1>Rank <img src={rank} alt="account" id="rank-img"/> </h1>
-                    <h1> 5 </h1>
-                </div>
-                <div className="level">
-                    <h1>Level <img src={level_up} alt="account" id="level"/> </h1>
-                    <h1> 30 </h1>
-                </div>
             </div>
         </div>
         <Stats id={props.location.state.id}/>

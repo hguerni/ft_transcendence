@@ -38,9 +38,11 @@ export class AuthService {
 
     async clientID(request: Request): Promise<number> {
         const cookie = request.cookies['clientID'];
-        const data = await this.jwtService.verifyAsync(cookie);
+        try {
+            const data = await this.jwtService.verifyAsync(cookie);
 
-        return data['id'];
+            return data['id'];
+        } catch{}
     }
 
     async newUser(@Body() data: RegisterDTO, clientID: number) {

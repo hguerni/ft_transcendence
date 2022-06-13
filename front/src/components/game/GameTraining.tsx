@@ -3,7 +3,7 @@ import { Socket, io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 import UserService from '../../services/user.service';
 
-const socket: Socket = io("ws://54.245.74.93:3030/game");
+const socket: Socket = io("ws://54.245.74.93:3030/game").removeAllListeners();
 
 let intervalId: NodeJS.Timer;
 
@@ -15,7 +15,11 @@ export default function GameTraining() {
     socket.on("GAME_END", (game: string) => {
       socket.emit("GAME_END", game, UserService.getUserId());
     });
-  }, [])
+
+    return () => {
+      socket.off("GAME_END");
+    }
+  }, []);
 
   function movePaddleUp() {
     socket.emit("MOVE_PADDLE_UP");

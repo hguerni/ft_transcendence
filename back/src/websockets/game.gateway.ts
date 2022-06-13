@@ -82,8 +82,12 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const game: string = args[0];
     const userId: number = parseInt(args[1]);
 
+    this.userService.setFtOnline(userId);
+
     this.logger.log(`Client ${client.id} want to end game ${game}`);
     let gamer = this.gameRooms.get(game);
+    if (!gamer)
+      return ;
     console.log(gamer)
     this.clientsToRoom.delete(client.id);
     this.usersToClients.delete(userId);
@@ -98,46 +102,51 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('LINK_CLIENT_TO_USER')
   handleLinkClientToUser(client: Socket, userID: number) {
-    if (!this.usersToClients.has(userID)) {
-      this.usersToClients.set(userID, [client.id]);
+    try {
+      if (!this.usersToClients.has(userID)) {
+        this.usersToClients.set(userID, [client.id]);
+        this.logger.log(`Client ${client.id} is link to user ${userID}`);
+        return ;
+      }
+
+      if (this.usersToClients.get(userID).includes(client.id)) {
+        let clients = this.usersToClients.get(userID);
+        clients.push(client.id);
+        this.usersToClients.set(userID, clients);
+      }
+      if (this.clientsToRoomCopy.has(this.usersToClients.get(userID).at(-1))) {
+        console.log(client.id);
+        let savid = this.usersToClients.get(userID).at(-1);
+        let room = this.clientsToRoomCopy.get(savid)
+        const p1_id = this.gameRooms.get(room).getPlayerSocketId('left');
+        const p2_id = this.gameRooms.get(room).getPlayerSocketId('right');
+        this.clientsToRoom.set(client.id, this.clientsToRoomCopy.get(this.usersToClients.get(userID).at(-1)));
+        this.clientsToRoomCopy.set(client.id, this.clientsToRoomCopy.get(this.usersToClients.get(userID).at(-1)));
+        console.log("yes" + this.clientsToRoom.get(client.id));
+        if (savid === p1_id)
+          this.gameRooms.get(room).setSocketLeft(client.id)
+        if (savid === p2_id)
+          this.gameRooms.get(room).setSocketRight(client.id)
+        let clients = this.usersToClients.get(userID);
+        clients.push(client.id);
+        this.usersToClients.set(userID, clients);
+        client.join(this.clientsToRoom.get(client.id))
+      }
+      this.handleSendingCurrentRoom(client.id);
+
+      const room = this.clientsToRoom.get(client.id);
+      if (room != undefined) {
+        client.join(room);
+        console.log(this.gameRooms.get(room));
+        this.gameRooms.get(room).gameUpdate(this.wsServer);
+      }
+
+      this.logger.log(`Client connected: ${client.id}`);
       this.logger.log(`Client ${client.id} is link to user ${userID}`);
-      return ;
     }
-
-    if (this.usersToClients.get(userID).includes(client.id)) {
-      let clients = this.usersToClients.get(userID);
-      clients.push(client.id);
-      this.usersToClients.set(userID, clients);
+    catch (e) {
+      this.logger.log(e);
     }
-    if (this.clientsToRoomCopy.has(this.usersToClients.get(userID).at(-1))) {
-      console.log(client.id);
-      let savid = this.usersToClients.get(userID).at(-1);
-      let room = this.clientsToRoomCopy.get(savid)
-      const p1_id = this.gameRooms.get(room).getPlayerSocketId('left');
-      const p2_id = this.gameRooms.get(room).getPlayerSocketId('right');
-      this.clientsToRoom.set(client.id, this.clientsToRoomCopy.get(this.usersToClients.get(userID).at(-1)));
-      this.clientsToRoomCopy.set(client.id, this.clientsToRoomCopy.get(this.usersToClients.get(userID).at(-1)));
-      console.log("yes" + this.clientsToRoom.get(client.id));
-      if (savid === p1_id)
-        this.gameRooms.get(room).setSocketLeft(client.id)
-      if (savid === p2_id)
-        this.gameRooms.get(room).setSocketRight(client.id)
-      let clients = this.usersToClients.get(userID);
-      clients.push(client.id);
-      this.usersToClients.set(userID, clients);
-      client.join(this.clientsToRoom.get(client.id))
-    }
-    this.handleSendingCurrentRoom(client.id);
-
-    const room = this.clientsToRoom.get(client.id);
-    if (room != undefined) {
-      client.join(room);
-      console.log(this.gameRooms.get(room));
-      this.gameRooms.get(room).gameUpdate(this.wsServer);
-    }
-
-    this.logger.log(`Client connected: ${client.id}`);
-    this.logger.log(`Client ${client.id} is link to user ${userID}`);
   }
 
   @SubscribeMessage('MOVE_PADDLE_UP')
@@ -148,7 +157,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     const room = this.clientsToRoom.get(client.id);
 
-    this.gameRooms.get(room).movePaddleUp(this.wsServer, client.id);
+    if (this.gameRooms.has(room))
+      this.gameRooms.get(room).movePaddleUp(this.wsServer, client.id);
   }
 
   @SubscribeMessage('MOVE_PADDLE_DOWN')
@@ -159,7 +169,8 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     const room = this.clientsToRoom.get(client.id);
 
-    this.gameRooms.get(room).movePaddleDown(this.wsServer, client.id);
+    if (this.gameRooms.has(room))
+      this.gameRooms.get(room).movePaddleDown(this.wsServer, client.id);
   }
 
   @SubscribeMessage('GAME_START')
@@ -171,10 +182,14 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const room = this.clientsToRoom.get(client.id);
     console.log(room);
     const p1_name = this.gameRooms.get(room).getRoomProps().p1_name;
+    const p1_ftid = this.gameRooms.get(room).getRoomProps().p1_userId;
+    const p2_ftid = this.gameRooms.get(room).getRoomProps().p2_userId;
     const p2_name = this.gameRooms.get(room).getRoomProps().p2_name;
     const p1_id = this.gameRooms.get(room).getPlayerSocketId('left');
     const p2_id = this.gameRooms.get(room).getPlayerSocketId('right');
 
+    this.userService.setInGame(p1_ftid);
+    this.userService.setInGame(p2_ftid);
     if (this.gameRooms.get(room).getPongProps().gameIsStarted)
       return ;
 
@@ -350,6 +365,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const p2_name = this.gameRooms.get(roomName).getRoomProps().p2_name;
     const p1_id = this.gameRooms.get(roomName).getPlayerSocketId('left');
     const p2_id = this.gameRooms.get(roomName).getPlayerSocketId('right');
+    this.userService.setFtOnline(userId)
 
     this.clientsToRoom.delete(client.id);
     //this.usersToClients.delete(userId);

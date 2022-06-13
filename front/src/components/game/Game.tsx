@@ -8,7 +8,7 @@ import GameRules from './GameRules';
 import UserService from '../../services/user.service';
 import axios from 'axios';
 
-export const socket: Socket = io("ws://54.245.74.93:3030/game");
+export const socket: Socket = io("ws://54.245.74.93:3030/game").removeAllListeners();
 
 function Game() {
 
@@ -33,6 +33,11 @@ function Game() {
     socket.on("GAME_END", (gameName: string) => {
       socket.emit("GAME_END", gameName, UserService.getUserId());
     });
+
+    return () => {
+      socket.off('ALERT');
+      socket.off('GAME_END');
+    }
   }, []);
 
   if (unauthorized)

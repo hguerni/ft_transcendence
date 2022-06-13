@@ -14,7 +14,12 @@ export function GameInProgress() {
       setMsg(message);
       //console.log(message);
     });
-  }, [])
+
+    return () => {
+      socket.off("SEND_CURRENT_ROOM_INFOS");
+      socket.off("SEND_GAME_STATUS");
+    }
+  }, []);
 
   if (room?.p2_name === "")
     room.p2_name = "?";
