@@ -240,6 +240,7 @@ export class GameService {
 
   setCustomMode(wsServer: Server, customMode: string) {
     this.pong.customMode = customMode;
+    console.log(customMode);
     if (customMode === "speedx2")
       this.pong.speepFactor *= 2;
     else if (customMode === "customModeColor")
