@@ -7,7 +7,9 @@ export function GetUserData() { //do not call this function more than one time, 
     if (data)
       localStorage.setItem("userData", JSON.stringify(data))
   }
-  setInterval(getActiveUserData, 1000);
+ // setInterval(getActiveUserData, 1000);
+  getActiveUserData();
+  console.log("testt");
 }
 
 export default class UserService {
