@@ -244,11 +244,11 @@ function History(props: any) {
                     {games.length ? games.map((element : any) => {
                         return (
                                 element.winner === true ? (
-                                <li key={element}>
+                                <li key={element.id}>
                                     <Game user={element.user} color="#25b62ca8" game={element}/>
                                 </li>
                             ) : (
-                                <li key={element}>
+                                <li key={element.id}>
                                     <Game user={element.user} color="#bd2148f8" game={element}/>
                                 </li>
                             )

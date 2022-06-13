@@ -26,7 +26,7 @@ export class AuthService {
         var QRCode = require('qrcode');
         await QRCode.toFile('./uploads/qrcode.png', otpauthUrl);
 
-        return {url: 'http://localhost:3030/uploads/qrcode.png'};
+        return {url: 'http://54.245.74.93:3030/uploads/qrcode.png'};
     }
 
     async twoFactorAuthVerify(code: string, clientID: number) {

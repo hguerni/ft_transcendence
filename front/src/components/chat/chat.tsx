@@ -35,7 +35,7 @@ enum chat_status {
     pv_message
   }
 
-const socket = io("ws://localhost:3030/chat");
+const socket = io("ws://54.245.74.93:3030/chat");
 let global_blocked: number[] = [];
 let global_channel = "";
 let global_status = status.ban;
@@ -576,9 +576,9 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
 
   const BlockOrUnblock = (id: number) => {
     if (global_blocked.includes(id))
-        return <MenuItem onClick={() => handleClose({n: 8, id: id})}>Debloquer</MenuItem>;
+        return <MenuItem onClick={() => handleClose({n: 8, id: id})} key={8}>Debloquer</MenuItem>;
     else
-        return <MenuItem onClick={() => handleClose({n: 6, id: id})}>Bloquer</MenuItem>;
+        return <MenuItem onClick={() => handleClose({n: 6, id: id})} key={6}>Bloquer</MenuItem>;
   }
 
   function promouvoir_admin(cible: number) {
@@ -634,19 +634,19 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   if (props.item.id === userId)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
+        <MenuItem onClick={() => handleClose({n: 1, id: props.item.id})} key={1}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
       </>)
   }
   else if (global_status === 0)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
+        <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})} key={0}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <InviteUserPopUp cible={props.item.id}/>
-        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
-        <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Promouvoir en admin</MenuItem>
-        <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})}>Mute</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})} key={3}>Envoyer un message</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})} key={4}>Promouvoir en admin</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 5, id: props.item.id})} key={5}>Mute</MenuItem>
         {BlockOrUnblock(props.item.id)}
-        <MenuItem onClick={() => handleClose({n: 7, id: props.item.id})}>Bannir</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 7, id: props.item.id})} key={7}>Bannir</MenuItem>
 
 
       </>)
@@ -654,20 +654,20 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
   else if (global_status === 1)
   {
     menu_onclick = (<>
-        <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
+        <MenuItem onClick={() => handleClose({n: 0, id: props.item.id})} key={0}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem>
         <InviteUserPopUp cible={props.item.id}/>
-        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
-        <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})}>Mute</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})} key={3}>Envoyer un message</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 4, id: props.item.id})} key={4}>Mute</MenuItem>
         {BlockOrUnblock(props.item.id)}
-        <MenuItem onClick={() => handleClose({n: 7, id: props.item.id})}>Bannir</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 7, id: props.item.id})} key={7}>Bannir</MenuItem>
         </>)
   }
   else if (global_status)
   {
     menu_onclick =( <>
-        <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 0, id: props.item.id})}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
+        <MenuItem selected className="MenuItem" onClick={() => handleClose({n: 0, id: props.item.id})} key={0}><Link to={{ pathname: "/profiles", state: {id: props.item.id} }}>Profil</Link></MenuItem> 
         <InviteUserPopUp cible={props.item.id}/>
-        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})}>Envoyer un message</MenuItem>
+        <MenuItem onClick={() => handleClose({n: 3, id: props.item.id})} key={3}>Envoyer un message</MenuItem>
         {BlockOrUnblock(props.item.id)}
             </>)
   }
@@ -744,7 +744,7 @@ function ListChannel() {
                 {/* <Menu_Membre/> */}
                 {arraylistName.map((item) => {
 
-                    return <MenuMembre item={item}/>
+                    return <MenuMembre item={item} />
                 })}
 
                 </div>

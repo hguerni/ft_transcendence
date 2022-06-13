@@ -14,7 +14,7 @@ require('dotenv').config();
 
 const uid = process.env.APIUID;
 const secret = process.env.APISECRET;
-const callbackURL = 'http://localhost:3030/auth/login'
+const callbackURL = 'http://54.245.74.93:3030/auth/login'
 const state = 'lololol'
 
 
@@ -56,7 +56,7 @@ export class IntraConfig extends PassportStrategy(Strategy, 'intra') {
             clientData.username = data.data.login;
             clientData.email = data.data.email;
             clientData.ft_id = data.data.id;
-            clientData.avatar = "http://localhost:3030/uploads/avatar.png"
+            clientData.avatar = "http://54.245.74.93:3030/uploads/avatar.png"
             await this.authService.newUser(clientData, data.data.id);
         }
         return jwt;

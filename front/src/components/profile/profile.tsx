@@ -123,7 +123,7 @@ function Profile() {
         await axios.put('updateAvatar', {avatar: data.url});
         setAvatar(data.url);
     }
-    catch (err) {setAvatar('http://localhost:3030/uploads/avatar.png')}
+    catch (err) {setAvatar('http://54.245.74.93:3030/uploads/avatar.png')}
 
     }
 
@@ -272,14 +272,14 @@ function Amis() {
                     element.friend.online !== 2 ? (
 
                        element.friend.online === 0 ? (
-                        <li key={element}>
+                        <li key={element.friend.id}>
                             <h1 id='texteh1'> 
                             <img src={rond_vert} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.ft_id} }}> {element.friend.username} 
                             </Link></h1>
                         </li>
                         )
                         :(
-                        <li key={element}>
+                        <li key={element.friend.id}>
                                                         <h1 id='texteh1'> 
                             <img src={nitendo} alt="account" id="rondstatus" /> <Link to={{ pathname: "/profiles", state: {id: element.friend.ft_id} }}> {element.friend.username} 
                             </Link></h1>
@@ -304,7 +304,7 @@ function Amis() {
                    element.friend.online === 2 ? (
 
 
-                        <li key={element}>
+                        <li key={element.friend.id}>
                             <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.friend.username}</h1>
                         </li>
 
@@ -323,7 +323,7 @@ function Amis() {
 
            // Affichage
                 return (
-                        <li key={element}>
+                        <li key={element.friend.id}>
                             <h1 id='texteh1'> <img src={rond_rouge} alt="account" id="rondstatus" /> {element.friend.username}</h1>
                             <button className="btncrayon" onClick={handleClick} data-arg1={element.friend.id}><img src={validate} alt="account" id="validate"/></button>
                         </li>
@@ -405,11 +405,11 @@ function History(props: any) {
                     {games.length ? games.map((element : any) => {
                         return (
                                 element.winner === true ? (
-                                <li key={element}>
+                                <li key={element.id}>
                                     <Game user={props.user} color="#25b62ca8" game={element}/>
                                 </li>
                             ) : (
-                                <li key={element}>
+                                <li key={element.id}>
                                     <Game user={props.user} color="#bd2148f8" game={element}/>
                                 </li>
                             )
