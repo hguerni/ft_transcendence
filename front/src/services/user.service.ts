@@ -9,7 +9,6 @@ export function GetUserData() { //do not call this function more than one time, 
   }
  // setInterval(getActiveUserData, 1000);
   getActiveUserData();
-  console.log("testt");
 }
 
 export default class UserService {
