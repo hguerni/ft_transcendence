@@ -49,7 +49,7 @@ export function CreateGamePopUp() {
 
         <div style={{margin: 'auto', width: 'fit-content'}}>
           <button className="gameButton"
-          onClick={() => {GameCreate(socket, gameName, customMode); setOpen(false); setGameName(v4().substring(0, 10))}}><h4>SEND</h4></button>
+          onClick={() => {GameCreate(socket, gameName, customMode); setOpen(false); setCustomMode(""); setGameName(v4().substring(0, 10))}}><h4>SEND</h4></button>
         </div>
       </Popup>
     </div>
