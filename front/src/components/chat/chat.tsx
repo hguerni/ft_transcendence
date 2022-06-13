@@ -714,7 +714,7 @@ function MenuMembre(props: {item: {id: number, name: string, status: number}}) {
           'aria-labelledby': 'basic-button',
         }}
       >
-            {}menu_onclick
+            {menu_onclick}
       </Menu>
     </div>
   );

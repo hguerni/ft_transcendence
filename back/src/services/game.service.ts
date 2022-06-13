@@ -102,8 +102,17 @@ export class GameService {
         else
           wsServer.to(game.room.name).emit('SEND_GAME_STATUS', `${game.room.p2_name} has won the game!`);
         wsServer.to(game.room.name).emit('GAME_END', game.room.name);
+        clearInterval(game.intervalId_1);
       }
     }
+  }
+
+  setSocketLeft(clientId: string){
+    this.playersIds.set("left", clientId);
+  }
+
+  setSocketRight(clientId: string){
+    this.playersIds.set("right", clientId);
   }
 
   private ballMoving(game: GameService, wsServer: Server)

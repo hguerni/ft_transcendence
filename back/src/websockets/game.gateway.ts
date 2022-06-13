@@ -28,6 +28,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   private clientsToRoom: Map<string, string> = new Map();
   private getRoomsGroup: string = v4(); // room name of clients who wants infos on games (or rooms) in progress
   private watchersIds: string[] = [""];
+  private clientsToRoomCopy: Map<string, string> = new Map()
   private usersToClients: Map<number, Array<string>> = new Map();
   //private usersToClients: Map<number, string> = new Map();
 
@@ -108,8 +109,23 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       clients.push(client.id);
       this.usersToClients.set(userID, clients);
     }
-    if (this.clientsToRoom.has(this.usersToClients.get(userID).at(-1))) {
-      this.clientsToRoom.set(client.id, this.clientsToRoom.get(this.usersToClients.get(userID).at(-1)));
+    if (this.clientsToRoomCopy.has(this.usersToClients.get(userID).at(-1))) {
+      console.log(client.id);
+      let savid = this.usersToClients.get(userID).at(-1);
+      let room = this.clientsToRoomCopy.get(savid)
+      const p1_id = this.gameRooms.get(room).getPlayerSocketId('left');
+      const p2_id = this.gameRooms.get(room).getPlayerSocketId('right');
+      this.clientsToRoom.set(client.id, this.clientsToRoomCopy.get(this.usersToClients.get(userID).at(-1)));
+      this.clientsToRoomCopy.set(client.id, this.clientsToRoomCopy.get(this.usersToClients.get(userID).at(-1)));
+      console.log("yes" + this.clientsToRoom.get(client.id));
+      if (savid === p1_id)
+        this.gameRooms.get(room).setSocketLeft(client.id)
+      if (savid === p2_id)
+        this.gameRooms.get(room).setSocketRight(client.id)
+      let clients = this.usersToClients.get(userID);
+      clients.push(client.id);
+      this.usersToClients.set(userID, clients);
+      client.join(this.clientsToRoom.get(client.id))
     }
     this.handleSendingCurrentRoom(client.id);
 
@@ -153,6 +169,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       return ;
     }
     const room = this.clientsToRoom.get(client.id);
+    console.log(room);
     const p1_name = this.gameRooms.get(room).getRoomProps().p1_name;
     const p2_name = this.gameRooms.get(room).getRoomProps().p2_name;
     const p1_id = this.gameRooms.get(room).getPlayerSocketId('left');
@@ -190,6 +207,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       this.gameRooms.set(gameRoom.getRoomProps().name, gameRoom);
       client.join(gameRoomName);
       this.clientsToRoom.set(client.id, gameRoomName);
+      this.clientsToRoomCopy.set(client.id, gameRoomName);
       this.logger.log(`Client ${client.id} has joined the room ${gameRoomName}`);
     }
     const room = this.clientsToRoom.get(client.id);
@@ -235,6 +253,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const gameRoom = new GameService();
     gameRoom.setRoomName(roomName);
     this.clientsToRoom.set(client.id, roomName);
+    this.clientsToRoomCopy.set(client.id, roomName);
     gameRoom.setPlayersSocketIds(client.id);
     gameRoom.setPlayersNamesAndIds(userData.username, userData.userId);
     this.gameRooms.set(roomName, gameRoom);
@@ -259,6 +278,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     this.watchersIds.splice(this.watchersIds.indexOf(client.id), 1)
     this.clientsToRoom.set(client.id, roomName);
+    this.clientsToRoomCopy.set(client.id, roomName);
     this.gameRooms.get(roomName).setPlayersSocketIds(client.id);
     this.gameRooms.get(roomName).setPlayersNamesAndIds(userData.username, userData.userId);
     client.join(roomName);
@@ -291,6 +311,7 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.watchersIds.push(client.id);
     client.join(roomToWatch);
     this.clientsToRoom.set(client.id, roomToWatch);
+    this.clientsToRoomCopy.set(client.id, roomToWatch);
     this.handleSendingCurrentRoom(client.id);
     this.wsServer.to(client.id).emit("GAME_UPDATE", JSON.stringify(this.gameRooms.get(roomToWatch).getPongProps()));
     this.logger.log(`Client ${client.id} has joined the room ${roomToWatch}`);
@@ -331,19 +352,18 @@ export class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const p2_id = this.gameRooms.get(roomName).getPlayerSocketId('right');
 
     this.clientsToRoom.delete(client.id);
-    this.usersToClients.delete(userId);
+    //this.usersToClients.delete(userId);
     this.gameRooms.get(roomName).setHasGivenUp();
 
-    if (this.gameRooms.get(roomName).getRoomProps().p1_userId === userId) {
-      this.clientsToRoom.delete(p2_id);
-      this.gameRooms.delete(roomName);
+    if (p1_id === client.id) {
+      this.clientsToRoom.delete(p2_id)
       this.wsServer.to(p2_id).emit("SEND_GAME_STATUS", `${p1_name} is quiting the game :/`);
     }
-    else if (this.gameRooms.get(roomName).getRoomProps().p2_userId === userId){
+    else if (p2_id === client.id){
       this.clientsToRoom.delete(p1_id);
-      this.gameRooms.delete(roomName);
       this.wsServer.to(p1_id).emit("SEND_GAME_STATUS", `${p2_name} has left the game :/`);
     }
+    this.gameRooms.delete(roomName);
     this.wsServer.to(client.id).emit("SEND_CURRENT_ROOM_INFOS", JSON.stringify(undefined));
     this.handleSendingRooms(this.getRoomsGroup);
     this.logger.log('GAME_QUIT');
