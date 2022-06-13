@@ -7,7 +7,7 @@ import GameFighting from './GameFighting';
 import GameRules from './GameRules';
 import UserService from '../../services/user.service';
 
-export const socket: Socket = io("ws://54.245.74.93:3030/game");
+export const socket: Socket = io("ws://localhost:3030/game");
 
 function Game() {
   useEffect(() => {

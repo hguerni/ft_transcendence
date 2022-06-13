@@ -35,7 +35,7 @@ enum chat_status {
     pv_message
   }
 
-const socket = io("ws://54.245.74.93:3030/chat");
+const socket = io("ws://localhost:3030/chat");
 let global_blocked: number[] = [];
 let global_channel = "";
 let global_status = status.ban;
@@ -516,7 +516,7 @@ function Channel() {
 
 function InviteUser(cible: number, gameName: string) {
 
-    const gameInviteLink = "http://54.245.74.93:3000/game/join/".concat(gameName);
+    const gameInviteLink = "http://localhost:3000/game/join/".concat(gameName);
     socket.emit("INVITE", {target: cible, message: gameInviteLink, sender: userId}); //send invite link to user
 }
 
